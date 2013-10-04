@@ -27,7 +27,8 @@ def create_user_directory():
 
 def main():
     #check for config file at user's home directory (start it with . to be hidden)
-    new_user = False #A user is new if they don't have this config file
+    #if doesn't exist prompt user to login or register
+    new_user = False #A user is new if they haven't registered
     if new_user:
         create_new_user()
         create_user_directory()
