@@ -1,18 +1,20 @@
 __author__ = 'robert'
 
-import hashlib, os, pickle, sys, threading, time
+import hashlib,os, pickle, sys, threading, time
 
 #Prototype to compare files on disk to those stored on a server
 #Download listing of files on server -> create listing of files on local machine -> compare listings -> update necessary files
 class FileChecker:
-    path = ''
+    path = '' #path to Onedir directory
+    interval = 5 #minutes between checking for updates
 
     def __init__(self):
         userhome = os.environ['HOME']
         path = userhome + '/Onedir'
 
-    def __init__(self, pathname):
+    def __init__(self, pathname, intervalIn):
         path = pathname
+        interval = intervalIn
 
     #Makes sure the onedir directory exists on the local machine
     #If it doesn't, this creates the directory and returns false
@@ -120,19 +122,18 @@ class FileChecker:
 
     # Checks for new files every five minutes
     def poll_file_updates(self):
-
         while True:
-            interval = 5
             self.run_file_updates()
             oldFiles = self.get_local_files()
-            time.sleep(interval*60) #sleeps for interval minutes
+            time.sleep(self.interval*60) #sleeps for interval minutes
 
 #Set your user path here (Could come from config file later)
 #Creates a process to run in background and polls for file updates
 def main():
     userhome = os.environ['HOME']
     pathname = userhome + '/Onedir'
-    checkMe = FileChecker(pathname)
+    interval = 5
+    checkMe = FileChecker(pathname, interval)
     t = threading.Thread(target=FileChecker.poll_file_updates, args=())
     t.start()
 
