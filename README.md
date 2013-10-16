@@ -1,1 +1,3 @@
 Install sqlite3 and use it to read the database!
+
+Currently requires flask, requests, ...
