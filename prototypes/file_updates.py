@@ -85,6 +85,8 @@ class FileChecker:
     def compareManifests(self, local, server):
         serverUpdates = []
         localUpdates = []
+        serverDeletes = []
+        localDeletes = []
         for filename in local.keys():
             if filename in server.keys():
                 if not local[filename][0] == server[filename][0]:
@@ -96,11 +98,16 @@ class FileChecker:
             # file was modified since last update; should be saved to server
             elif filename[1] > (time.gmtime() - (self.interval * 60)):
                 serverUpdates.append(filename)
+            # file exists locally, but not on server, though it previously was local. Should be deleted
+            else:
+                localDeletes.append[filename]
         for filename in server.keys():
             # file was created elsewhere since last update; should be saved to local
-            if not filename in local.keys() & filename[1] > (time.gmtime() - (self.interval * 60)):
+            if (not filename in local.keys()) & (filename[1] > (time.gmtime() - (self.interval * 60))):
                 localUpdates.append(filename)  # add file to be updated on local machine
-        return [localUpdates, serverUpdates]
+            elif (not filename in local.keys()) & (filename[1] < (time.gmtime() - (self.interval * 60))):
+                serverDeletes.append(filename)  # file should be deleted from server
+        return [localUpdates, serverUpdates, localDeletes, serverDeletes]
 
     #Unifies above methods
     def check_updates(self):
@@ -117,14 +124,28 @@ class FileChecker:
             updateFiles = self.check_updates()
             localUpdates = updateFiles[0]
             serverUpdates = updateFiles[1]
+            localDeletes = updateFiles[2]
+            serverDeletes = updateFiles[3]
         else:  # Directory doesn't exist, so no local files are on machine
             serverUpdates = {}  # No local files on machine means no updates need to be made to server
             localUpdates = self.get_server_files()  # Local machine needs all files from server
         if localUpdates:
-            # download all files in localUpdates
+            for file in localUpdates:
+                #download each file from server
+                pass
             #TODO add this in later
             pass
         if serverUpdates:
+            #upload all files in serverUpdates
+            #TODO add this in later
+            pass
+        if localDeletes:
+            for file in localDeletes:
+                if os.path.isdir(file):
+                    os.rmdir(file)
+                else:
+                    os.remove(file)
+        if serverDeletes:
             #upload all files in serverUpdates
             #TODO add this in later
             pass
