@@ -14,13 +14,16 @@ class FileChecker:
     path = ''  # path to Onedir directory
     interval = 5  # minutes between checking for updates
 
-    def __init__(self, pathname=None, intervalIn=None):
-        userhome = os.environ['HOME']
-        self.path = userhome + '/Onedir'
 
     def __init__(self, pathname, intervalIn):
-        self.path = pathname
-        self.interval = intervalIn
+        userhome = os.environ['HOME']
+        path = userhome + '/Onedir'
+        if not pathname == None:
+            self.path = pathname
+        else:
+            self.path = path
+        if not intervalIn == None:
+            self.interval = intervalIn
 
     #Makes sure the onedir directory exists on the local machine
     #If it doesn't, this creates the directory and returns false
@@ -29,7 +32,7 @@ class FileChecker:
             try:
                 os.mkdir(self.path, 0700)
             except OSError:
-                sys.exit('Cannot create onedir directory')
+                sys.exit( 'Cannot create onedir directory')
             return False
         return True
 
