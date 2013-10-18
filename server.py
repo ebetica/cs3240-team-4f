@@ -9,9 +9,11 @@ FALSE = "false"
 app = Flask(__name__)
 
 app.config.update(dict(
-    DATABASE='database.db',
+    DATABASE='data/database.db',
+    DATABASE_SCHEMA='data/schema.sql',
     TESTING = False,
-    USERS = {}
+    USERS = {} # Stores list of logged in users and their timestamps
+               # not sure if I'm putting this in the right place.
 ))
 
 def connect_db():
@@ -32,7 +34,7 @@ def init_db():
     """Creates the database tables."""
     with app.app_context():
         db = get_db()
-        with app.open_resource('schema.sql', mode='r') as f:
+        with app.open_resource(app.config['DATABASE_SCHEMA', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
 
@@ -70,8 +72,16 @@ def login():
     else:
         return FALSE
 
+@app.route('/register', methods=['POST'])
+def register():
+    # Code for registering a user.
+    # Read from form sent in via post, hash the password
+    # and make entry to database.
+    return FALSE
+
 def _password_hash(password):
     # Make this return the proper hashed version later
+    # Probably use SHA1 with salt
     return password
 
 if __name__ == '__main__':

@@ -1,7 +1,8 @@
 import os
-import server
 import unittest
 import tempfile
+
+import server
 
 class TestOneDir(unittest.TestCase):
 
