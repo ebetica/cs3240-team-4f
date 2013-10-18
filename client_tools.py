@@ -1,10 +1,7 @@
 # The non-interactive parts of the client
 import string
 import requests 
-
-SERVER_ADDRESS = 'http://127.0.0.1:5000/'
-TRUE = "true"
-FALSE = "false"
+from constants import *
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -12,14 +9,17 @@ def user_in_database(username):
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
     return r.content == TRUE
 
+
 def register_user(username):
     # Asks for password and relevent information and registers user.
     pass
+
 
 def login_user(username, password):
     payload = {'username': username, 'password': password}
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
     return r.content == TRUE
+
 
 def sanity_check_username(name):
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
