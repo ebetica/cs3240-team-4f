@@ -9,7 +9,7 @@ FALSE = "false"
 def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
-    r = requests.post(SERVER_ADDRESS + 'user_in_database', data=payload)
+    r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
     return r.content == TRUE
 
 def register_user(username):

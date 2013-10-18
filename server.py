@@ -54,7 +54,7 @@ def close_db(error):
 def hello_world():
     return 'Hello World!'
 
-@app.route('/user_in_database', methods=['POST'])
+@app.route('/user_in_database', methods=['GET'])
 def user_in_database():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
