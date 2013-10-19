@@ -74,6 +74,7 @@ def login():
 
 @app.route('/register', methods=['POST'])
 def register():
+    username= request.form['username']
     # Code for registering a user.
     # Read from form sent in via post, hash the password
     # and make entry to database.
