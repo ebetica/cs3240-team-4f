@@ -38,10 +38,10 @@ class FileChecker:
 
     #Safe way to hash large files (reads and hashes in chunks)
     #From www.pythoncentral.io/hashing-files-with-python/
-    def safeHashFile(self, fileOb):
+    def safeHashFile(self, path):
         BLOCKSIZE = 65536
         hasher = hashlib.md5()
-        with open(fileOb, 'rb') as afile:
+        with open(path, 'rb') as afile:
             buf = afile.read(BLOCKSIZE)
             while len(buf) > 0:
                 hasher.update(buf)
@@ -57,10 +57,11 @@ class FileChecker:
             filelist = {}
         fileDict = {}
         for fileOb in filelist:
-            if os.path.isfile(fileOb):
-                fileDict += {fileOb, [self.safeHashFile(file), os.path.getmtime(file)]}
-            else:
-                fileDict += self.get_local_files(fileOb)
+            if (fileOb)[0] is not '.onedirdata.p':
+                if os.path.isfile(fileOb):
+                    fileDict[fileOb] = [self.safeHashFile(fileOb), os.path.getmtime(fileOb)]
+                else:
+                    fileDict.update(self.get_local_files(fileOb))
         return fileDict
 
     #Loads a dictionary of (files stored on the server) from Onedir directory using pickle
@@ -96,16 +97,16 @@ class FileChecker:
                         localUpdates.append(filename)  # add file to be updated on local machine
 
             # file was modified since last update; should be saved to server
-            elif filename[1] > (time.gmtime() - (self.interval * 60)):
+            elif filename[1] > (time.time() - (self.interval * 60)):
                 serverUpdates.append(filename)
             # file exists locally, but not on server, though it previously was local. Should be deleted
             else:
                 localDeletes.append[filename]
         for filename in server.keys():
             # file was created elsewhere since last update; should be saved to local
-            if (not filename in local.keys()) & (filename[1] > (time.gmtime() - (self.interval * 60))):
+            if (not filename in local.keys()) & (filename[1] > (time.time() - (self.interval * 60))):
                 localUpdates.append(filename)  # add file to be updated on local machine
-            elif (not filename in local.keys()) & (filename[1] < (time.gmtime() - (self.interval * 60))):
+            elif (not filename in local.keys()) & (filename[1] < (time.time() - (self.interval * 60))):
                 serverDeletes.append(filename)  # file should be deleted from server
         return [localUpdates, serverUpdates, localDeletes, serverDeletes]
 
