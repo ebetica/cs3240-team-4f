@@ -24,13 +24,16 @@ def parse_user():
         loggedin = client_tools.register_user(username, password, email)
     return (username, loggedin)
 
+
 def create_user_directory():
     # prompt user for home directory location
     # return the locaton
     pass
 
+
 def initiate_config_file(config_file, initial_dir):
     pass
+
 
 def main():
     filename = os.path.expanduser("~/.onedirc")
@@ -53,6 +56,7 @@ def main():
         #start syncing files, client should persist (not sprint 1 work)
         pass
     config.close()
+
 
 if __name__ == '__main__':
     main()
