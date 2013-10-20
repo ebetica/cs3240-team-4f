@@ -1,38 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="5037f9ad-e526-48cc-8836-a822523f2b45" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/prototype_client.py" afterPath="$PROJECT_DIR$/prototypes/client.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/prototype_server.py" afterPath="$PROJECT_DIR$/prototypes/server.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/test_one_dir.py" afterPath="$PROJECT_DIR$/prototypes/test_communication.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/prototypes/client_tools.py" afterPath="$PROJECT_DIR$/prototypes/client_tools.py" />
+    <list default="true" id="3c765063-d9d0-45d6-be02-19fe4e469ca8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" afterPath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cs3240-team-4f.iws" />
     <ignored path=".idea/workspace.xml" />
-    <ignored path=".idea/scopes/scope_settings.xml" />
-    <ignored path=".idea/modules.xml" />
-    <ignored path=".idea/testrunner.xml" />
-    <ignored path=".idea/other.xml" />
-    <ignored path=".idea/encodings.xml" />
-    <ignored path=".idea/inspectionProfiles/Project_Default.xml" />
-    <ignored path=".idea/vcs.xml" />
-    <ignored path=".idea/cs3240-team-4f.iml" />
-    <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
-    <ignored path=".idea/misc.xml" />
-    <file path="/Dummy.txt" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382243601043" ignored="false" />
-    <file path="/prototype_file_update.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381906530246" ignored="false" />
-    <file path="/prototype_file_update_test.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381907126622" ignored="false" />
-    <file path="/file_updates.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381984237494" ignored="false" />
-    <file path="/a.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381942696865" ignored="false" />
-    <file path="/a.coffee" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381942768539" ignored="false" />
-    <file path="/test_file_updates.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381946698872" ignored="false" />
-    <file path="/server.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382244191547" ignored="false" />
-    <file path="/test_one_dir.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242832486" ignored="false" />
-    <file path="/client.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242922025" ignored="false" />
-    <file path="/client_tools.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382244132508" ignored="false" />
+    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382252690546" ignored="false" />
+    <file path="/updown.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382252678874" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +28,19 @@
     <favorites_list name="cs3240-team-4f" />
   </component>
   <component name="FileEditorManager">
-    <leaf />
+    <leaf>
+      <file leaf-file-name="updown.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/prototypes/updown.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="9" column="25" selection-start="264" selection-end="264" vertical-scroll-proportion="0.25542572">
+              <folding>
+                <element signature="e#22#31#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -62,7 +51,6 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitLogSettings">
-    <option name="myStructureFilterPaths" />
     <option name="myDateState">
       <MyDateState />
     </option>
@@ -70,26 +58,15 @@
   <component name="IdeDocumentHistory">
     <option name="changedFiles">
       <list>
-        <option value="$PROJECT_DIR$/prototype_file_update.py" />
-        <option value="$PROJECT_DIR$/prototypes/src/prototype_file_update.py" />
-        <option value="$PROJECT_DIR$/prototypes/test/prototype_file_update_test.py" />
-        <option value="$PROJECT_DIR$/prototypes/test_file_updates.py" />
-        <option value="$PROJECT_DIR$/prototypes/file_updates.py" />
-        <option value="$PROJECT_DIR$/server.py" />
-        <option value="$PROJECT_DIR$/test_one_dir.py" />
-        <option value="$PROJECT_DIR$/client.py" />
-        <option value="$PROJECT_DIR$/prototypes/prototype_server.py" />
-        <option value="$PROJECT_DIR$/prototypes/__init__.py" />
-        <option value="$PROJECT_DIR$/prototypes/client_tools.py" />
-        <option value="$PROJECT_DIR$/prototypes/server.py" />
+        <option value="$PROJECT_DIR$/prototypes/updown.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="68" />
-    <option name="y" value="108" />
-    <option name="width" value="1059" />
-    <option name="height" value="754" />
+    <option name="x" value="1672" />
+    <option name="y" value="274" />
+    <option name="width" value="1382" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -105,7 +82,7 @@
     <option name="STATE" value="0" />
   </component>
   <component name="ProjectView">
-    <navigator currentView="ProjectPane" proportions="" version="1" splitterProportion="0.5">
+    <navigator currentView="Scope" currentSubView="All" proportions="" version="1" splitterProportion="0.5">
       <flattenPackages />
       <showMembers />
       <showModules />
@@ -117,7 +94,43 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scope" />
+      <pane id="Scope">
+        <subPane subId="Problems" />
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="All">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="cs3240-team-4f">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="cs3240-team-4f">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="prototypes">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -136,20 +149,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cs3240-team-4f" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cs3240-team-4f" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="prototypes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -158,8 +157,9 @@
     <property name="options.splitter.main.proportions" value="0.3" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="recentsLimit" value="5" />
-    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PythonSdkConfigurable" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/.." />
+    <property name="ChangesBrowser.SHOW_FLATTEN" value="true" />
+    <property name="options.lastSelected" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../onedir/updown.py" />
     <property name="options.splitter.details.proportions" value="0.2" />
     <property name="options.searchVisible" value="true" />
   </component>
@@ -171,38 +171,23 @@
       <PyConsoleSettings />
     </option>
   </component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/prototypes" />
-      <recent name="$PROJECT_DIR$/data" />
-      <recent name="$PROJECT_DIR$/prototypes/src" />
-    </key>
-  </component>
-  <component name="RunManager" selected="Python tests.Unittests in test_file_updates">
-    <configuration default="false" name="Unittests in test_file_updates" type="tests" factoryName="Unittests" temporary="true">
+  <component name="RunManager" selected="Python.server">
+    <configuration default="false" name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/prototypes" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="cs3240-team-4f" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/prototypes/test_file_updates.py" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <RunnerSettings RunnerId="PyDebugRunner" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/server.py" />
+      <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PyDebugRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
       <method />
     </configuration>
@@ -245,29 +230,6 @@
       <option name="PARAMETERS" value="" />
       <method />
     </configuration>
-    <configuration default="true" type="tests" factoryName="Unittests">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="cs3240-team-4f" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="" />
-      <option name="CLASS_NAME" value="" />
-      <option name="METHOD_NAME" value="" />
-      <option name="FOLDER_NAME" value="" />
-      <option name="TEST_TYPE" value="TEST_SCRIPT" />
-      <option name="PATTERN" value="" />
-      <option name="USE_PATTERN" value="false" />
-      <option name="PUREUNITTEST" value="true" />
-      <option name="PARAMS" value="" />
-      <option name="USE_PARAM" value="false" />
-      <method />
-    </configuration>
     <configuration default="true" type="tests" factoryName="Doctests">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -288,59 +250,17 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <configuration default="false" name="cs3240-team-4f" type="PythonConfigurationType" factoryName="Python" singleton="true">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="" />
-      <option name="IS_MODULE_SDK" value="false" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="cs3240-team-4f" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/prototypes/server.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <configuration default="false" name="file_updates" type="PythonConfigurationType" factoryName="Python">
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <module name="cs3240-team-4f" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/prototypes/file_updates.py" />
-      <option name="PARAMETERS" value="" />
-      <RunnerSettings RunnerId="PyDebugRunner" />
-      <RunnerSettings RunnerId="PythonRunner" />
-      <ConfigurationWrapper RunnerId="PyDebugRunner" />
-      <ConfigurationWrapper RunnerId="PythonRunner" />
-      <method />
-    </configuration>
-    <list size="3">
-      <item index="0" class="java.lang.String" itemvalue="Python.cs3240-team-4f" />
-      <item index="1" class="java.lang.String" itemvalue="Python.file_updates" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Unittests in test_file_updates" />
+    <list size="1">
+      <item index="0" class="java.lang.String" itemvalue="Python.server" />
     </list>
     <recent_temporary>
       <list size="1">
-        <item index="0" class="java.lang.String" itemvalue="Python tests.Unittests in test_file_updates" />
+        <item index="0" class="java.lang.String" itemvalue="Python.server" />
       </list>
     </recent_temporary>
   </component>
   <component name="ShelveChangesManager" show_recycled="false" />
-  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="sslv3">
+  <component name="SvnConfiguration" maxAnnotateRevisions="500" myUseAcceleration="nothing" myAutoUpdateAfterCommit="false" cleanupOnStartRun="false" SSL_PROTOCOLS="all">
     <option name="USER" value="" />
     <option name="PASSWORD" value="" />
     <option name="mySSHConnectionTimeout" value="30000" />
@@ -359,56 +279,26 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="5037f9ad-e526-48cc-8836-a822523f2b45" name="Default" comment="" />
-      <created>1381773532412</created>
-      <updated>1381773532412</updated>
+      <changelist id="3c765063-d9d0-45d6-be02-19fe4e469ca8" name="Default" comment="" />
+      <created>1380913523755</created>
+      <updated>1380913523755</updated>
     </task>
-    <task id="LOCAL-00001" summary="First commit of prototype to detect file changes.">
-      <created>1381780637582</created>
-      <updated>1381780637582</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Updated with comments and slightly revised main">
-      <created>1381781490065</created>
-      <updated>1381781490065</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Updated with comments, safer hashing, a class structure, and polling">
-      <created>1381895699910</created>
-      <updated>1381895699910</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Updated with comments, additional classification and a base for testing">
-      <created>1381907177855</created>
-      <updated>1381907177855</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Fixed errors (Thanks PyCharm for not highlighting them). Also moved code around for organizational purposes.">
-      <created>1381942906637</created>
-      <updated>1381942906637</updated>
-    </task>
-    <task id="LOCAL-00006" summary="Wrote tests and fixed errors revealed by tests.">
-      <created>1381981628889</created>
-      <updated>1381981628889</updated>
-    </task>
-    <task id="LOCAL-00007" summary="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files">
-      <created>1382243608728</created>
-      <updated>1382243608728</updated>
-    </task>
-    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="68" y="108" width="1059" height="754" extended-state="0" />
-    <editor active="false" />
+    <frame x="1672" y="274" width="1382" height="784" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3296" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27353814" sideWeight="0.6709265" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3988764" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.20833333" sideWeight="0.6704" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3286517" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32748538" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22712238" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -460,7 +350,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files" />
+    <option name="LAST_COMMIT_MESSAGE" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -474,115 +364,26 @@
     <option name="UPDATE_FILTER_BY_SCOPE" value="false" />
     <option name="SHOW_FILE_HISTORY_AS_TREE" value="false" />
     <option name="FILE_HISTORY_SPLITTER_PROPORTION" value="0.6" />
-    <MESSAGE value="First commit of prototype to detect file changes." />
-    <MESSAGE value="Updated with comments and slightly revised main" />
-    <MESSAGE value="Updated with comments, safer hashing, a class structure, and polling" />
-    <MESSAGE value="Updated with comments, additional classification and a base for testing" />
-    <MESSAGE value="Fixed errors (Thanks PyCharm for not highlighting them). Also moved code around for organizational purposes." />
-    <MESSAGE value="Wrote tests and fixed errors revealed by tests." />
-    <MESSAGE value="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <option name="time" value="10" />
-    </breakpoint-manager>
+    <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/prototypes/test_file_updates.py">
+    <entry file="file://$PROJECT_DIR$/../onedir/updown.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="45" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/test_file_updates.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="45" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/UserDict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="0" selection-start="639" selection-end="639" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/stat.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="40" column="0" selection-start="728" selection-end="728" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/genericpath.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="42" column="0" selection-start="1178" selection-end="1178" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/unittest/result.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="115" column="0" selection-start="3538" selection-end="3538" vertical-scroll-proportion="-0.042895444" />
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pycharm/tcunittest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="98" column="0" selection-start="2820" selection-end="2820" vertical-scroll-proportion="0.33333334" />
-      </provider>
-    </entry>
-    <entry file="file:///usr/lib/python2.7/unittest/case.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="509" column="0" selection-start="18278" selection-end="18278" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/test_file_updates.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="35" column="45" selection-start="1066" selection-end="1066" vertical-scroll-proportion="0.596577" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/constants.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/test_communication.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.28767124">
+        <state line="0" column="0" selection-start="0" selection-end="591" vertical-scroll-proportion="0.0">
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/server.py">
+    <entry file="file://$PROJECT_DIR$/prototypes/updown.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="69" column="14" selection-start="1673" selection-end="1673" vertical-scroll-proportion="2.6538463">
+        <state line="9" column="25" selection-start="264" selection-end="264" vertical-scroll-proportion="0.25542572">
           <folding>
-            <element signature="e#0#14#0" expanded="true" />
+            <element signature="e#22#31#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="31" selection-start="778" selection-end="778" vertical-scroll-proportion="0.9230769">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/client_tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="19" column="16" selection-start="691" selection-end="691" vertical-scroll-proportion="0.67639256">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
-          <folding />
         </state>
       </provider>
     </entry>
