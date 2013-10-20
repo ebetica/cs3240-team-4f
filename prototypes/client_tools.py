@@ -1,7 +1,7 @@
 # The non-interactive parts of the client
 import string
 import requests 
-from constants import *
+from prototypes.constants import *
 
 def user_in_database(username):
     # Returns True iff username is in the database

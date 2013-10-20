@@ -1,36 +1,35 @@
 import os
 import unittest
 import tempfile
-from constants import *
 
-import server
+from prototypes import prototype_server
 
 class TestOneDir(unittest.TestCase):
 
 
     def setUp(self):
-        self.db_fd, server.app.config['DATABASE'] = tempfile.mkstemp()
-        server.app.config['TESTING'] = True
-        self.app = server.app.test_client()
-        server.init_db()
+        self.db_fd, prototype_server.app.config['DATABASE'] = tempfile.mkstemp()
+        prototype_server.app.config['TESTING'] = True
+        self.app = prototype_server.app.test_client()
+        prototype_server.init_db()
 
 
     def test_empty_database(self):
-        self.assertEqual(self.user_in_database("not_a_user"), FALSE)
+        self.assertEqual(self.user_in_database("not_a_user"), False)
 
 
     def test_register_login(self):
         name = "test_user"
         password = "password"
-        self.assertEqual(self.register_user(name, password), TRUE)
-        self.assertEqual(self.login(name, password), TRUE)
-        self.assertEqual(self.login(name, "wrongpassword"), FALSE)
-        self.assertEqual(self.login("not-in-database", password), FALSE)
+        self.assertEqual(self.register_user(name, password), True)
+        self.assertEqual(self.login(name, password), True)
+        self.assertEqual(self.login(name, "wrongpassword"), False)
+        self.assertEqual(self.login("not-in-database", password), False)
 
 
     def tearDown(self):
         os.close(self.db_fd)
-        os.unlink(server.app.config['DATABASE'])
+        os.unlink(prototype_server.app.config['DATABASE'])
 
 
     def user_in_database(self, username):
