@@ -2,12 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="5037f9ad-e526-48cc-8836-a822523f2b45" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/prototypes/prototype_client.py" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/prototypes/prototype_server.py" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/client.py" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/client_tools.py" afterPath="$PROJECT_DIR$/prototypes/client_tools.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/constants.py" afterPath="$PROJECT_DIR$/prototypes/constants.py" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/test_one_dir.py" afterPath="$PROJECT_DIR$/prototypes/test_one_dir.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/prototype_client.py" afterPath="$PROJECT_DIR$/prototypes/client.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/prototype_server.py" afterPath="$PROJECT_DIR$/prototypes/server.py" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/prototypes/test_one_dir.py" afterPath="$PROJECT_DIR$/prototypes/test_communication.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/prototypes/client_tools.py" afterPath="$PROJECT_DIR$/prototypes/client_tools.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" afterPath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
@@ -24,16 +22,17 @@
     <ignored path=".idea/cs3240-team-4f.iml" />
     <ignored path=".idea/inspectionProfiles/profiles_settings.xml" />
     <ignored path=".idea/misc.xml" />
-    <file path="/Dummy.txt" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242441522" ignored="false" />
+    <file path="/Dummy.txt" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382243601043" ignored="false" />
     <file path="/prototype_file_update.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381906530246" ignored="false" />
     <file path="/prototype_file_update_test.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381907126622" ignored="false" />
     <file path="/file_updates.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381984237494" ignored="false" />
     <file path="/a.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381942696865" ignored="false" />
     <file path="/a.coffee" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381942768539" ignored="false" />
     <file path="/test_file_updates.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1381946698872" ignored="false" />
-    <file path="/server.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242715124" ignored="false" />
+    <file path="/server.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382244191547" ignored="false" />
     <file path="/test_one_dir.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242832486" ignored="false" />
     <file path="/client.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382242922025" ignored="false" />
+    <file path="/client_tools.py" changelist="5037f9ad-e526-48cc-8836-a822523f2b45" time="1382244132508" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,48 +51,7 @@
     <favorites_list name="cs3240-team-4f" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="test_one_dir.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/prototypes/test_one_dir.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="7" column="0" selection-start="121" selection-end="121" vertical-scroll-proportion="0.0">
-              <folding>
-                <element signature="e#0#9#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="prototype_client.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/prototypes/prototype_client.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="24" column="31" selection-start="778" selection-end="778" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client_tools.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/prototypes/client_tools.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="17" column="0" selection-start="590" selection-end="590" vertical-scroll-proportion="0.0">
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="prototype_server.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/prototypes/prototype_server.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state line="21" column="4" selection-start="487" selection-end="487" vertical-scroll-proportion="0.7307692">
-              <folding>
-                <element signature="e#0#14#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FindManager">
     <FindUsagesManager>
@@ -121,6 +79,9 @@
         <option value="$PROJECT_DIR$/test_one_dir.py" />
         <option value="$PROJECT_DIR$/client.py" />
         <option value="$PROJECT_DIR$/prototypes/prototype_server.py" />
+        <option value="$PROJECT_DIR$/prototypes/__init__.py" />
+        <option value="$PROJECT_DIR$/prototypes/client_tools.py" />
+        <option value="$PROJECT_DIR$/prototypes/server.py" />
       </list>
     </option>
   </component>
@@ -340,7 +301,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <module name="cs3240-team-4f" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/prototypes/prototype_server.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/prototypes/server.py" />
       <option name="PARAMETERS" value="" />
       <RunnerSettings RunnerId="PythonRunner" />
       <ConfigurationWrapper RunnerId="PythonRunner" />
@@ -426,18 +387,23 @@
       <created>1381981628889</created>
       <updated>1381981628889</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files">
+      <created>1382243608728</created>
+      <updated>1382243608728</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="68" y="108" width="1059" height="754" extended-state="0" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290735" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27353814" sideWeight="0.6709265" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.27353814" sideWeight="0.6709265" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3988764" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -447,7 +413,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -495,7 +460,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Wrote tests and fixed errors revealed by tests." />
+    <option name="LAST_COMMIT_MESSAGE" value="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -515,6 +480,7 @@
     <MESSAGE value="Updated with comments, additional classification and a base for testing" />
     <MESSAGE value="Fixed errors (Thanks PyCharm for not highlighting them). Also moved code around for organizational purposes." />
     <MESSAGE value="Wrote tests and fixed errors revealed by tests." />
+    <MESSAGE value="Changed from defined booleans to built-in booleans, removed old code from client.py, refactored &amp; organized files" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -574,35 +540,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/test_one_dir.py">
+    <entry file="file://$PROJECT_DIR$/prototypes/test_communication.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="7" column="0" selection-start="121" selection-end="121" vertical-scroll-proportion="0.0">
+        <state line="7" column="0" selection-start="111" selection-end="111" vertical-scroll-proportion="0.28767124">
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/prototype_client.py">
+    <entry file="file://$PROJECT_DIR$/prototypes/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="24" column="31" selection-start="778" selection-end="778" vertical-scroll-proportion="0.0">
+        <state line="69" column="14" selection-start="1673" selection-end="1673" vertical-scroll-proportion="2.6538463">
+          <folding>
+            <element signature="e#0#14#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/prototypes/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="31" selection-start="778" selection-end="778" vertical-scroll-proportion="0.9230769">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/prototypes/client_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="17" column="0" selection-start="590" selection-end="590" vertical-scroll-proportion="0.0">
+        <state line="19" column="16" selection-start="691" selection-end="691" vertical-scroll-proportion="0.67639256">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prototypes/prototype_server.py">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="4" selection-start="487" selection-end="487" vertical-scroll-proportion="0.7307692">
-          <folding>
-            <element signature="e#0#14#0" expanded="true" />
-          </folding>
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/prototypes/__init__.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
         </state>
       </provider>
     </entry>

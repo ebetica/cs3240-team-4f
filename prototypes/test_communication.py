@@ -2,16 +2,16 @@ import os
 import unittest
 import tempfile
 
-from prototypes import prototype_server
+from prototypes import server
 
 class TestOneDir(unittest.TestCase):
 
 
     def setUp(self):
-        self.db_fd, prototype_server.app.config['DATABASE'] = tempfile.mkstemp()
-        prototype_server.app.config['TESTING'] = True
-        self.app = prototype_server.app.test_client()
-        prototype_server.init_db()
+        self.db_fd, server.app.config['DATABASE'] = tempfile.mkstemp()
+        server.app.config['TESTING'] = True
+        self.app = server.app.test_client()
+        server.init_db()
 
 
     def test_empty_database(self):
@@ -29,7 +29,7 @@ class TestOneDir(unittest.TestCase):
 
     def tearDown(self):
         os.close(self.db_fd)
-        os.unlink(prototype_server.app.config['DATABASE'])
+        os.unlink(server.app.config['DATABASE'])
 
 
     def user_in_database(self, username):

@@ -64,7 +64,10 @@ def hello_world():
 def user_in_database():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    ret = True if user != None else False
+    if user is not None:
+        ret = True
+    else:
+        ret = False
     return ret
 
 

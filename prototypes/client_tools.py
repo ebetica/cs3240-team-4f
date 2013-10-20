@@ -7,7 +7,7 @@ def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
-    return r.content == TRUE
+    return r.content is True
 
 def register_user(username,password,email=None):
     if not user_in_database(username):
@@ -23,7 +23,7 @@ def register_user(username,password,email=None):
 def login_user(username, password):
     payload = {'username': username, 'password': password}
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
-    return r.content == TRUE
+    return r.content is True
 
 
 def sanity_check_username(name):
