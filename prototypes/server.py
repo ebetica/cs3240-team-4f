@@ -3,7 +3,6 @@ import time
 
 from flask import Flask, request, g
 
-
 # Creats the application
 app = Flask(__name__)
 
