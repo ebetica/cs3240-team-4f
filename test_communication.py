@@ -1,7 +1,6 @@
 import os
 import unittest
 import tempfile
-from constants import *
 
 import server
 
@@ -16,16 +15,16 @@ class TestOneDir(unittest.TestCase):
 
 
     def test_empty_database(self):
-        self.assertEqual(self.user_in_database("not_a_user"), FALSE)
+        self.assertEqual(self.user_in_database("not_a_user"), False)
 
 
     def test_register_login(self):
         name = "test_user"
         password = "password"
-        self.assertEqual(self.register_user(name, password), TRUE)
-        self.assertEqual(self.login(name, password), TRUE)
-        self.assertEqual(self.login(name, "wrongpassword"), FALSE)
-        self.assertEqual(self.login("not-in-database", password), FALSE)
+        self.assertEqual(self.register_user(name, password), True)
+        self.assertEqual(self.login(name, password), True)
+        self.assertEqual(self.login(name, "wrongpassword"), False)
+        self.assertEqual(self.login("not-in-database", password), False)
 
 
     def tearDown(self):

@@ -1,15 +1,20 @@
-from flask import Flask, request, g
 import sqlite3
 import time
+import os
 from constants import *
+from flask import Flask, request, g, send_from_directory, redirect, url_for
+from werkzeug import utils
 
 # Creats the application
 app = Flask(__name__)
 
+# The database location is stored here. If you move around files and
+# don't change this, the server will break.
 app.config.update(dict(
-    DATABASE='data/database.db',
-    DATABASE_SCHEMA='data/schema.sql',
+    DATABASE='database.db',
+    DATABASE_SCHEMA='schema.sql',
     TESTING = False,
+    DEBUG = True,
     USERS = {} # Stores list of logged in users and their timestamps
                # not sure if I'm putting this in the right place.
 ))
@@ -41,9 +46,11 @@ def init_db():
 
 
 def query_db(query, args=(), one=False):
+    """Returns a query to the database as a list"""
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
     cur.close()
+    get_db().commit()
     return (rv[0] if rv else None) if one else rv
 
 
@@ -54,17 +61,41 @@ def close_db(error):
         g.sqlite_db.close()
 
 
-@app.route('/')
-def hello_world():
-    return 'Hello World!'
-
-
 @app.route('/user_in_database', methods=['GET', 'POST'])
 def user_in_database():
+    """Tests if the user is in the database"""
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    ret = TRUE if user != None else FALSE
+    if user is not None:
+        ret = TRUE
+    else:
+        ret = FALSE
     return ret
+
+@app.route('/upload', methods=['GET', 'POST'])
+def upload_file():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file:
+            filename = utils.secure_filename(file.filename)
+            descriptor = os.path.join(app.root_path, 'uploads/', filename)
+            file.save(descriptor)
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return '''
+    <!doctype html>
+    <title>Upload new File</title>
+    <h1>Upload new File</h1>
+    <form action="" method=post enctype=multipart/form-data>
+      <p><input type=file name=file>
+         <input type=submit value=Upload>
+    </form>
+    '''
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    descriptor = os.path.join(app.root_path, 'uploads/')
+    return send_from_directory(descriptor, filename)
 
 
 @app.route('/login', methods=['POST'])
@@ -84,11 +115,11 @@ def register():
     username= request.form['username']
     password= _password_hash(request.form['password'])
     email = request.form['email']
-    query_db("INSERT INTO user VALUES (?,?,?)",[username,password,email],one=True)
+    query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,"user"],one=True)
     # Code for registering a user.
     # Read from form sent in via post, hash the password
     # and make entry to database.
-    return True
+    return TRUE
 
 
 def _password_hash(password):
@@ -98,4 +129,4 @@ def _password_hash(password):
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=app.config["DEBUG"])

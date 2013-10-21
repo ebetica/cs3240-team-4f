@@ -38,10 +38,10 @@ class FileChecker:
 
     #Safe way to hash large files (reads and hashes in chunks)
     #From www.pythoncentral.io/hashing-files-with-python/
-    def safeHashFile(self, fileOb):
+    def safeHashFile(self, path):
         BLOCKSIZE = 65536
         hasher = hashlib.md5()
-        with open(fileOb, 'rb') as afile:
+        with open(path, 'rb') as afile:
             buf = afile.read(BLOCKSIZE)
             while len(buf) > 0:
                 hasher.update(buf)
@@ -56,11 +56,13 @@ class FileChecker:
         except OSError:
             filelist = {}
         fileDict = {}
-        for fileOb in filelist:
-            if os.path.isfile(fileOb):
-                fileDict += {fileOb, [self.safeHashFile(file), os.path.getmtime(file)]}
-            else:
-                fileDict += self.get_local_files(fileOb)
+        for afile in filelist:
+            if not afile == '.onedirdata.p':
+                afile = (fileOb + '/' + afile)
+                if os.path.isfile(afile):
+                    fileDict[afile] = [self.safeHashFile(afile), os.path.getmtime(afile)]
+                else:
+                    fileDict.update(self.get_local_files(afile))
         return fileDict
 
     #Loads a dictionary of (files stored on the server) from Onedir directory using pickle
@@ -96,16 +98,16 @@ class FileChecker:
                         localUpdates.append(filename)  # add file to be updated on local machine
 
             # file was modified since last update; should be saved to server
-            elif filename[1] > (time.gmtime() - (self.interval * 60)):
+            elif filename[1] > (time.time() - (self.interval * 60)):
                 serverUpdates.append(filename)
             # file exists locally, but not on server, though it previously was local. Should be deleted
             else:
-                localDeletes.append[filename]
+                localDeletes.append(filename)
         for filename in server.keys():
             # file was created elsewhere since last update; should be saved to local
-            if (not filename in local.keys()) & (filename[1] > (time.gmtime() - (self.interval * 60))):
+            if (not filename in local.keys()) & (filename[1] > (time.time() - (self.interval * 60))):
                 localUpdates.append(filename)  # add file to be updated on local machine
-            elif (not filename in local.keys()) & (filename[1] < (time.gmtime() - (self.interval * 60))):
+            elif (not filename in local.keys()) & (filename[1] < (time.time() - (self.interval * 60))):
                 serverDeletes.append(filename)  # file should be deleted from server
         return [localUpdates, serverUpdates, localDeletes, serverDeletes]
 
@@ -118,8 +120,6 @@ class FileChecker:
     #runner for file updates
     def run_file_updates(self):
 
-        #delete excludeFiles from server
-
         if self.check_directory():
             updateFiles = self.check_updates()
             localUpdates = updateFiles[0]
@@ -130,7 +130,7 @@ class FileChecker:
             serverUpdates = {}  # No local files on machine means no updates need to be made to server
             localUpdates = self.get_server_files()  # Local machine needs all files from server
         if localUpdates:
-            for file in localUpdates:
+            for afile in localUpdates:
                 #download each file from server
                 pass
             #TODO add this in later
@@ -140,13 +140,13 @@ class FileChecker:
             #TODO add this in later
             pass
         if localDeletes:
-            for file in localDeletes:
+            for afile in localDeletes:
                 if os.path.isdir(file):
                     os.rmdir(file)
                 else:
                     os.remove(file)
         if serverDeletes:
-            #upload all files in serverUpdates
+            #delete all files in serverDeletes
             #TODO add this in later
             pass
 
