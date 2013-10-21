@@ -19,8 +19,9 @@ def parse_user():
         loggedin = client_tools.login_user(username, password)
     else:
         # Get password and email
-        password = ""
-        email = ""
+        print("New user! Please enter your password below:")
+        password = raw_input("Password: ")
+        email = raw_input("Email: ")
         loggedin = client_tools.register_user(username, password, email)
     return (username, loggedin)
 
