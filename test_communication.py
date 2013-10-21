@@ -2,7 +2,7 @@ import os
 import unittest
 import tempfile
 
-from prototypes import server
+import server
 
 class TestOneDir(unittest.TestCase):
 
