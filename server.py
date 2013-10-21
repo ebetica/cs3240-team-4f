@@ -2,6 +2,7 @@ import sqlite3
 import time
 import os
 from flask import Flask, request, g, send_from_directory, redirect, url_for
+from werkzeug import utils
 
 # Creats the application
 app = Flask(__name__)
@@ -69,13 +70,14 @@ def user_in_database():
         ret = False
     return ret
 
-@app.route('/post/<filename>', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        afile = request.files['file']
-        if afile:
-            filename = afile.filename
-            afile.save(os.path.join('C:\\users\\robert\\Test', filename))  # TODO change this to *nix
+        file = request.files['file']
+        if file:
+            filename = utils.secure_filename(file.filename)
+            descriptor = os.path.join(app.root_path, 'uploads/', filename)
+            file.save(descriptor)
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return '''
@@ -90,8 +92,8 @@ def upload_file():
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory('C:\\users\\robert\\Test',
-                               filename)
+    descriptor = os.path.join(app.root_path, 'uploads/')
+    return send_from_directory(descriptor, filename)
 
 
 @app.route('/login', methods=['POST'])
