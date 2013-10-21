@@ -1,23 +1,24 @@
 __author__ = 'rbq2rd'
 
 import requests
+import constants
 
-
+#Uploads directory as specified in server.py::upload_file() must exist
 def upload_file(url, filename):
-    url = url + '/post/' + filename
-    files = {'file': open(filename,'rb')}
-    r = requests.post(url,files=files)
+    url += 'upload'
+    files = {'file': open(filename, 'rb')}
+    r = requests.post(url, files=files)
 
 
-def download_file(url,filename):
-    url = url + '/uploads/' + filename
+def download_file(url, filename):
+    url += 'uploads/server.py'
     r = requests.get(url)
     with open(filename, 'wb') as code:
         code.write(r.content)
 
 
 def main():
-    url = 'http://127.0.0.1:5000' # wherever our server is
+    url = constants.SERVER_ADDRESS # wherever our server is
     filename = 'server.py' # some file
     # uploads filename to url
     upload_file(url, filename)
