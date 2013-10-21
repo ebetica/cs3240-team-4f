@@ -3,7 +3,7 @@ __author__ = 'rbq2rd'
 import requests
 import constants
 
-#Uploads directory as specified in server.py::upload_file()
+#Uploads directory as specified in server.py::upload_file() must exist
 def upload_file(url, filename):
     url += 'upload'
     files = {'file': open(filename, 'rb')}
