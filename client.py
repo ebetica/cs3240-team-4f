@@ -38,7 +38,9 @@ def initiate_config_file(config_file, initial_dir):
 def main():
     filename = os.path.expanduser("~/.onedirc")
     config = None
-    new_user = False #A user is new if they haven't registered
+    new_user = False  #A user is new if they haven't registered
+    if UserNew=="Y":
+        new_user=True
     try:
         config = open(filename, 'r')
     except IOError:
