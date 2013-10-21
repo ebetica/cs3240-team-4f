@@ -10,7 +10,7 @@ class TestFileUpdates (unittest.TestCase):
 
     TEST_DIR = '/home/robert/TestDir'  # Change these for yourself
     EMPTY_DIR = '/home/robert/EmptyDir'
-    test_dict = {'file.file': ['0ca1a8d78c25cc35d60a8ce64c32b765', 1382281892.71026], 'constants.py': ['a25bde5a994ab01afd8bb83106e395cd', 1382281986.06226], 'downup.py': ['62127ece4ba0d6cfcb4d3c7aae04f2c8', 1382283352.30626], 'blah.py': ['372d1fa76d4949706fb2c82f83a3d404', 1382288982.1999247], 'constants.pyc': ['0dfe2c77655c3fbd1965381750187281', 1382281989.15026], 'banana.txt': ['ed076287532e86365e841e92bfc50d8c', 1382283357.20226], 'server.py': ['b953cbac298c5d7a97656d338da140ad', 1382281927.31026]}
+    test_dict = {'/home/robert/TestDir/file.file': ['0ca1a8d78c25cc35d60a8ce64c32b765', 1382281892.71026], '/home/robert/TestDir/constants.py': ['a25bde5a994ab01afd8bb83106e395cd', 1382281986.06226], '/home/robert/TestDir/downup.py': ['62127ece4ba0d6cfcb4d3c7aae04f2c8', 1382283352.30626], '/home/robert/TestDir/build_file_listing.py': ['372d1fa76d4949706fb2c82f83a3d404', 1382288982.1999247], '/home/robert/TestDir/constants.pyc': ['0dfe2c77655c3fbd1965381750187281', 1382281989.15026], '/home/robert/TestDir/banana.txt': ['ed076287532e86365e841e92bfc50d8c', 1382283357.20226], '/home/robert/TestDir/server.py': ['b953cbac298c5d7a97656d338da140ad', 1382281927.31026]}
 
     def test_InitNoArgs(self):
         fileChecker = FileChecker(None, None)
@@ -71,7 +71,7 @@ class TestFileUpdates (unittest.TestCase):
         serverFiles = fileChecker.get_server_files()
         output = fileChecker.compareManifests(localFiles, serverFiles)
         for element in output:
-            self.assertTrue(not element)
+            self.assertFalse(element)
 
     def test_AllUpdates(self):
         fileChecker = FileChecker(self.TEST_DIR, 5)
