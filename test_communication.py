@@ -1,6 +1,7 @@
 import os
 import unittest
 import tempfile
+from constants import *
 
 import server
 
@@ -35,22 +36,21 @@ class TestOneDir(unittest.TestCase):
     def user_in_database(self, username):
         ret = self.app.get('/user_in_database', data=dict(
                     username=username), follow_redirects=True).data
-        print(self.app.get.__doc__)
-        return ret
+        return ret==TRUE
 
 
     def register_user(self, username, password):
         ret = self.app.post('/register', data=dict(
-                    username=username, password=password)
+                    username=username, password=password, email="test@test.com")
                     , follow_redirects=True).data
-        return ret
+        return ret==TRUE
 
 
     def login(self, username, password):
-        ret = self.app.post('/register', data=dict(
+        ret = self.app.post('/login', data=dict(
                     username=username, password=password)
                     , follow_redirects=True).data
-        return ret
+        return ret==TRUE
         
 
 if __name__ == '__main__':

@@ -7,7 +7,6 @@ def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
-    print r.content
     return r.content == TRUE
 
 def register_user(username,password,email=None):
