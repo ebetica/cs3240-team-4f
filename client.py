@@ -1,4 +1,4 @@
-from prototypes import client_tools
+import client_tools
 
 __author__ = 'robert'
 
@@ -26,7 +26,7 @@ def parse_user():
 
 
 def main():
-    pass
+    parse_user()
 
 
 if __name__ == '__main__':

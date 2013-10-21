@@ -1,13 +1,14 @@
 # The non-interactive parts of the client
 import string
 import requests 
-from prototypes.constants import *
+from constants import *
 
 def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
-    return r.content is True
+    print r.content
+    return r.content == TRUE
 
 def register_user(username,password,email=None):
     if not user_in_database(username):
@@ -23,7 +24,7 @@ def register_user(username,password,email=None):
 def login_user(username, password):
     payload = {'username': username, 'password': password}
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
-    return r.content is True
+    return r.content == TRUE
 
 
 def sanity_check_username(name):
