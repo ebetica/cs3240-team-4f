@@ -1,4 +1,5 @@
 import client_tools
+import os
 
 __author__ = 'robert'
 
@@ -25,10 +26,20 @@ def parse_user():
         loggedin = client_tools.register_user(username, password, email)
     return (username, loggedin)
 
+def write_config_file(onedir_path, username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig' + username
+    config_path = os.path.join(userhome, config_file)
+    if not os.path.isfile(config_path):
+        with open(config_path, 'w') as afile:
+            afile.write(onedir_path)
+        return True
+    else:
+        #Flip out!!!! THE FILE ALREADY EXISTS!!!*!*!*!
+        return False
 
 def main():
     parse_user()
-
 
 if __name__ == '__main__':
     main()
