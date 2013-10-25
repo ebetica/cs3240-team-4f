@@ -45,6 +45,14 @@ def change_password():
     # Prompt for the password and change it
     pass
 
+def reset_password():
+    # are we prompting admins for pw before big changes
+    # print("Admin password reset. Please enter your password below:")
+    #password = raw_input("")
+    print("Admin password reset. Please enter user to reset password for below:")
+    user = raw_input("Username")
+    client_tools.reset_password(user)
+
 
 def sync(on):
     # If on is true, turn sync on,

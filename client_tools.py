@@ -58,3 +58,8 @@ def download_file(url, filename):
     r = requests.get(url)
     with open(filename, 'wb') as code:
         code.write(r.content)
+
+def reset_password(username):
+    payload = {'username': username}
+    r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
+    return r.content == TRUE

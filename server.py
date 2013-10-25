@@ -123,6 +123,15 @@ def register():
     # and make entry to database.
     return TRUE
 
+@app.route('/post', methods=['POST'])
+def post():
+    file = request.form['file']
+    query_db("")
+
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    username = request.form['username']
+    query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
 
 def _password_hash(password):
     # Make this return the proper hashed version later
