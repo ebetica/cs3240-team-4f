@@ -17,19 +17,28 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "MODIFY event:", event.pathname
         #Upload the file to the server
 
+class FileUpdateChecker():
+
+    def __init__(self, directory):
+        self.path = directory
+        self.watchManager = pyinotify.WatchManager()
+        self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True)
+        self.eventHandler = MyEventHandler()
+        self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
+
+    def start(self):
+        self.notifier.start()
+
+    def stop(self):
+        self.notifier.stop()
+
 def main():
     # watch manager
     ONEDIR_DIRECTORY = os.environ['HOME'] + '/Onedir'
 
-    wm = pyinotify.WatchManager()
-    wm.add_watch(ONEDIR_DIRECTORY, pyinotify.ALL_EVENTS, rec=True)
-
-    # event handler
-    eh = MyEventHandler()
-
-    # notifier
-    notifier = pyinotify.ThreadedNotifier(wm, eh)
-    notifier.start()
+    fu = FileUpdateChecker(ONEDIR_DIRECTORY)
+    fu.start()
+    fu.stop()
 
 if __name__ == '__main__':
     main()
