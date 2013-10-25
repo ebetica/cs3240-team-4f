@@ -4,6 +4,7 @@ import os
 __author__ = 'robert'
 
 #Contains the code for Team 18's dropbox client
+#This is only for methods that directly prompt the user for input
 
 def parse_user():
     #prompt for username
@@ -19,24 +20,19 @@ def parse_user():
         password = raw_input("Password: ")
         loggedin = client_tools.login_user(username, password)
     else:
-        # Get password and email
-        print("New user! Please enter your password below:")
-        password = raw_input("Password: ")
-        email = raw_input("Email: ")
-        loggedin = client_tools.register_user(username, password, email)
+        make_new_user(username)
     return (username, loggedin)
 
-def write_config_file(onedir_path, username):
-    userhome = os.environ['HOME']
-    config_file = '.onedirconfig' + username
-    config_path = os.path.join(userhome, config_file)
-    if not os.path.isfile(config_path):
-        with open(config_path, 'w') as afile:
-            afile.write(onedir_path)
-        return True
-    else:
-        #Flip out!!!! THE FILE ALREADY EXISTS!!!*!*!*!
-        return False
+def make_new_user(username):
+    # Get password and email
+    print("New user! Please enter your password below:")
+    password = raw_input("Password: ")
+    email = raw_input("Email: ")
+    print('Please enter the directory you would like to keep synced with the OneDir service.')
+    print('A blank directory will default to ~/OneDir/')
+    directory = raw_input("Directory: ")
+    loggedin = client_tools.register_user(username, password, email)
+
 
 def main():
     parse_user()
