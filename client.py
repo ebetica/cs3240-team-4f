@@ -1,5 +1,7 @@
 import client_tools
 import os
+import sys
+import argparse
 
 __author__ = 'robert'
 
@@ -34,8 +36,52 @@ def make_new_user(username):
     loggedin = client_tools.register_user(username, password, email)
 
 
+def run_in_background():
+    # Run the daemon that checks for file updates and stuff
+    print("OneDir is not running in the background because we haven't fucking implemented it!")
+
+
+def change_password():
+    # Prompt for the password and change it
+    pass
+
+
+def sync(on):
+    # If on is true, turn sync on,
+    # else, off
+    pass
+
+def change_directory(dirname):
+    # Change the default directory of OneDir
+    pass
+
 def main():
-    parse_user()
+    parser = argparse.ArgumentParser(description=
+    '''OneDir is a wonderful program. Run it without any arguments to simply start the client''')
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-p", "--change-password", action="store_true",
+            help="Open a prompt to change your password")
+    group.add_argument("-s", "--sync", action="store_true",
+            help="Set sync on")
+    group.add_argument("-n", "--no-sync", action="store_true",
+            help="Set sync off")
+    group.add_argument("-d", "--change-directory", type=str,
+            help="Change the default directory of OneDir")
+    args = parser.parse_args()
+    # Throw an error if OneDir is not running!
+    if args.change_password:
+        change_password()
+    elif args.sync:
+        sync(True)
+    elif args.no_sync:
+        sync(False)
+    elif args.change_directory:
+        change_directory(args.change_directory)
+    
+    # No options are passed in, so just start the program
+    if len(sys.argv) == 1:
+        parse_user()
+        run_in_background()
 
 if __name__ == '__main__':
     main()
