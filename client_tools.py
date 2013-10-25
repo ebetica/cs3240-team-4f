@@ -38,13 +38,20 @@ def sanity_check_username(name):
 def write_config_file(onedir_path, username):
     userhome = os.environ['HOME']
     config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, config_file)
-    if not os.path.isfile(config_path):
+    config_path = os.path.join(userhome, os.sep, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
+    return True
+
+def read_config_file(username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig_' + username
+    config_path = os.path.join(userhome, os.sep, config_file)
+    try:
         with open(config_path, 'w') as afile:
-            afile.write(onedir_path)
-        return True
-    else:
-        #Flip out!!!! THE FILE ALREADY EXISTS!!!*!*!*!
+            return afile.readline()
+    except Exception as e:
+        print e.message
         return False
 
 def upload_file(url, filename):

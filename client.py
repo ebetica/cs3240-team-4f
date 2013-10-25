@@ -2,6 +2,7 @@ import client_tools
 import os
 import sys
 import argparse
+import pynotify_update
 
 __author__ = 'robert'
 
@@ -22,7 +23,7 @@ def parse_user():
         password = raw_input("Password: ")
         loggedin = client_tools.login_user(username, password)
     else:
-        make_new_user(username)
+        loggedin = make_new_user(username)
     return (username, loggedin)
 
 def make_new_user(username):
@@ -33,11 +34,21 @@ def make_new_user(username):
     print('Please enter the directory you would like to keep synced with the OneDir service.')
     print('A blank directory will default to ~/OneDir/')
     directory = raw_input("Directory: ")
+    if directory == "":
+        ONEDIR_DIRECTORY = os.path.join(os.environ['HOME'], 'OneDir')
+        client_tools.write_config_file( ONEDIR_DIRECTORY, username)
+    else:
+        client_tools.write_config_file(directory, username)
     loggedin = client_tools.register_user(username, password, email)
 
 
 def run_in_background():
     # Run the daemon that checks for file updates and stuff
+    username = ''  #We should get the username. Otherwise I'll be unhappy
+    ONEDIR_DIRECTORY = client_tools.read_config_file(username)
+    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+    fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+
     print("OneDir is not running in the background because we haven't fucking implemented it!")
 
 
