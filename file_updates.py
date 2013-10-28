@@ -18,11 +18,11 @@ class FileChecker:
     def __init__(self, pathname, intervalIn):
         userhome = os.environ['HOME']
         path = userhome + '/Onedir'
-        if not pathname == None:
+        if not pathname is None:
             self.path = pathname
         else:
             self.path = path
-        if not intervalIn == None:
+        if not intervalIn is None:
             self.interval = intervalIn
 
     #Makes sure the onedir directory exists on the local machine

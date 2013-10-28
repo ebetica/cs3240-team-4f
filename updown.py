@@ -4,17 +4,7 @@ import requests
 import constants
 
 #Uploads directory as specified in server.py::upload_file() must exist
-def upload_file(url, filename):
-    url += 'upload'
-    files = {'file': open(filename, 'rb')}
-    r = requests.post(url, files=files)
 
-
-def download_file(url, filename):
-    url += 'uploads/server.py'
-    r = requests.get(url)
-    with open(filename, 'wb') as code:
-        code.write(r.content)
 
 
 def main():

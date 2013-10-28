@@ -1,6 +1,7 @@
 import sqlite3
 import time
 import os
+import hashlib
 from constants import *
 from flask import Flask, request, g, send_from_directory, redirect, url_for
 from werkzeug import utils
@@ -100,9 +101,10 @@ def uploaded_file(filename):
 def login():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
+    if user is None: return FALSE
     if user[1] == _password_hash(request.form['password']):
         app.config['USERS'][user[0]] = time.time()
-        print app.config
+        if app.config["DEBUG"]: print app.config
         return TRUE
     else:
         return FALSE
@@ -118,12 +120,25 @@ def register():
     # Read from form sent in via post, hash the password
     # and make entry to database.
     return TRUE
+@app.route('/getVals',methods=['GET'])
+def getVals():
+    item=request.form['item']
+    Vals=query_db("SELECT * FROM ?",[item], one=True)
+    return Vals
+@app.route('/post', methods=['POST'])
+def post():
+    file = request.form['file']
+    query_db("")
 
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    username = request.form['username']
+    query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
 
 def _password_hash(password):
     # Make this return the proper hashed version later
     # Probably use SHA1 with salt
-    return password
+    return hashlib.sha1(password).hexdigest()
 
 
 if __name__ == '__main__':

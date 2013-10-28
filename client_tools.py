@@ -2,12 +2,12 @@
 import string
 import requests 
 from constants import *
+import os
 
 def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
-    print r.content
     return r.content == TRUE
 
 def register_user(username,password,email=None):
@@ -26,6 +26,9 @@ def login_user(username, password):
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
     return r.content == TRUE
 
+def get_user_list():
+    payload={'item': 'username'}
+    r=request.get(SERVER_ADDRESS+'getVals',data=payload)
 
 def sanity_check_username(name):
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
@@ -34,3 +37,39 @@ def sanity_check_username(name):
             all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
             ]
     return all(rules)
+
+def write_config_file(onedir_path, username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig_' + username
+    config_path = os.path.join(userhome, os.sep, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
+    return True
+
+def read_config_file(username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig_' + username
+    config_path = os.path.join(userhome, os.sep, config_file)
+    try:
+        with open(config_path, 'w') as afile:
+            return afile.readline()
+    except Exception as e:
+        print e.message
+        return False
+
+def upload_file(url, filename):
+    url += 'upload'
+    files = {'file': open(filename, 'rb')}
+    r = requests.post(url, files=files)
+
+
+def download_file(url, filename):
+    url += 'uploads/server.py'
+    r = requests.get(url)
+    with open(filename, 'wb') as code:
+        code.write(r.content)
+
+def reset_password(username):
+    payload = {'username': username}
+    r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
+    return r.content == TRUE

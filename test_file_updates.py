@@ -84,5 +84,5 @@ class TestFileUpdates (unittest.TestCase):
         self.assertFalse(output[3])
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
     unittest.main()
