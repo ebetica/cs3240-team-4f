@@ -134,6 +134,10 @@ def post():
 def password_reset():
     username = request.form['username']
     query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
+@app.route('/remove_user', methods=['POST'])
+def remove_user():
+    username = request.form['username']
+    query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
 
 def _password_hash(password):
     # Make this return the proper hashed version later

@@ -64,6 +64,11 @@ def reset_password():
     user = raw_input("Username")
     client_tools.reset_password(user)
 
+def remove_user():
+    #admin access only
+    print("Admin removing user. Please enter user to remove below:")
+    user = raw_input("Username")
+    client_tools.remove_user(user)
 
 def sync(on):
     # If on is true, turn sync on,
