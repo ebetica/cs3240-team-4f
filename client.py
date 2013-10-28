@@ -3,6 +3,7 @@ import os
 import sys
 import argparse
 import pynotify_update
+import shutil
 
 __author__ = 'robert'
 
@@ -70,8 +71,11 @@ def sync(on):
     pass
 
 def change_directory(dirname):
-    # Change the default directory of OneDir
-    pass
+    username = ''  #We should get the username. Otherwise I'll be unhappy
+    ONEDIR_DIRECTORY = client_tools.read_config_file(username)
+    shutil.move(ONEDIR_DIRECTORY, dirname)
+    client_tools.write_config_file(dirname, username)
+
 def ExistingUsers():
     print client_tools.get_user_list(); 
 def main():
