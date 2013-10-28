@@ -28,7 +28,7 @@ def login_user(username, password):
 
 def get_user_list():
     payload={'item': 'username'}
-    r=request.get(SERVER_ADDRESS+'getVals',data=payload)
+    r=requests.get(SERVER_ADDRESS+'getVals',data=payload)
 
 def sanity_check_username(name):
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
@@ -61,6 +61,7 @@ def upload_file(url, filename):
     url += 'upload'
     files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files)
+    return r.status_code
 
 
 def download_file(url, filename):

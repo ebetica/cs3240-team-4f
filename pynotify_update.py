@@ -5,11 +5,16 @@ import os
 import client_tools
 import constants
 
+
 class MyEventHandler(pyinotify.ProcessEvent):
+    uploadFiles = []
 
     def process_IN_CREATE(self, event):
         print "CREATE event:", event.pathname
-        client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname)
+        self.uploadFiles.append(event.pathname)
+        r = client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname)
+        if r == 200:
+            self.uploadFiles.remove(event.pathname)
 
     def process_IN_DELETE(self, event):
         print "DELETE event:", event.pathname
