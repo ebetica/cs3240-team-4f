@@ -19,7 +19,6 @@ app.config.update(dict(
                # not sure if I'm putting this in the right place.
 ))
 
-
 def connect_db():
     """Connects to the specific database."""
     rv = sqlite3.connect(app.config['DATABASE'])
@@ -52,7 +51,6 @@ def query_db(query, args=(), one=False):
     cur.close()
     get_db().commit()
     return (rv[0] if rv else None) if one else rv
-
 
 @app.teardown_appcontext
 def close_db(error):
