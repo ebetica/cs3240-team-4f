@@ -115,7 +115,8 @@ def register():
     username= request.form['username']
     password= _password_hash(request.form['password'])
     email = request.form['email']
-    query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,"user"],one=True)
+    user=request.form['user_type']
+    query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,user],one=True)
     # Code for registering a user.
     # Read from form sent in via post, hash the password
     # and make entry to database.

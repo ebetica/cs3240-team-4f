@@ -31,6 +31,7 @@ def make_new_user(username):
     print("New user! Please enter your password below:")
     password = raw_input("Password: ")
     email = raw_input("Email: ")
+    user_type=raw_input("Admin or User: ")
     print('Please enter the directory you would like to keep synced with the OneDir service.')
     print('A blank directory will default to ~/OneDir/')
     directory = raw_input("Directory: ")
@@ -39,7 +40,7 @@ def make_new_user(username):
         client_tools.write_config_file( ONEDIR_DIRECTORY, username)
     else:
         client_tools.write_config_file(directory, username)
-    loggedin = client_tools.register_user(username, password, email)
+    loggedin = client_tools.register_user(username, password, email,user_type)
 
 
 def run_in_background():

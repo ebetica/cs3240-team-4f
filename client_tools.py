@@ -10,12 +10,12 @@ def user_in_database(username):
     r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
     return r.content == TRUE
 
-def register_user(username,password,email=None):
+def register_user(username,password,email=None,_type='user'):
     if not user_in_database(username):
         if email is None:
             email=''
         if sanity_check_username(username):
-            payload={'username':username, 'password': password, 'email': email}
+            payload={'username':username, 'password': password, 'email': email, 'user_type':_type}
             r=requests.post(SERVER_ADDRESS + 'register', data=payload)
         else:
             pass
