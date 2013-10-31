@@ -74,11 +74,11 @@ def user_in_database():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        file = request.files['file']
-        if file:
-            filename = utils.secure_filename(file.filename)
+        afile = request.files['file']
+        if afile:
+            filename = utils.secure_filename(afile.filename)
             descriptor = os.path.join(app.root_path, 'uploads/', filename)
-            file.save(descriptor)
+            afile.save(descriptor)
             return redirect(url_for('uploaded_file',
                                     filename=filename))
     return '''
@@ -135,6 +135,10 @@ def post():
 def password_reset():
     username = request.form['username']
     query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
+@app.route('/remove_user', methods=['POST'])
+def remove_user():
+    username = request.form['username']
+    query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
 
 def _password_hash(password):
     # Make this return the proper hashed version later
