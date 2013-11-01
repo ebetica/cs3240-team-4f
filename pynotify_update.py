@@ -4,6 +4,7 @@ import pyinotify
 import os
 import client_tools
 import constants
+from file_updates import ServerChecker
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
@@ -33,9 +34,12 @@ class FileUpdateChecker():
         self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True)
         self.eventHandler = MyEventHandler()
         self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
+        self.interval = 5
+        self.serverChecker = ServerChecker(self.path, self.interval)
 
     def start(self):
         self.notifier.start()
+        self.serverChecker.start()
 
     def stop(self):
         self.notifier.stop()

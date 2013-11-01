@@ -49,24 +49,27 @@ def write_config_file(onedir_path, username):
 def read_config_file(username):
     userhome = os.environ['HOME']
     config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, os.sep, config_file)
+    config_path = os.path.join(userhome, config_file)
     try:
-        with open(config_path, 'w') as afile:
+        with open(config_path, 'r') as afile:
             return afile.readline()
     except Exception as e:
         print e.message
         return False
 
+
 def upload_file(url, filename):
     url += 'upload'
+    payload = {'username': '', 'hash': ''}
     files = {'file': open(filename, 'rb')}
-    r = requests.post(url, files=files)
+    r = requests.post(url, files=files, data=payload)
     return r.status_code
 
 
 def download_file(url, filename):
     url += 'uploads/server.py'
-    r = requests.get(url)
+    payload = {'username': '', 'hash': ''}
+    r = requests.get(url, data=payload)
     with open(filename, 'wb') as code:
         code.write(r.content)
 

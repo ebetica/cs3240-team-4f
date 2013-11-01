@@ -76,26 +76,23 @@ def user_in_database():
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        username = request.form['username']
+        hash = request.form['hash']
         afile = request.files['file']
         if afile:
             filename = utils.secure_filename(afile.filename)
-            descriptor = os.path.join(app.root_path, 'uploads/', filename)
+            descriptor = os.path.join(app.root_path, 'uploads', username, filename)
             afile.save(descriptor)
             return redirect(url_for('uploaded_file',
                                     filename=filename))
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <h1>Upload new File</h1>
-    <form action="" method=post enctype=multipart/form-data>
-      <p><input type=file name=file>
-         <input type=submit value=Upload>
-    </form>
-    '''
+
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    descriptor = os.path.join(app.root_path, 'uploads/')
+    username = request.form['username']
+    hash = request.form['hash']
+    #if hash == serverHash:
+    descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
 
 
