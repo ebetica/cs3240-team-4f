@@ -2,6 +2,8 @@ import sqlite3
 import time
 import os
 import hashlib
+import string
+import random
 from constants import *
 from flask import Flask, request, g, send_from_directory, redirect, url_for
 from werkzeug import utils
@@ -103,9 +105,11 @@ def login():
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
     if user is None: return FALSE
     if user[1] == _password_hash(request.form['password']):
-        app.config['USERS'][user[0]] = time.time()
+        letters = string.ascii_letters+string.digits
+        h = "".join([random.choice(letters) for k in range(20)])
+        app.config['USERS'][user[0]] = [time.time(), h]
         if app.config["DEBUG"]: print app.config
-        return TRUE
+        return h
     else:
         return FALSE
 
@@ -121,6 +125,7 @@ def register():
     # Read from form sent in via post, hash the password
     # and make entry to database.
     return TRUE
+
 @app.route('/getVals',methods=['GET'])
 def getVals():
     item=request.form['item']

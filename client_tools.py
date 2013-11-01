@@ -24,7 +24,7 @@ def register_user(username,password,email=None,_type='user'):
 def login_user(username, password):
     payload = {'username': username, 'password': password}
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
-    return r.content == TRUE
+    return r.content
 
 def get_user_list():
     payload={'item': 'username'}
@@ -41,7 +41,7 @@ def sanity_check_username(name):
 def write_config_file(onedir_path, username):
     userhome = os.environ['HOME']
     config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, os.sep, config_file)
+    config_path = os.path.join(userhome, config_file)
     with open(config_path, 'w') as afile:
         afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
     return True
@@ -79,3 +79,23 @@ def remove_user(username):
     payload = {'username': username}
     r = requests.post(SERVER_ADDRESS + 'remove_user', data = payload)
     return r.content == TRUE
+
+def update_session(session):
+    order = ['username', 'auth', 'sync']
+    session_file = open("/tmp/onedir.session", 'w')
+    for i in order:
+        session_file.write(session[i] + '\n')
+    session_file.close()
+
+def session():
+    order = ['username', 'auth', 'sync']
+    try:
+        session_file = open("/tmp/onedir.session", 'r').read().split("\n")
+        session = {}
+        for i in range(len(order)):
+            session[order[i]] = session_file[i]
+
+        return session
+    except IOError:
+        return False
+    

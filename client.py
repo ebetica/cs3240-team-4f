@@ -4,6 +4,7 @@ import sys
 import argparse
 import pynotify_update
 import shutil
+from constants import *
 
 __author__ = 'robert'
 
@@ -14,6 +15,7 @@ def parse_user():
     #prompt for username
     #check user name isn't in db already
     #add user to db
+    #returns the hash that authenticates the user for the session
     username = raw_input("Username: ")
     while not client_tools.sanity_check_username(username):
         username = raw_input("Username: ")
@@ -22,10 +24,13 @@ def parse_user():
     if in_database:
         # User is in database
         password = raw_input("Password: ")
-        loggedin = client_tools.login_user(username, password)
+        h = client_tools.login_user(username, password)
+        while h == FALSE:
+            password = raw_input("Wrong password, try again: ")
+            h = client_tools.login_user(username, password)
     else:
-        loggedin = make_new_user(username)
-    return (username, loggedin)
+        h = make_new_user(username)
+    return (username, h)
 
 def make_new_user(username):
     # Get password and email
@@ -41,7 +46,9 @@ def make_new_user(username):
         client_tools.write_config_file( ONEDIR_DIRECTORY, username)
     else:
         client_tools.write_config_file(directory, username)
-    loggedin = client_tools.register_user(username, password, email,user_type)
+    client_tools.register_user(username, password, email,user_type)
+    h = client_tools.login_user(username, password)
+    return h
 
 
 def run_in_background():
@@ -52,6 +59,7 @@ def run_in_background():
     fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
 
     print("OneDir is not running in the background because we haven't fucking implemented it!")
+    return True
 
 def change_password():
     # Prompt for the password and change it
@@ -84,33 +92,45 @@ def change_directory(dirname):
 
 def ExistingUsers():
     print client_tools.get_user_list(); 
+
 def main():
     parser = argparse.ArgumentParser(description=
     '''OneDir is a wonderful program. Run it without any arguments to simply start the client''')
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-p", "--change-password", action="store_true",
             help="Open a prompt to change your password")
-    group.add_argument("-s", "--sync", action="store_true",
+    group.add_argument("-c", "--sync", action="store_true",
             help="Set sync on")
     group.add_argument("-n", "--no-sync", action="store_true",
             help="Set sync off")
+    group.add_argument("-s", "--stop", action="store_true",
+            help="STOP THE PRESS (client)")
     group.add_argument("-d", "--change-directory", type=str,
             help="Change the default directory of OneDir")
     args = parser.parse_args()
     # Throw an error if OneDir is not running!
-    if args.change_password:
-        change_password()
-    elif args.sync:
-        sync(True)
-    elif args.no_sync:
-        sync(False)
-    elif args.change_directory:
-        change_directory(args.change_directory)
-    
-    # No options are passed in, so just start the program
-    if len(sys.argv) == 1:
-        parse_user()
-        run_in_background()
+    if client_tools.session():
+        if args.change_password:
+            change_password()
+        elif args.sync:
+            sync(True)
+        elif args.no_sync:
+            sync(False)
+        elif args.change_directory:
+            change_directory(args.change_directory)
+        else:
+            print("OneDir is already running!")
+    else:
+        # No options are passed in, so just start the program
+        if len(sys.argv) == 1:
+            print("Starting OneDir...")
+            username, h = parse_user()
+            success = run_in_background()
+            session = {}
+            session['username'] = username
+            session['auth'] = h
+            session['sync'] = '1'
+            client_tools.update_session(session)
 
 if __name__ == '__main__':
     main()
