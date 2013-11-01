@@ -1,8 +1,7 @@
 # The non-interactive parts of the client
-import string
+import string, os
 import requests 
 from constants import *
-import os
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -49,9 +48,9 @@ def write_config_file(onedir_path, username):
 def read_config_file(username):
     userhome = os.environ['HOME']
     config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, os.sep, config_file)
+    config_path = os.path.join(userhome, config_file)
     try:
-        with open(config_path, 'w') as afile:
+        with open(config_path, 'r') as afile:
             return afile.readline()
     except Exception as e:
         print e.message
