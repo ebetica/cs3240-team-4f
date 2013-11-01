@@ -52,7 +52,8 @@ def read_config_file(username):
     config_path = os.path.join(userhome, config_file)
     try:
         with open(config_path, 'r') as afile:
-            return afile.readline()
+            	string = afile.readline()
+		return string
     except Exception as e:
         print e.message
         return False
@@ -60,7 +61,8 @@ def read_config_file(username):
 
 def upload_file(url, filename):
     url += 'upload'
-    payload = {'username': '', 'hash': ''}
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
     files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
     return r.status_code
@@ -68,7 +70,8 @@ def upload_file(url, filename):
 
 def download_file(url, filename):
     url += 'uploads/server.py'
-    payload = {'username': '', 'hash': ''}
+    session = session()
+    payload = {'username': session['username'], 'hash': session['auth']}
     r = requests.get(url, data=payload)
     with open(filename, 'wb') as code:
         code.write(r.content)

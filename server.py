@@ -79,10 +79,14 @@ def upload_file():
         username = request.form['username']
         hash = request.form['hash']
         afile = request.files['file']
-        if afile:
+	print username
+        if afile:  # and hash == serverHash: TODO
             filename = utils.secure_filename(afile.filename)
-            descriptor = os.path.join(app.root_path, 'uploads', username, filename)
-            afile.save(descriptor)
+            descriptor = os.path.join(app.root_path, 'uploads', username)
+	    if not os.path.isdir(descriptor):
+		os.mkdir(descriptor, 0700)
+            descriptor2 = os.path.join(descriptor, filename)
+            afile.save(descriptor2)
             return redirect(url_for('uploaded_file',
                                     filename=filename))
 
@@ -91,7 +95,7 @@ def upload_file():
 def uploaded_file(filename):
     username = request.form['username']
     hash = request.form['hash']
-    #if hash == serverHash:
+    #if hash == serverHash: TODO
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
 

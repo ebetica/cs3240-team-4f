@@ -31,6 +31,8 @@ class FileUpdateChecker():
     def __init__(self, directory):
         self.path = directory
         self.watchManager = pyinotify.WatchManager()
+	if not os.path.isdir(self.path):
+		os.mkdir(self.path, 0700)
         self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True)
         self.eventHandler = MyEventHandler()
         self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
@@ -39,7 +41,7 @@ class FileUpdateChecker():
 
     def start(self):
         self.notifier.start()
-        self.serverChecker.start()
+        #self.serverChecker.start()
 
     def stop(self):
         self.notifier.stop()
