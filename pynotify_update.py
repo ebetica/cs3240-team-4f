@@ -41,7 +41,7 @@ class FileUpdateChecker():
 
     def start(self):
         self.notifier.start()
-        #self.serverChecker.start()
+        self.serverChecker.start()
 
     def stop(self):
         self.notifier.stop()

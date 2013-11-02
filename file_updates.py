@@ -18,7 +18,7 @@ class ServerChecker(threading.Thread):
 
 
     def __init__(self, pathname, intervalIn):
-        super.__init__
+        super(ServerChecker, self).__init__()
         userhome = os.environ['HOME']
         path = userhome + '/Onedir'
         if not pathname is None:
