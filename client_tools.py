@@ -60,7 +60,7 @@ def read_config_file(username):
 
 
 def upload_file(url, filename):
-    url += 'upload'
+    url += 'upload/'
     sess = session()
     payload = {'username': sess['username'], 'hash': sess['auth']}
     files = {'file': open(filename, 'rb')}
@@ -69,11 +69,20 @@ def upload_file(url, filename):
 
 
 def download_file(url, filename):
-    url += 'uploads/server.py'
-    session = session()
-    payload = {'username': session['username'], 'hash': session['auth']}
+    url += 'uploads/'
+    url += filename
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
     r = requests.get(url, data=payload)
     with open(filename, 'wb') as code:
+        code.write(r.content)
+
+def download_file_updates(url):
+    url += 'sync'
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
+    r = requests.get(url, data=payload)
+    with open('.onedirdata', 'wb') as code:
         code.write(r.content)
 
 def reset_password(username):

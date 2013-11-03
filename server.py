@@ -1,7 +1,7 @@
 import sqlite3
 import time
 import os
-import hashlib
+import server_tools
 import string
 import random
 from constants import *
@@ -77,27 +77,37 @@ def user_in_database():
 def upload_file():
     if request.method == 'POST':
         username = request.form['username']
-        hash = request.form['hash']
+        userhash = request.form['hash']
         afile = request.files['file']
-	print username
+
         if afile:  # and hash == serverHash: TODO
             filename = utils.secure_filename(afile.filename)
             descriptor = os.path.join(app.root_path, 'uploads', username)
-	    if not os.path.isdir(descriptor):
-		os.mkdir(descriptor, 0700)
-            descriptor2 = os.path.join(descriptor, filename)
-            afile.save(descriptor2)
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            if not os.path.isdir(descriptor):
+                os.mkdir(descriptor, 0700)
+                descriptor2 = os.path.join(descriptor, filename)
+                afile.save(descriptor2)
+                return redirect(url_for('uploaded_file',
+                                        filename=filename))
 
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     username = request.form['username']
-    hash = request.form['hash']
+    userhash = request.form['hash']
     #if hash == serverHash: TODO
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
+
+@app.route('/sync')
+def client_sync():
+    username = request.form['username']
+    userhash = request.form['hash']
+    #if hash == serverHash: TODO
+    path = os.path.join(app.root_path, 'uploads', username)
+    server_tools.build_file_listing(path)
+    descriptor = os.path.join(path, '.onedirdata')
+    return send_from_directory(descriptor)
 
 
 @app.route('/login', methods=['POST'])
@@ -105,7 +115,7 @@ def login():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
     if user is None: return FALSE
-    if user[1] == _password_hash(request.form['password']):
+    if user[1] == server_tools._password_hash(request.form['password']):
         letters = string.ascii_letters+string.digits
         h = "".join([random.choice(letters) for k in range(20)])
         app.config['USERS'][user[0]] = [time.time(), h]
@@ -118,7 +128,7 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     username= request.form['username']
-    password= _password_hash(request.form['password'])
+    password= server_tools._password_hash(request.form['password'])
     email = request.form['email']
     user=request.form['user_type']
     query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,user],one=True)
@@ -132,6 +142,7 @@ def getVals():
     item=request.form['item']
     Vals=query_db("SELECT * FROM ?",[item], one=True)
     return Vals
+
 @app.route('/post', methods=['POST'])
 def post():
     file = request.form['file']
@@ -141,16 +152,11 @@ def post():
 def password_reset():
     username = request.form['username']
     query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
+
 @app.route('/remove_user', methods=['POST'])
 def remove_user():
     username = request.form['username']
     query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
-
-def _password_hash(password):
-    # Make this return the proper hashed version later
-    # Probably use SHA1 with salt
-    return hashlib.sha1(password).hexdigest()
-
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])

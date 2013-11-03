@@ -1,9 +1,8 @@
 __author__ = 'robert'
 
-from file_updates import ServerChecker
-import pickle
 import os
 import hashlib
+import pickle
 
 #Safe way to hash large files (reads and hashes in chunks)
 #From www.pythoncentral.io/hashing-files-with-python/
@@ -20,22 +19,17 @@ def safeHashFile( path):
 #Builds a dictionary of the local files on the machine
 #Uses filename as key, and stores an md5 hash of each file as well as when the file was last modified
 def get_local_files(fileOb):
-    try:
-        filelist = os.listdir(fileOb)
-    except OSError:
-        filelist = {}
     fileDict = {}
-    for afile in filelist:
-        if afile[0] is not '.':
-            afile = (fileOb + '/' + afile)
-            if os.path.isfile(afile):
-                fileDict[afile] = [safeHashFile(afile), os.path.getmtime(afile)]
-            elif os.path.exists(afile):
-                fileDict.update(get_local_files(afile))
+    for root, dirs, files in os.walk(fileOb, topdown=False):
+        for name in files:
+            if not name == '.onedirdata':
+                path = os.path.join(root, name)
+                fileDict[name] = [safeHashFile(path), os.path.getmtime(path)]
+        for name in dirs:
+            fileDict.update(get_local_files(name))
     return fileDict
 
-def main():
-    path = '/home/robert/ActualTestDir'
+def build_file_listing( path):
     pick = get_local_files(path)
     print pick
     pickle_path = path + '/.onedirdata.p'
@@ -43,5 +37,7 @@ def main():
         pickle.dump(pick, pickle_file)
 
 
-if __name__ == '__main__':
-    main()
+def _password_hash(password):
+    # Make this return the proper hashed version later
+    # Probably use SHA1 with salt
+    return hashlib.sha1(password).hexdigest()
