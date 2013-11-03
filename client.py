@@ -37,7 +37,7 @@ def make_new_user(username):
     print("New user! Please enter your password below:")
     password = raw_input("Password: ")
     email = raw_input("Email: ")
-    user_type=raw_input("Admin or User: ")
+    user_type = raw_input("Admin or User: ")
     print('Please enter the directory you would like to keep synced with the OneDir service.')
     print('A blank directory will default to ~/OneDir/')
     directory = raw_input("Directory: ")
@@ -46,7 +46,7 @@ def make_new_user(username):
         client_tools.write_config_file( ONEDIR_DIRECTORY, username)
     else:
         client_tools.write_config_file(directory, username)
-    client_tools.register_user(username, password, email,user_type)
+    client_tools.register_user(username, password, email, user_type)
     h = client_tools.login_user(username, password)
     return h
 
@@ -68,14 +68,23 @@ def reset_password():
     # are we prompting admins for pw before big changes
     # print("Admin password reset. Please enter your password below:")
     #password = raw_input("")
-    print("Admin password reset. Please enter user to reset password for below:")
-    user = raw_input("Username")
-    client_tools.reset_password(user)
+    sess = client_tools.session()
+    print("Reset password.")
+    if client_tools.is_admin(sess['username']):
+        print("Please enter the user to reset the password for.")
+        user = raw_input("Username:")
+        client_tools.reset_password(user)
+    else:
+        if raw_input("Are you sure? (Y/N)") == 'Y':
+            client_tools.reset_password(sess['username'])
+
 
 def remove_user():
-    #admin access only
+    sess = client_tools.session()
+    user = sess['username']
+
     print("Admin removing user. Please enter user to remove below:")
-    user = raw_input("Username")
+    user = raw_input("Username:")
     client_tools.remove_user(user)
 
 def sync(on):

@@ -14,14 +14,14 @@ import server_tools
 #Prototype to compare files on disk to those stored on a server
 #Download listing of files on server -> create listing of files on local machine -> compare listings -> update necessary files
 class ServerChecker(threading.Thread):
-    path = ''  # path to Onedir directory
+    path = ''  # path to OneDir directory
     interval = 5  # minutes between checking for updates
 
 
     def __init__(self, pathname, intervalIn):
         super(ServerChecker, self).__init__()
         userhome = os.environ['HOME']
-        path = os.path.join(userhome, 'Onedir')
+        path = os.path.join(userhome, 'OneDir')
         if pathname:
             self.path = pathname
         else:
@@ -36,7 +36,7 @@ class ServerChecker(threading.Thread):
             try:
                 os.mkdir(self.path, 0700)
             except OSError:
-                sys.exit( 'Cannot create Onedir directory')
+                sys.exit( 'Cannot create OneDir directory')
             return False
         return True
 
@@ -113,7 +113,7 @@ class ServerChecker(threading.Thread):
 #Creates a process to run in background and polls for file updates
 def main():
     userhome = os.environ['HOME']
-    pathname = os.path.join(userhome, '/Onedir')
+    pathname = os.path.join(userhome, 'OneDir')
     interval = 5
     checkMe = ServerChecker(pathname, interval)
     checkMe.run()

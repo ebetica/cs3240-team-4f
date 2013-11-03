@@ -73,6 +73,17 @@ def user_in_database():
         ret = FALSE
     return ret
 
+@app.route('/user_is_admin', methods=['GET', 'POST'])
+def user_in_database():
+    """Tests if the user is in the database"""
+    username = request.form['username']
+    user_type = query_db("SELECT role FROM users WHERE username=?", [username], one=True )
+    if user_type == 'user':
+        ret = FALSE
+    else:
+        ret = TRUE
+    return ret
+
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':

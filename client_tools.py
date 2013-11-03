@@ -51,9 +51,10 @@ def read_config_file(username):
     config_file = '.onedirconfig_' + username
     config_path = os.path.join(userhome, config_file)
     try:
+        string = ''
         with open(config_path, 'r') as afile:
-            	string = afile.readline()
-		return string
+            string = afile.readline()
+        return string
     except Exception as e:
         print e.message
         return False
@@ -101,6 +102,11 @@ def update_session(session):
     for i in order:
         session_file.write(session[i] + '\n')
     session_file.close()
+
+def is_admin(username):
+    payload = {'username': username}
+    r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
+    return r.content == TRUE
 
 def session():
     order = ['username', 'auth', 'sync']

@@ -48,7 +48,7 @@ class FileUpdateChecker():
 
 def main():
     # watch manager
-    ONEDIR_DIRECTORY = os.environ['HOME'] + '/OneDir'
+    ONEDIR_DIRECTORY = os.path.join(os.environ['HOME'] + 'OneDir')
 
     fu = FileUpdateChecker(ONEDIR_DIRECTORY)
     fu.start()

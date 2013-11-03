@@ -32,7 +32,7 @@ def get_local_files(fileOb):
 def build_file_listing( path):
     pick = get_local_files(path)
     print pick
-    pickle_path = path + '/.onedirdata.p'
+    pickle_path = os.path.join(path ,'.onedirdata.p')
     with open(pickle_path, 'wb') as pickle_file:
         pickle.dump(pick, pickle_file)
 
