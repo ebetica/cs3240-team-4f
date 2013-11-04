@@ -51,8 +51,15 @@ def make_new_user(username):
     return h
 
 def change_password():
-    # Prompt for the password and change it
-    pass
+    print("Change password.")
+    if raw_input("Are you sure? (Y/N)").capitalize() in ['Y', 'YES']:
+        pass1 = raw_input("New password: ")
+        pass2 = raw_input("Re-enter new password: ")
+        if pass1 == pass2:
+            username = client_tools.session()['username']
+            client_tools.change_password(username, pass1)
+        else:
+            change_password()
 
 def reset_password():
     # are we prompting admins for pw before big changes
@@ -62,7 +69,7 @@ def reset_password():
     print("Reset password.")
     if client_tools.is_admin(sess['username']):
         print("Please enter the user to reset the password for.")
-        user = raw_input("Username:")
+        user = raw_input("Username: ")
         client_tools.reset_password(user)
     else:
         if raw_input("Are you sure? (Y/N)").capitalize() in ['Y', 'YES']:
@@ -74,7 +81,7 @@ def remove_user():
     print("Removing user")
     if client_tools.is_admin(sess['username']):
         print("Please enter the user to remove.")
-        user = raw_input("Username:")
+        user = raw_input("Username: ")
         client_tools.remove_user(user)
 
 def sync(on):

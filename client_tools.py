@@ -91,6 +91,11 @@ def reset_password(username):
     r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
     return r.content == TRUE
 
+def change_password(username, password):
+    payload = {'username': username, 'password': password}
+    r = requests.post(SERVER_ADDRESS + 'change_password', data=payload)
+    return r.content == TRUE
+
 def remove_user(username):
     payload = {'username': username}
     r = requests.post(SERVER_ADDRESS + 'remove_user', data = payload)

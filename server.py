@@ -164,6 +164,12 @@ def password_reset():
     username = request.form['username']
     query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
 
+@app.route('/password_change', methods=['POST'])
+def password_reset():
+    username = request.form['username']
+    password = request.form['password']
+    query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, username], one=True)
+
 @app.route('/remove_user', methods=['POST'])
 def remove_user():
     username = request.form['username']
