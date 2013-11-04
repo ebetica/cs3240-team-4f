@@ -75,7 +75,7 @@ def reset_password():
         user = raw_input("Username:")
         client_tools.reset_password(user)
     else:
-        if raw_input("Are you sure? (Y/N)") == 'Y':
+        if raw_input("Are you sure? (Y/N)").capitalize() in ['Y', 'YES']:
             client_tools.reset_password(sess['username'])
 
 
