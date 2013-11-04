@@ -50,16 +50,6 @@ def make_new_user(username):
     h = client_tools.login_user(username, password)
     return h
 
-
-def run_in_background(username):
-    # Run the daemon that checks for file updates and stuff
-    ONEDIR_DIRECTORY = client_tools.read_config_file(username)
-    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
-    fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
-
-    print("OneDir is running in the background.")
-    return True
-
 def change_password():
     # Prompt for the password and change it
     pass
@@ -81,16 +71,24 @@ def reset_password():
 
 def remove_user():
     sess = client_tools.session()
-    user = sess['username']
-
-    print("Admin removing user. Please enter user to remove below:")
-    user = raw_input("Username:")
-    client_tools.remove_user(user)
+    print("Removing user")
+    if client_tools.is_admin(sess['username']):
+        print("Please enter the user to remove.")
+        user = raw_input("Username:")
+        client_tools.remove_user(user)
 
 def sync(on):
-    # If on is true, turn sync on,
-    # else, off
-    pass
+    # Run the daemon that checks for file updates and stuff
+    sess = client_tools.session()
+    ONEDIR_DIRECTORY = client_tools.read_config_file(sess['username'])
+    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)
+    fuc.start()
+    if on:
+        fuc.start()
+        return True
+    else:
+        fuc.stop()
+        return False
 
 def change_directory(dirname):
     username = ''  #We should get the username. Otherwise I'll be unhappy
@@ -133,12 +131,12 @@ def main():
         if len(sys.argv) == 1:
             print("Starting OneDir...")
             username, h = parse_user()
-	    session = {}
+            session = {}
             session['username'] = username
             session['auth'] = h
             session['sync'] = '1'
             client_tools.update_session(session)
-            success = run_in_background(username)
+            success = sync(True)
 
 if __name__ == '__main__':
     main()
