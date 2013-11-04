@@ -1,6 +1,8 @@
 # The non-interactive parts of the client
 import string, os
 import requests 
+import daemon
+import pynotify_update
 from constants import *
 
 def user_in_database(username):
@@ -56,17 +58,37 @@ def read_config_file(username):
         print e.message
         return False
 
+def change_directory(dirname):
+    sess = session()
+    username = session['username']
+    ONEDIR_DIRECTORY = read_config_file(username)
+    shutil.move(ONEDIR_DIRECTORY, dirname)
+    write_config_file(dirname, username)
+
 def upload_file(url, filename):
-    url += 'upload'
+    url += 'upload/'
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
     files = {'file': open(filename, 'rb')}
-    r = requests.post(url, files=files)
+    r = requests.post(url, files=files, data=payload)
     return r.status_code
 
 
 def download_file(url, filename):
-    url += 'uploads/server.py'
-    r = requests.get(url)
+    url += 'uploads/'
+    url += filename
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
+    r = requests.get(url, data=payload)
     with open(filename, 'wb') as code:
+        code.write(r.content)
+
+def download_file_updates(url):
+    url += 'sync'
+    sess = session()
+    payload = {'username': sess['username'], 'hash': sess['auth']}
+    r = requests.get(url, data=payload)
+    with open('.onedirdata', 'wb') as code:
         code.write(r.content)
 
 def reset_password(username):
@@ -74,17 +96,21 @@ def reset_password(username):
     r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
     return r.content == TRUE
 
+def change_password(oldpass, newpass):
+    sess = session()
+    payload = {'username': sess['username'], 'oldpass': oldpass, 'newpass': newpass}
+    r = requests.post(SERVER_ADDRESS + 'password_change', data=payload)
+    return r.content == TRUE
+
 def remove_user(username):
     payload = {'username': username}
     r = requests.post(SERVER_ADDRESS + 'remove_user', data = payload)
     return r.content == TRUE
 
-def update_session(session):
-    order = ['username', 'auth', 'sync']
-    session_file = open("/tmp/onedir.session", 'w')
-    for i in order:
-        session_file.write(session[i] + '\n')
-    session_file.close()
+def is_admin(username):
+    payload = {'username': username}
+    r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
+    return r.content == TRUE
 
 def session():
     order = ['username', 'auth', 'sync']
@@ -98,3 +124,46 @@ def session():
     except IOError:
         return False
     
+def update_session(session):
+    order = ['username', 'auth', 'sync']
+    session_file = open("/tmp/onedir.session", 'w')
+    for i in order:
+        session_file.write(session[i] + '\n')
+    session_file.close()
+
+def quit_session():
+    os.remove("/tmp/onedir.session")
+
+class OneDirDaemon(daemon.Daemon):
+    def __init__(self, pidfile, username):
+        daemon.Daemon.__init__(self, pidfile)
+        self.username = username
+
+    def run(self):
+    # Run the daemon that checks for file updates and stuff
+        ONEDIR_DIRECTORY = read_config_file(self.username)
+        fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+        fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+
+def sync(on):
+    # Run the daemon that checks for file updates and stuff
+    sess = session()
+    onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
+    ONEDIR_DIRECTORY = read_config_file(sess['username'])
+    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+    if on:
+        #fuc.start()
+        onedir_daemon.start()
+        sess['sync'] = '1'
+    else:
+        #fuc.stop()
+        onedir_daemon.stop()
+        sess['sync'] = '0'
+    update_session(sess)
+    return sess['sync']  == '1'
+
+def stop():
+    sync(False)
+    quit_session()
+
+

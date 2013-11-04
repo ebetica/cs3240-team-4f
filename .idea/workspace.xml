@@ -3,23 +3,22 @@
   <component name="ChangeListManager">
     <list default="true" id="3c765063-d9d0-45d6-be02-19fe4e469ca8" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_tools.py" afterPath="$PROJECT_DIR$/client_tools.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" afterPath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_updates.py" afterPath="$PROJECT_DIR$/file_updates.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pynotify_update.py" afterPath="$PROJECT_DIR$/pynotify_update.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cs3240-team-4f.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382991452113" ignored="false" />
+    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383334989337" ignored="false" />
     <file path="/updown.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382320346681" ignored="false" />
-    <file path="/server.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382990062801" ignored="false" />
+    <file path="/server.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383331167007" ignored="false" />
     <file path="/test_communication.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382315937264" ignored="false" />
-    <file path="/file_updates.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382726259029" ignored="false" />
-    <file path="/pynotify_update.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382991317346" ignored="false" />
+    <file path="/file_updates.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383333183169" ignored="false" />
+    <file path="/pynotify_update.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383333678611" ignored="false" />
     <file path="/README.md" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382635510260" ignored="false" />
     <file path="/client.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382989856534" ignored="false" />
-    <file path="/client_tools.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382990873646" ignored="false" />
+    <file path="/client_tools.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383332825726" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,7 +50,7 @@
       <file leaf-file-name="file_updates.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/file_updates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="5" column="7" selection-start="69" selection-end="69" vertical-scroll-proportion="0.0">
+            <state line="124" column="75" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -60,7 +59,7 @@
       <file leaf-file-name="client_tools.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="63" column="24" selection-start="2222" selection-end="2222" vertical-scroll-proportion="0.0">
+            <state line="58" column="0" selection-start="2070" selection-end="2070" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -69,7 +68,7 @@
       <file leaf-file-name="server.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/server.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="73" column="46" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.0">
+            <state line="89" column="33" selection-start="2572" selection-end="2572" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -78,7 +77,7 @@
       <file leaf-file-name="client.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="79" column="40" selection-start="2813" selection-end="2813" vertical-scroll-proportion="0.0">
+            <state line="83" column="0" selection-start="2984" selection-end="2984" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -87,7 +86,7 @@
       <file leaf-file-name="pynotify_update.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pynotify_update.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="15" column="20" selection-start="390" selection-end="390" vertical-scroll-proportion="0.3008547">
+            <state line="47" column="19" selection-start="1513" selection-end="1513" vertical-scroll-proportion="1.0752137">
               <folding>
                 <element signature="e#23#39#0" expanded="true" />
               </folding>
@@ -120,10 +119,10 @@
         <option value="$PROJECT_DIR$/test_communication.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/updown.py" />
-        <option value="$PROJECT_DIR$/file_updates.py" />
         <option value="$PROJECT_DIR$/client.py" />
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/client_tools.py" />
+        <option value="$PROJECT_DIR$/file_updates.py" />
         <option value="$PROJECT_DIR$/pynotify_update.py" />
       </list>
     </option>
@@ -160,26 +159,6 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cs3240-team-4f" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cs3240-team-4f" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cs3240-team-4f" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="Scope">
         <subPane subId="Problems" />
         <subPane subId="Project Files">
@@ -196,9 +175,25 @@
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT USER_OBJECT="cs3240-team-4f">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cs3240-team-4f" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cs3240-team-4f" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cs3240-team-4f" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -233,7 +228,7 @@
       <recent name="C:\Users\robert\Documents\GitHub\cs3240-team-4f" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.Client Help">
+  <component name="RunManager" selected="Python.Client">
     <configuration default="false" name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -357,10 +352,28 @@
       <option name="USE_PATTERN" value="false" />
       <method />
     </configuration>
-    <list size="3">
+    <configuration default="false" name="Client" type="PythonConfigurationType" factoryName="Python">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="C:/Python27/python.exe" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <module name="cs3240-team-4f" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" enabled="false" sample_coverage="true" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/client.py" />
+      <option name="PARAMETERS" value="" />
+      <method />
+    </configuration>
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="Python.server" />
       <item index="1" class="java.lang.String" itemvalue="Python.Client Help" />
       <item index="2" class="java.lang.String" itemvalue="Python tests.Doctests in C:\Users\robert\Documents\GitHub\cs3240-team-4f" />
+      <item index="3" class="java.lang.String" itemvalue="Python.Client" />
     </list>
     <recent_temporary>
       <list size="3">
@@ -434,23 +447,27 @@
       <created>1382989946370</created>
       <updated>1382989946370</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Expanded client code and capabilities. Currently need to download updated files from server.">
+      <created>1382991465123</created>
+      <updated>1382991465123</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22998933" sideWeight="0.67142856" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2353255" sideWeight="0.67142856" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977974" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977974" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22637363" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32857144" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32747254" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -528,15 +545,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="14" />
+      <option name="time" value="15" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Python27/Lib/site-packages/werkzeug/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="72" column="0" selection-start="2517" selection-end="2517" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/flask/globals.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="20" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" />
@@ -589,37 +601,42 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_updates.py">
+    <entry file="file://$PROJECT_DIR$/build/pip-delete-this-directory.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="7" selection-start="69" selection-end="69" vertical-scroll-proportion="0.0">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="89" column="33" selection-start="2572" selection-end="2572" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="79" column="40" selection-start="2813" selection-end="2813" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="73" column="46" selection-start="2031" selection-end="2031" vertical-scroll-proportion="0.0">
+        <state line="83" column="0" selection-start="2984" selection-end="2984" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/client_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="63" column="24" selection-start="2222" selection-end="2222" vertical-scroll-proportion="0.0">
+        <state line="58" column="0" selection-start="2070" selection-end="2070" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_updates.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="124" column="75" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pynotify_update.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="15" column="20" selection-start="390" selection-end="390" vertical-scroll-proportion="0.3008547">
+        <state line="47" column="19" selection-start="1513" selection-end="1513" vertical-scroll-proportion="1.0752137">
           <folding>
             <element signature="e#23#39#0" expanded="true" />
           </folding>
