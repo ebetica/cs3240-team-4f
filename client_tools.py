@@ -66,7 +66,7 @@ def change_directory(dirname):
     write_config_file(dirname, username)
 
 def upload_file(url, filename):
-    url += 'upload/'
+    url += 'upload'
     sess = session()
     payload = {'username': sess['username'], 'hash': sess['auth']}
     files = {'file': open(filename, 'rb')}

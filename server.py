@@ -96,9 +96,9 @@ def upload_file():
             descriptor = os.path.join(app.root_path, 'uploads', username)
             if not os.path.isdir(descriptor):
                 os.mkdir(descriptor, 0700)
-                descriptor2 = os.path.join(descriptor, filename)
-                afile.save(descriptor2)
-                return redirect(url_for('uploaded_file',
+            descriptor2 = os.path.join(descriptor, filename)
+            afile.save(descriptor2)
+            return redirect(url_for('uploaded_file',
                                         filename=filename))
 
 
