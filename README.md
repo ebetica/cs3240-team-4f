@@ -17,6 +17,6 @@ Sprint 1 design document (client-server communication) is CSCommie_design.doc.
 Code notes
 ===
 
-The database has fields (username, password, email, role) Currently, the role field is only "user", but eventually will be "admin" and other fields.
+The database has fields (username, password, email, role) Currently, the role is determined by user at time of registration so they can chose to be a "user" or "admin".
 
 Server and client side communication is via strings. The constants package provides variables TRUE and FALSE that stands for 'true' and 'false'
