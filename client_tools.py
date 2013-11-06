@@ -149,14 +149,10 @@ def sync(on):
     # Run the daemon that checks for file updates and stuff
     sess = session()
     onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
-    ONEDIR_DIRECTORY = read_config_file(sess['username'])
-    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
     if on:
-        #fuc.start()
         onedir_daemon.start()
         sess['sync'] = '1'
     else:
-        #fuc.stop()
         onedir_daemon.stop()
         sess['sync'] = '0'
     update_session(sess)
