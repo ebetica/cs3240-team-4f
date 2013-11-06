@@ -87,7 +87,10 @@ def remove_user():
 
 
 def ExistingUsers():
-    print client_tools.get_user_list(); 
+    sess = client_tools.session()
+    print("User list")
+    if client_tools.is_admin(sess['username']):
+        print client_tools.get_user_list();
 
 def main():
     parser = argparse.ArgumentParser(description=

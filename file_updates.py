@@ -9,6 +9,7 @@ import time
 import client_tools
 import constants
 import server_tools
+import csv
 
 
 #Prototype to compare files on disk to those stored on a server
@@ -40,67 +41,65 @@ class ServerChecker(threading.Thread):
             return False
         return True
 
-    #Loads a dictionary of (files stored on the server) from Onedir directory using pickle
-    def load_server_files(self):
-        path = os.path.join(self.path, '/.onedirdata.p')  # Local machine path to dictionary of files from server
-        if os.path.isfile(path):
-            return pickle.load(open(path))
-        else:
-            return {}
-
     #Connects to server, downloads a listing of the user's files and then returns that listing
     def get_server_files(self):
-        #get_update_files(server, username)
-        #build path on server from username
-        #downloads manifest of user files on server to $ONEDIR/.onedirdata.p
-        return self.load_server_files()
+        client_tools.download_file_updates(constants.SERVER_ADDRESS)
+        fileListing = {}
+        path = os.path.join(self.path, '/.filelisting.onedir')  # Local machine path to dictionary of files from server
+
+        if os.path.isfile(path):
+            with open(path, 'a') as readerFile:
+                reader = csv.reader(readerFile, delimerter=' ')
+                for row in reader:
+                    fileListing[row[0]] = row[1]
+        return fileListing
+
 
     #Compares the file listings between server and local machine
     #Returns a list containing two lists
     #The first list is a list of files that need to be updated on the local machine
     #The second list is a list of files that need to be deleted from the local machine
-    def compareManifests(self, local, server):
-        localUpdates = []
-        localDeletes = []
-        for filename in local.keys():
-            if filename in server.keys():
-                if not local[filename][0] == server[filename][0]:
-                    if local[filename][1] < server[filename][1]:
-                        localUpdates.append(filename)  # add file to be updated on local machine
-            # file exists locally, but not on server, though it previously was local. Should be deleted
-            elif filename not in server.keys():
-                localDeletes.append(filename)
-        for filename in server.keys():
-            # file was created elsewhere since last update; should be saved to local
-            if not filename in local.keys():
-                localUpdates.append(filename)  # add file to be updated on local machine
-        return [localUpdates, localDeletes]
+    #TODO support directories
+    def updateFiles(self, server):
+        filesToDownload = []
+        filesToUpload = []
 
-    #Unifies above methods
-    def check_updates(self):
-        localManifest = server_tools.get_local_files(self.path)
-        serverManifest = self.get_server_files()
-        return self.compareManifests(localManifest, serverManifest)
+        localfiles = os.listdir(self.path)
+        for filename in server.keys():
+            if not str.endswith(filename, '.delete'):
+                if filename not in localfiles:
+                    filesToDownload.append(filename)
+                elif server[filename] > os.path.getmtime(os.path.join(self.path, filename)):
+                    filesToDownload.append(filename)
+                else:
+                    filesToUpload.append(filename)
+            else:
+                filename = filename[:-7]
+                os.remove(os.path.join(self.path, filename))
+
+        localfiles = os.listdir(self.path)
+        for filename in localfiles:
+            if filename not in server.keys():
+                filesToUpload.append(filename)
+        return [filesToDownload, filesToUpload]
 
     #runner for file updates
     def run_file_updates(self):
 
         if self.check_directory():
-            updateFiles = self.check_updates()
-            localUpdates = updateFiles[0]
-            localDeletes = updateFiles[1]
+            serverFiles = self.get_server_files()
+            updateFiles = self.updateFiles(serverFiles)
+            filesToDownload = updateFiles[0]
+            filesToUpload = updateFiles[1]
         else:  # Directory doesn't exist, so no local files are on machine
-            localDeletes = []  # No local files on machine means no updates need to be made to server
-            localUpdates = self.get_server_files()  # Local machine needs all files from server
-        if localUpdates:
-            for afile in localUpdates:
+            filesToDownload = self.get_server_files()  # Local machine needs all files from server
+            filesToUpload = []  # No local files on machine means no updates need to be made to server
+        if filesToDownload:
+            for afile in filesToDownload:
                 client_tools.download_file(constants.SERVER_ADDRESS, afile)
-        if localDeletes:
-            for afile in localDeletes:
-                if os.path.isdir(afile):
-                    os.rmdir(afile)
-                else:
-                    os.remove(afile)
+        if filesToUpload:
+            for afile in filesToUpload:
+                client_tools.upload_file(constants.SERVER_ADDRESS, afile, os.path.getmtime(afile))
 
     # Checks for new files every five minutes
     def run(self):

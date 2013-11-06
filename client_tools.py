@@ -65,10 +65,10 @@ def change_directory(dirname):
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
 
-def upload_file(url, filename):
+def upload_file(url, filename, timestamp):
     url += 'upload'
     sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth']}
+    payload = {'username': sess['username'], 'hash': sess['auth'], 'timestamp': timestamp}
     files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
     return r.status_code
