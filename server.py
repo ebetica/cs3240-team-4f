@@ -1,9 +1,5 @@
-import sqlite3
-import time
-import os
+import sqlite3, time, os, string, random, uuid
 import server_tools
-import string
-import random
 from constants import *
 from flask import Flask, request, g, send_from_directory, redirect, url_for
 from werkzeug import utils
@@ -88,7 +84,9 @@ def user_is_admin():
 def upload_file():
     if request.method == 'POST':
         username = request.form['username']
-        userhash = request.form['hash']
+        userhash = request.form['auth']
+        if not securify(username, userhash):
+            return FALSE
         timestamp = request.form['timestamp']
         afile = request.files['file']
         listingFile = '.filelisting.onedir'
@@ -110,8 +108,9 @@ def upload_file():
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     username = request.form['username']
-    userhash = request.form['hash']
-    #if hash == serverHash: TODO
+    userhash = request.form['auth']
+    if not securify(username, userhash):
+        return FALSE
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
 
@@ -119,11 +118,15 @@ def uploaded_file(filename):
 def client_sync():
     username = request.form['username']
     userhash = request.form['hash']
+    if not securify(username, userhash):
+        return FALSE
     listingFile = '.filelisting.onedir'
-    #if hash == serverHash: TODO
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, listingFile)
 
+
+def securify(username, auth):
+    return app.config['USERS'][username]['auth'] == auth
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -133,7 +136,7 @@ def login():
     if user[1] == server_tools.password_hash(request.form['password']):
         letters = string.ascii_letters+string.digits
         h = "".join([random.choice(letters) for k in range(20)])
-        app.config['USERS'][user[0]] = [time.time(), h]
+        app.config['USERS'][user[0]] = {'time': time.time(), 'auth': h}
         if app.config["DEBUG"]: print app.config
         return h
     else:
@@ -143,10 +146,11 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     username= request.form['username']
-    password= server_tools.password_hash(request.form['password'])
+    salt = uuid.uuid64().hex
+    password= server_tools.password_hash(request.form['password']+salt)
     email = request.form['email']
     user=request.form['user_type']
-    query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,user],one=True)
+    query_db("INSERT INTO users VALUES (?,?,?,?,?)",[username,password,salt,email,user],one=True)
     # Code for registering a user.
     # Read from form sent in via post, hash the password
     # and make entry to database.

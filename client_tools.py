@@ -67,10 +67,12 @@ def change_directory(dirname):
 
 def upload_file(url, filename, timestamp):
     url += 'upload'
-    sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth'], 'timestamp': timestamp}
+    payload = add_auth({'timestamp': timestamp})
     files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     return r.status_code
 
 
@@ -78,16 +80,22 @@ def download_file(url, filename):
     url += 'uploads/'
     url += filename
     sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth']}
+    payload = add_auth({})
     r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     with open(filename, 'wb') as code:
         code.write(r.content)
 
 def download_file_updates(url):
     url += 'sync'
     sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth']}
+    payload = add_auth({})
     r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     with open('.onedirdata', 'wb') as code:
         code.write(r.content)
 
@@ -112,6 +120,12 @@ def is_admin(username):
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
     return r.content == TRUE
 
+def add_auth(payload):
+    sess = session()
+    payload['username'] = sess['username']
+    payload['auth'] = sess['auth']
+    return payload
+
 def session():
     order = ['username', 'auth', 'sync']
     try:
@@ -132,6 +146,9 @@ def update_session(session):
     session_file.close()
 
 def quit_session():
+    sess = session()
+    if sess['sync'] == '1':
+        sync(False)
     os.remove("/tmp/onedir.session")
 
 class OneDirDaemon(daemon.Daemon):
