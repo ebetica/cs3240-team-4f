@@ -89,13 +89,18 @@ def upload_file():
     if request.method == 'POST':
         username = request.form['username']
         userhash = request.form['hash']
+        timestamp = request.form['timestamp']
         afile = request.files['file']
+        listingFile = '.filelisting.onedir'
 
         if afile:  # and hash == serverHash: TODO
             filename = utils.secure_filename(afile.filename)
             descriptor = os.path.join(app.root_path, 'uploads', username)
             if not os.path.isdir(descriptor):
                 os.mkdir(descriptor, 0700)
+            descriptor1 = os.path.join(descriptor, listingFile)
+            with open(descriptor1, 'a') as listFile:
+                listFile.write(filename + ' ' + timestamp)
             descriptor2 = os.path.join(descriptor, filename)
             afile.save(descriptor2)
             return redirect(url_for('uploaded_file',
@@ -114,11 +119,10 @@ def uploaded_file(filename):
 def client_sync():
     username = request.form['username']
     userhash = request.form['hash']
+    listingFile = '.filelisting.onedir'
     #if hash == serverHash: TODO
-    path = os.path.join(app.root_path, 'uploads', username)
-    server_tools.build_file_listing(path)
-    descriptor = os.path.join(path, '.onedirdata')
-    return send_from_directory(descriptor)
+    descriptor = os.path.join(app.root_path, 'uploads', username)
+    return send_from_directory(descriptor, listingFile)
 
 
 @app.route('/login', methods=['POST'])
