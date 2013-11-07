@@ -120,6 +120,9 @@ def is_admin(username):
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
     return r.content == TRUE
 
+def view_user_files(username):
+    payload = {'username': username}
+
 def add_auth(payload):
     sess = session()
     payload['username'] = sess['username']

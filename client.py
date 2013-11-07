@@ -63,9 +63,6 @@ def change_password():
             change_password()
 
 def reset_password():
-    # are we prompting admins for pw before big changes
-    # print("Admin password reset. Please enter your password below:")
-    #password = raw_input("")
     sess = client_tools.session()
     print("Reset password.")
     if client_tools.is_admin(sess['username']):
@@ -76,6 +73,12 @@ def reset_password():
         if raw_input("Are you sure? (Y/N)").capitalize() in ['Y', 'YES']:
             client_tools.reset_password(sess['username'])
 
+def view_user_files():
+    sess = client_tools.session()
+    if client_tools.is_admin(sess['username']):
+        print("Please enter the user to view the file sizes and counts for.")
+        user = raw_input("Usernmae: ")
+        client_tools.view_user_files(user)
 
 def remove_user():
     sess = client_tools.session()

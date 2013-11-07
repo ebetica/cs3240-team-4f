@@ -2,23 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c765063-d9d0-45d6-be02-19fe4e469ca8" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.py" afterPath="$PROJECT_DIR$/client.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_tools.py" afterPath="$PROJECT_DIR$/client_tools.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_updates.py" afterPath="$PROJECT_DIR$/file_updates.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pynotify_update.py" afterPath="$PROJECT_DIR$/pynotify_update.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" afterPath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cs3240-team-4f.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383334989337" ignored="false" />
+    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383787266926" ignored="false" />
     <file path="/updown.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382320346681" ignored="false" />
-    <file path="/server.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383331167007" ignored="false" />
+    <file path="/server.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383790354130" ignored="false" />
     <file path="/test_communication.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382315937264" ignored="false" />
     <file path="/file_updates.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383333183169" ignored="false" />
     <file path="/pynotify_update.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383333678611" ignored="false" />
     <file path="/README.md" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382635510260" ignored="false" />
-    <file path="/client.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382989856534" ignored="false" />
-    <file path="/client_tools.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383332825726" ignored="false" />
+    <file path="/client.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383789166138" ignored="false" />
+    <file path="/client_tools.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383790618521" ignored="false" />
+    <file path="/server_tools.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383788244600" ignored="false" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,7 +42,7 @@
       <file leaf-file-name="updown.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/updown.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="6" column="0" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0">
+            <state line="14" column="0" selection-start="303" selection-end="303" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -50,25 +51,27 @@
       <file leaf-file-name="file_updates.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/file_updates.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="124" column="75" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0">
+            <state line="1" column="0" selection-start="22" selection-end="22" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="client_tools.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="client_tools.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="58" column="0" selection-start="2070" selection-end="2070" vertical-scroll-proportion="0.0">
-              <folding />
+            <state line="125" column="22" selection-start="4179" selection-end="4179" vertical-scroll-proportion="0.826972">
+              <folding>
+                <element signature="e#42#59#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="server.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/server.py">
+      <file leaf-file-name="server_tools.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/server_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="89" column="33" selection-start="2572" selection-end="2572" vertical-scroll-proportion="0.0">
+            <state line="30" column="0" selection-start="1009" selection-end="1009" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
@@ -77,19 +80,17 @@
       <file leaf-file-name="client.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/client.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="83" column="0" selection-start="2984" selection-end="2984" vertical-scroll-proportion="0.0">
+            <state line="75" column="22" selection-start="2790" selection-end="2790" vertical-scroll-proportion="0.0">
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="pynotify_update.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="pynotify_update.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pynotify_update.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="47" column="19" selection-start="1513" selection-end="1513" vertical-scroll-proportion="1.0752137">
-              <folding>
-                <element signature="e#23#39#0" expanded="true" />
-              </folding>
+            <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -102,7 +103,6 @@
     </FindUsagesManager>
   </component>
   <component name="Git.Settings">
-    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GitLogSettings">
@@ -119,19 +119,20 @@
         <option value="$PROJECT_DIR$/test_communication.py" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/updown.py" />
-        <option value="$PROJECT_DIR$/client.py" />
-        <option value="$PROJECT_DIR$/server.py" />
-        <option value="$PROJECT_DIR$/client_tools.py" />
         <option value="$PROJECT_DIR$/file_updates.py" />
         <option value="$PROJECT_DIR$/pynotify_update.py" />
+        <option value="$PROJECT_DIR$/client.py" />
+        <option value="$PROJECT_DIR$/server_tools.py" />
+        <option value="$PROJECT_DIR$/server.py" />
+        <option value="$PROJECT_DIR$/client_tools.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1066" />
+    <option name="x" value="1672" />
+    <option name="y" value="274" />
+    <option name="width" value="1382" />
+    <option name="height" value="784" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -172,6 +173,24 @@
         <subPane subId="All">
           <PATH>
             <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="cs3240-team-4f">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="cs3240-team-4f">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="prototypes">
               <option name="myItemId" value="" />
               <option name="myItemType" value="" />
             </PATH_ELEMENT>
@@ -227,6 +246,156 @@
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\robert\Documents\GitHub\cs3240-team-4f" />
     </key>
+  </component>
+  <component name="RestoreUpdateTree">
+    <UpdateInfo date="Moments ago" ActionInfo="_Update">
+      <UpdatedFiles>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated from server" />
+          <option name="myStatusName" value="Changed on server" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CHANGED_ON_SERVER" />
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Updated" />
+            <option name="myStatusName" value="Changed" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="UPDATED" />
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/.gitignore</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/client.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/client_tools.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/database.db</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/file_updates.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/pynotify_update.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/schema.sql</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/server.py</PATH>
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Created" />
+            <option name="myStatusName" value="Created" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="CREATED" />
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Deleted" />
+            <option name="myStatusName" value="Deleted" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="true" />
+            <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pip-delete-this-directory.txt</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/ACKS</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/COPYING</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/MANIFEST.in</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/PKG-INFO</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/README.md</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/common/inotify_syscalls.c</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/old/ChangeLog</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/old/NEWS</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/Makefile</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/autocompile.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/chain.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/coalesce.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/daemon.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/exclude.lst</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/exclude.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/loop.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/not_quiet.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/stats.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/stats_threaded.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/tornado_notifier.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/transient_file.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/transient_file.sh</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/tutorial_asyncnotifier.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/tutorial_notifier.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/tutorial_threadednotifier.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/examples/unicode.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python2/pyinotify.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python3/Makefile</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/python3/pyinotify.py</PATH>
+            <PATH vcs="Git" revision="">$PROJECT_DIR$/build/pyinotify/setup.py</PATH>
+          </FILE-GROUP>
+          <FILE-GROUP>
+            <option name="myUpdateName" value="Restored" />
+            <option name="myStatusName" value="Will be restored" />
+            <option name="mySupportsDeletion" value="false" />
+            <option name="myCanBeAbsent" value="false" />
+            <option name="myId" value="RESTORED" />
+          </FILE-GROUP>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Modified" />
+          <option name="myStatusName" value="Modified" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MODIFIED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Skipped" />
+          <option name="myStatusName" value="Skipped" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SKIPPED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with conflicts" />
+          <option name="myStatusName" value="Will be merged with conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_CONFLICTS" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with tree conflicts" />
+          <option name="myStatusName" value="Merged with tree conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged with property conflicts" />
+          <option name="myStatusName" value="Will be merged with property conflicts" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Merged" />
+          <option name="myStatusName" value="Will be merged" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="MERGED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Not in repository" />
+          <option name="myStatusName" value="Not in repository" />
+          <option name="mySupportsDeletion" value="true" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UNKNOWN" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally added" />
+          <option name="myStatusName" value="Locally added" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_ADDED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Locally removed" />
+          <option name="myStatusName" value="Locally removed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="LOCALLY_REMOVED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Switched" />
+          <option name="myStatusName" value="Switched" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="SWITCHED" />
+        </FILE-GROUP>
+      </UpdatedFiles>
+    </UpdateInfo>
   </component>
   <component name="RunManager" selected="Python.Client">
     <configuration default="false" name="server" type="PythonConfigurationType" factoryName="Python" temporary="true">
@@ -455,19 +624,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
-    <editor active="false" />
+    <frame x="1672" y="274" width="1382" height="784" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info id="Changes" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2353255" sideWeight="0.67142856" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23787878" sideWeight="0.7104" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977974" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39977974" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22637363" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32747254" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2896" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -549,11 +718,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://C:/Python27/Lib/site-packages/flask/globals.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="20" column="0" selection-start="481" selection-end="481" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
     <entry file="file://C:/Python27/Lib/site-packages/werkzeug/local.py">
       <provider selected="true" editor-type-id="text-editor">
         <state line="337" column="0" selection-start="10503" selection-end="10503" vertical-scroll-proportion="0.0" />
@@ -594,51 +758,62 @@
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pynotify_update.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/updown.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build/pip-delete-this-directory.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="89" column="33" selection-start="2572" selection-end="2572" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="83" column="0" selection-start="2984" selection-end="2984" vertical-scroll-proportion="0.0">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/client_tools.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="58" column="0" selection-start="2070" selection-end="2070" vertical-scroll-proportion="0.0">
+        <state line="14" column="0" selection-start="303" selection-end="303" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/file_updates.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="124" column="75" selection-start="5058" selection-end="5058" vertical-scroll-proportion="0.0">
+        <state line="1" column="0" selection-start="22" selection-end="22" vertical-scroll-proportion="0.0">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pynotify_update.py">
+    <entry file="file://$PROJECT_DIR$/prototypes/build_file_listing.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="47" column="19" selection-start="1513" selection-end="1513" vertical-scroll-proportion="1.0752137">
+        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="188" column="0" selection-start="6346" selection-end="6346" vertical-scroll-proportion="-9.6">
           <folding>
-            <element signature="e#23#39#0" expanded="true" />
+            <element signature="e#0#46#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server_tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="30" column="0" selection-start="1009" selection-end="1009" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="75" column="22" selection-start="2790" selection-end="2790" vertical-scroll-proportion="0.0">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/client_tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="125" column="22" selection-start="4179" selection-end="4179" vertical-scroll-proportion="0.826972">
+          <folding>
+            <element signature="e#42#59#0" expanded="true" />
           </folding>
         </state>
       </provider>
