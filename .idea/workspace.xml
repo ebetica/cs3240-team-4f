@@ -2,15 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3c765063-d9d0-45d6-be02-19fe4e469ca8" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client.py" afterPath="$PROJECT_DIR$/client.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/client_tools.py" afterPath="$PROJECT_DIR$/client_tools.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" afterPath="$PROJECT_DIR$/.idea/cs3240-team-4f.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="cs3240-team-4f.iws" />
     <ignored path=".idea/workspace.xml" />
-    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383787266926" ignored="false" />
+    <file path="/Dummy.txt" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383790676243" ignored="false" />
     <file path="/updown.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382320346681" ignored="false" />
     <file path="/server.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1383790354130" ignored="false" />
     <file path="/test_communication.py" changelist="3c765063-d9d0-45d6-be02-19fe4e469ca8" time="1382315937264" ignored="false" />
@@ -60,7 +56,7 @@
       <file leaf-file-name="client_tools.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/client_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="125" column="22" selection-start="4179" selection-end="4179" vertical-scroll-proportion="0.826972">
+            <state line="119" column="13" selection-start="4002" selection-end="4002" vertical-scroll-proportion="0.56743">
               <folding>
                 <element signature="e#42#59#0" expanded="true" />
               </folding>
@@ -539,10 +535,10 @@
       <method />
     </configuration>
     <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="Python.server" />
-      <item index="1" class="java.lang.String" itemvalue="Python.Client Help" />
-      <item index="2" class="java.lang.String" itemvalue="Python tests.Doctests in C:\Users\robert\Documents\GitHub\cs3240-team-4f" />
-      <item index="3" class="java.lang.String" itemvalue="Python.Client" />
+      <item index="0" class="java.lang.String" itemvalue="Python.Client" />
+      <item index="1" class="java.lang.String" itemvalue="Python.server" />
+      <item index="2" class="java.lang.String" itemvalue="Python.Client Help" />
+      <item index="3" class="java.lang.String" itemvalue="Python tests.Doctests in C:\Users\robert\Documents\GitHub\cs3240-team-4f" />
     </list>
     <recent_temporary>
       <list size="3">
@@ -620,14 +616,19 @@
       <created>1382991465123</created>
       <updated>1382991465123</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Adding the client function to view user files as admin">
+      <created>1383790678751</created>
+      <updated>1383790678752</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="ToolWindowManager">
     <frame x="1672" y="274" width="1382" height="784" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -641,7 +642,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32929516" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -689,7 +689,7 @@
     <option name="WRAP_WHEN_TYPING_REACHES_RIGHT_MARGIN" value="false" />
     <option name="FORCE_NON_EMPTY_COMMENT" value="false" />
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="false" />
-    <option name="LAST_COMMIT_MESSAGE" value="Expanded client code and capabilities. Currently need to download updated files from server." />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding the client function to view user files as admin" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="false" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_FILES_UP_TO_DATE_BEFORE_COMMIT" value="false" />
@@ -711,6 +711,7 @@
     <MESSAGE value="Client directory changes" />
     <MESSAGE value="Alright! We can upload files to our lovely server running on Flask!" />
     <MESSAGE value="Expanded client code and capabilities. Currently need to download updated files from server." />
+    <MESSAGE value="Adding the client function to view user files as admin" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -811,7 +812,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/client_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="125" column="22" selection-start="4179" selection-end="4179" vertical-scroll-proportion="0.826972">
+        <state line="119" column="13" selection-start="4002" selection-end="4002" vertical-scroll-proportion="0.56743">
           <folding>
             <element signature="e#42#59#0" expanded="true" />
           </folding>
