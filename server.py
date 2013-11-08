@@ -133,7 +133,7 @@ def login():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
     if user is None: return FALSE
-    if user[1] == server_tools.password_hash(request.form['password']):
+    if user[1] == server_tools.password_hash(request.form['password'] + user[2]):
         letters = string.ascii_letters+string.digits
         h = "".join([random.choice(letters) for k in range(20)])
         if user[0] in app.config['USERS']:
@@ -175,11 +175,6 @@ def getVals():
     item=request.form['item']
     Vals=query_db("SELECT * FROM ?",[item], one=True)
     return Vals
-
-@app.route('/post', methods=['POST'])
-def post():
-    file = request.form['file']
-    query_db("")
 
 @app.route('/password_reset', methods=['POST'])
 def password_reset():
