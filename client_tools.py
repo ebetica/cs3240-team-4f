@@ -153,6 +153,11 @@ def quit_session():
     if sess['sync'] == '1':
         sync(False)
     os.remove("/tmp/onedir.session")
+    url += 'logout'
+    payload = add_auth({})
+    r = requests.post(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in on the server...")
 
 class OneDirDaemon(daemon.Daemon):
     def __init__(self, pidfile, username):

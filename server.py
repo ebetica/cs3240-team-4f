@@ -126,7 +126,7 @@ def client_sync():
 
 
 def securify(username, auth):
-    return app.config['USERS'][username]['auth'] == auth
+    return auth in [i['auth'] for i in app.config['USERS'][username]]
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -136,11 +136,25 @@ def login():
     if user[1] == server_tools.password_hash(request.form['password']):
         letters = string.ascii_letters+string.digits
         h = "".join([random.choice(letters) for k in range(20)])
-        app.config['USERS'][user[0]] = {'time': time.time(), 'auth': h}
+        if user[0] in app.config['USERS']:
+            app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
+        else:
+            app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
         if app.config["DEBUG"]: print app.config
         return h
     else:
         return FALSE
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    username = request.form['username']
+    auth = request.form['auth']
+    if user not in app.config['USERS']: return FALSE
+    for i in app.config['USERS'][user]:
+        if i['auth'] == auth:
+            app.config['USERS'][user].remove(i)
+            break
 
 
 @app.route('/register', methods=['POST'])
