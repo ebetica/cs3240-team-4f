@@ -148,22 +148,23 @@ def login():
 
 @app.route('/logout', methods=['POST'])
 def logout():
-    username = request.form['username']
+    user = request.form['username']
     auth = request.form['auth']
     if user not in app.config['USERS']: return FALSE
     for i in app.config['USERS'][user]:
         if i['auth'] == auth:
             app.config['USERS'][user].remove(i)
             break
+    return TRUE
 
 
 @app.route('/register', methods=['POST'])
 def register():
     username= request.form['username']
-    salt = uuid.uuid64().hex
+    salt = uuid.uuid1().hex
     password= server_tools.password_hash(request.form['password']+salt)
     email = request.form['email']
-    user=request.form['user_type']
+    user = request.form['user_type']
     query_db("INSERT INTO users VALUES (?,?,?,?,?)",[username,password,salt,email,user],one=True)
     # Code for registering a user.
     # Read from form sent in via post, hash the password

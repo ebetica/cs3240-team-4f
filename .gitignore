@@ -6,5 +6,6 @@
 .idea/**/*
 .coverage
 *.swap
+*.swp
 build/**/*
 uploads/**/*
