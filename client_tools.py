@@ -4,6 +4,7 @@ import requests
 import daemon
 import pynotify_update
 from constants import *
+import shutil
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -60,7 +61,7 @@ def read_config_file(username):
 
 def change_directory(dirname):
     sess = session()
-    username = session['username']
+    username = sess['username']
     ONEDIR_DIRECTORY = read_config_file(username)
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
