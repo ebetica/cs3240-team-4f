@@ -99,7 +99,19 @@ class ServerChecker(threading.Thread):
                 client_tools.download_file(constants.SERVER_ADDRESS, afile)
         if filesToUpload:
             for afile in filesToUpload:
-                client_tools.upload_file(constants.SERVER_ADDRESS, afile, os.path.getmtime(afile))
+                afile = os.path.join(self.path, afile)
+                self.upload(afile)
+
+    def upload(self, afile):
+        if os.path.isdir(afile):
+            for entry in os.listdir(afile):
+                entry = os.path.join(afile, entry)
+                if os.path.isdir(entry):
+                    self.upload(entry)
+                else:
+                    client_tools.upload_file(constants.SERVER_ADDRESS, entry, os.path.getmtime(afile))
+        else:
+            client_tools.upload_file(constants.SERVER_ADDRESS, afile, os.path.getmtime(afile))
 
     # Checks for new files every five minutes
     def run(self):

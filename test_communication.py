@@ -23,9 +23,11 @@ class TestOneDir(unittest.TestCase):
         name = "test_user"
         password = "password"
         self.assertEqual(self.register_user(name, password), True)
-        self.assertEqual(self.login(name, password), True)
-        self.assertEqual(self.login(name, "wrongpassword"), False)
-        self.assertEqual(self.login("not-in-database", password), False)
+        h = self.login(name, password)
+        self.assertNotEqual(h, FALSE)
+        self.assertEqual(self.login(name, "wrongpassword"), FALSE)
+        self.assertEqual(self.login("not-in-database", password), FALSE)
+        self.assertEqual(self.logout(name, h), True)
 
 
     def tearDown(self):
@@ -41,7 +43,7 @@ class TestOneDir(unittest.TestCase):
 
     def register_user(self, username, password):
         ret = self.app.post('/register', data=dict(
-                    username=username, password=password, email="test@test.com")
+                    username=username, password=password, email="test@test.com", user_type="user")
                     , follow_redirects=True).data
         return ret==TRUE
 
@@ -50,8 +52,13 @@ class TestOneDir(unittest.TestCase):
         ret = self.app.post('/login', data=dict(
                     username=username, password=password)
                     , follow_redirects=True).data
-        return ret==TRUE
+        return ret
         
+    def logout(self, username, auth):
+        ret = self.app.post('/logout', data=dict(
+                    username=username, auth=auth)
+                    , follow_redirects=True).data
+        return ret == TRUE
 
 if __name__ == '__main__':
     unittest.main()

@@ -4,6 +4,9 @@ import requests
 import daemon
 import pynotify_update
 from constants import *
+import shutil
+
+DEBUG = True 
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -60,17 +63,19 @@ def read_config_file(username):
 
 def change_directory(dirname):
     sess = session()
-    username = session['username']
+    username = sess['username']
     ONEDIR_DIRECTORY = read_config_file(username)
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
 
 def upload_file(url, filename, timestamp):
     url += 'upload'
-    sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth'], 'timestamp': timestamp}
+    payload = add_auth({'timestamp': timestamp})
     files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     return r.status_code
 
 
@@ -78,16 +83,22 @@ def download_file(url, filename):
     url += 'uploads/'
     url += filename
     sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth']}
+    payload = add_auth({})
     r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     with open(filename, 'wb') as code:
         code.write(r.content)
 
 def download_file_updates(url):
     url += 'sync'
     sess = session()
-    payload = {'username': sess['username'], 'hash': sess['auth']}
+    payload = add_auth({})
     r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
     with open('.onedirdata', 'wb') as code:
         code.write(r.content)
 
@@ -112,6 +123,15 @@ def is_admin(username):
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
     return r.content == TRUE
 
+def view_user_files(username):
+    payload = {'username': username}
+
+def add_auth(payload):
+    sess = session()
+    payload['username'] = sess['username']
+    payload['auth'] = sess['auth']
+    return payload
+
 def session():
     order = ['username', 'auth', 'sync']
     try:
@@ -132,7 +152,14 @@ def update_session(session):
     session_file.close()
 
 def quit_session():
+    sess = session()
+    if sess['sync'] == '1':
+        sync(False)
     os.remove("/tmp/onedir.session")
+    payload = add_auth({})
+    r = requests.post(SERVER_ADDRESS + 'logout', data=payload)
+    if r.content == FALSE:
+        print("You are not logged in on the server...")
 
 class OneDirDaemon(daemon.Daemon):
     def __init__(self, pidfile, username):
@@ -147,20 +174,29 @@ class OneDirDaemon(daemon.Daemon):
 
 def sync(on):
     # Run the daemon that checks for file updates and stuff
-    sess = session()
-    onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
-    ONEDIR_DIRECTORY = read_config_file(sess['username'])
-    fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
-    if on:
-        #fuc.start()
-        onedir_daemon.start()
-        sess['sync'] = '1'
+    if not DEBUG:
+        sess = session()
+        onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
+        if on:
+            onedir_daemon.start()
+            sess['sync'] = '1'
+        else:
+            onedir_daemon.stop()
+            sess['sync'] = '0'
+        update_session(sess)
+        return sess['sync']  == '1'
     else:
-        #fuc.stop()
-        onedir_daemon.stop()
-        sess['sync'] = '0'
-    update_session(sess)
-    return sess['sync']  == '1'
+        sess = session()
+        ONEDIR_DIRECTORY = read_config_file(sess['username'])
+        fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+        if on:
+            fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+            sess['sync'] = '1'
+        else:
+            fuc.stop()
+            sess['sync'] = '0'
+        update_session(sess)
+        return sess['sync']  == '1'
 
 def stop():
     sync(False)

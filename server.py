@@ -1,9 +1,5 @@
-import sqlite3
-import time
-import os
+import sqlite3, time, os, string, random, uuid
 import server_tools
-import string
-import random
 from constants import *
 from flask import Flask, request, g, send_from_directory, redirect, url_for
 from werkzeug import utils
@@ -88,12 +84,14 @@ def user_is_admin():
 def upload_file():
     if request.method == 'POST':
         username = request.form['username']
-        userhash = request.form['hash']
+        userhash = request.form['auth']
+        if not securify(username, userhash):
+            return FALSE
         timestamp = request.form['timestamp']
         afile = request.files['file']
         listingFile = '.filelisting.onedir'
 
-        if afile:  # and hash == serverHash: TODO
+        if afile:
             filename = utils.secure_filename(afile.filename)
             descriptor = os.path.join(app.root_path, 'uploads', username)
             if not os.path.isdir(descriptor):
@@ -103,15 +101,17 @@ def upload_file():
                 listFile.write(filename + ' ' + timestamp)
             descriptor2 = os.path.join(descriptor, filename)
             afile.save(descriptor2)
-            return redirect(url_for('uploaded_file',
-                                        filename=filename))
+            return TRUE
+            #return redirect(url_for('uploaded_file',
+            #                            filename=filename))
 
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     username = request.form['username']
-    userhash = request.form['hash']
-    #if hash == serverHash: TODO
+    userhash = request.form['auth']
+    if not securify(username, userhash):
+        return FALSE
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
 
@@ -119,34 +119,54 @@ def uploaded_file(filename):
 def client_sync():
     username = request.form['username']
     userhash = request.form['hash']
+    if not securify(username, userhash):
+        return FALSE
     listingFile = '.filelisting.onedir'
-    #if hash == serverHash: TODO
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, listingFile)
 
+
+def securify(username, auth):
+    return auth in [i['auth'] for i in app.config['USERS'][username]]
 
 @app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
     if user is None: return FALSE
-    if user[1] == server_tools.password_hash(request.form['password']):
+    if user[1] == server_tools.password_hash(request.form['password'] + user[2]):
         letters = string.ascii_letters+string.digits
         h = "".join([random.choice(letters) for k in range(20)])
-        app.config['USERS'][user[0]] = [time.time(), h]
+        if user[0] in app.config['USERS']:
+            app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
+        else:
+            app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
         if app.config["DEBUG"]: print app.config
         return h
     else:
         return FALSE
 
 
+@app.route('/logout', methods=['POST'])
+def logout():
+    user = request.form['username']
+    auth = request.form['auth']
+    if user not in app.config['USERS']: return FALSE
+    for i in app.config['USERS'][user]:
+        if i['auth'] == auth:
+            app.config['USERS'][user].remove(i)
+            break
+    return TRUE
+
+
 @app.route('/register', methods=['POST'])
 def register():
     username= request.form['username']
-    password= server_tools.password_hash(request.form['password'])
+    salt = uuid.uuid1().hex
+    password= server_tools.password_hash(request.form['password']+salt)
     email = request.form['email']
-    user=request.form['user_type']
-    query_db("INSERT INTO users VALUES (?,?,?,?)",[username,password,email,user],one=True)
+    user = request.form['user_type']
+    query_db("INSERT INTO users VALUES (?,?,?,?,?)",[username,password,salt,email,user],one=True)
     # Code for registering a user.
     # Read from form sent in via post, hash the password
     # and make entry to database.
@@ -157,11 +177,6 @@ def getVals():
     item=request.form['item']
     Vals=query_db("SELECT * FROM ?",[item], one=True)
     return Vals
-
-@app.route('/post', methods=['POST'])
-def post():
-    file = request.form['file']
-    query_db("")
 
 @app.route('/password_reset', methods=['POST'])
 def password_reset():
