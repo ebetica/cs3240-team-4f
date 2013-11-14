@@ -6,6 +6,8 @@ import pynotify_update
 from constants import *
 import shutil
 
+DEBUG = True 
+
 def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
@@ -154,9 +156,8 @@ def quit_session():
     if sess['sync'] == '1':
         sync(False)
     os.remove("/tmp/onedir.session")
-    url += 'logout'
     payload = add_auth({})
-    r = requests.post(url, data=payload)
+    r = requests.post(SERVER_ADDRESS + 'logout', data=payload)
     if r.content == FALSE:
         print("You are not logged in on the server...")
 
@@ -173,16 +174,29 @@ class OneDirDaemon(daemon.Daemon):
 
 def sync(on):
     # Run the daemon that checks for file updates and stuff
-    sess = session()
-    onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
-    if on:
-        onedir_daemon.start()
-        sess['sync'] = '1'
+    if not DEBUG:
+        sess = session()
+        onedir_daemon = OneDirDaemon(PID_FILE, sess['username'])
+        if on:
+            onedir_daemon.start()
+            sess['sync'] = '1'
+        else:
+            onedir_daemon.stop()
+            sess['sync'] = '0'
+        update_session(sess)
+        return sess['sync']  == '1'
     else:
-        onedir_daemon.stop()
-        sess['sync'] = '0'
-    update_session(sess)
-    return sess['sync']  == '1'
+        sess = session()
+        ONEDIR_DIRECTORY = read_config_file(sess['username'])
+        fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+        if on:
+            fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+            sess['sync'] = '1'
+        else:
+            fuc.stop()
+            sess['sync'] = '0'
+        update_session(sess)
+        return sess['sync']  == '1'
 
 def stop():
     sync(False)

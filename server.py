@@ -91,7 +91,7 @@ def upload_file():
         afile = request.files['file']
         listingFile = '.filelisting.onedir'
 
-        if afile:  # and hash == serverHash: TODO
+        if afile:
             filename = utils.secure_filename(afile.filename)
             descriptor = os.path.join(app.root_path, 'uploads', username)
             if not os.path.isdir(descriptor):
@@ -101,8 +101,9 @@ def upload_file():
                 listFile.write(filename + ' ' + timestamp)
             descriptor2 = os.path.join(descriptor, filename)
             afile.save(descriptor2)
-            return redirect(url_for('uploaded_file',
-                                        filename=filename))
+            return TRUE
+            #return redirect(url_for('uploaded_file',
+            #                            filename=filename))
 
 
 @app.route('/uploads/<filename>')
