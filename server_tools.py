@@ -41,3 +41,12 @@ def password_hash(password):
     # Make this return the proper hashed version later
     # Probably use SHA1 with salt
     return hashlib.sha1(password).hexdigest()
+
+def r_mkdir(dirname): 
+    if os.path.exists(dirname):
+        return
+    else:
+        r_mkdir(os.path.dirname(dirname))
+        os.makedirs(dirname)
+        print(dirname)
+

@@ -80,54 +80,64 @@ def user_is_admin():
         ret = TRUE
     return ret
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
-    if request.method == 'POST':
-        username = request.form['username']
-        userhash = request.form['auth']
-        if not securify(username, userhash):
-            return FALSE
-        timestamp = request.form['timestamp']
-        afile = request.files['file']
-        listingFile = '.filelisting.onedir'
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    timestamp = request.form['timestamp']
+    path = request.form['path']
+    afile = request.files['file']
+    listingFile = username + '.filelisting'
 
-        if afile:
-            filename = utils.secure_filename(afile.filename)
-            descriptor = os.path.join(app.root_path, 'uploads', username)
-            if not os.path.isdir(descriptor):
-                os.mkdir(descriptor, 0700)
-            descriptor1 = os.path.join(descriptor, listingFile)
-            with open(descriptor1, 'a') as listFile:
-                listFile.write(filename + ' ' + timestamp)
-            descriptor2 = os.path.join(descriptor, filename)
-            afile.save(descriptor2)
-            return TRUE
-            #return redirect(url_for('uploaded_file',
-            #                            filename=filename))
+    if afile:
+        descriptor = os.path.join(app.root_path, 'uploads', username)
+        if not os.path.isdir(descriptor):
+            os.mkdir(descriptor, 0700)
+        descriptor1 = os.path.join(app.root_path, 'uploads', listingFile)
+        with open(descriptor1, 'a') as listFile:
+            listFile.write(path + ' ' + timestamp + '\n')
+        descriptor2 = os.path.join(descriptor, path)
+        server_tools.r_mkdir( os.path.dirname(descriptor2) )
+        afile.save(descriptor2)
+        print("Saved file to %s"%descriptor2)
+        return TRUE
+    return FALSE
+
+
+@app.route('/mkdir', methods=['POST'])
+def mkdir():
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
+    server_tools.r_mkdir(descriptor)
+    return TRUE
 
 
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
-    username = request.form['username']
-    userhash = request.form['auth']
-    if not securify(username, userhash):
+    if not securify(request):
         return FALSE
+    username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, filename)
 
 @app.route('/sync')
 def client_sync():
-    username = request.form['username']
-    userhash = request.form['hash']
-    if not securify(username, userhash):
+    if not securify(request):
         return FALSE
+    username = request.form['username']
     listingFile = '.filelisting.onedir'
     descriptor = os.path.join(app.root_path, 'uploads', username)
     return send_from_directory(descriptor, listingFile)
 
 
-def securify(username, auth):
+def securify(request):
+    username = request.form['username']
+    auth = request.form['auth']
     return auth in [i['auth'] for i in app.config['USERS'][username]]
+
 
 @app.route('/login', methods=['POST'])
 def login():

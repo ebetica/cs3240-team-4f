@@ -69,9 +69,17 @@ def change_directory(dirname):
     write_config_file(dirname, username)
 
 def upload_file(url, filename, timestamp):
-    url += 'upload'
-    payload = add_auth({'timestamp': timestamp})
-    files = {'file': open(filename, 'rb')}
+    sess = session()
+    username = sess['username']
+    ONEDIR_DIRECTORY = read_config_file(username)
+    rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY)
+    payload = add_auth({'timestamp': timestamp, 'path': rel_path})
+    files = {}
+    if os.path.isdir(filename):
+        url += 'mkdir'
+    else:
+        url += 'upload'
+        files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")

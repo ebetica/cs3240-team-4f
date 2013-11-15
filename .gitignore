@@ -9,4 +9,5 @@
 *.swp
 build/**/*
 uploads/**/*
+uploads
 .onedirdata
