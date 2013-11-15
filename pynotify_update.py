@@ -33,7 +33,6 @@ class FileUpdateChecker():
     def __init__(self, directory):
         self.path = directory
         self.watchManager = pyinotify.WatchManager()
-        self.before = []
         if not os.path.isdir(self.path):
             os.mkdir(self.path, 0700)
         self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True, auto_add=True)
@@ -43,23 +42,9 @@ class FileUpdateChecker():
         self.serverChecker = ServerChecker(self.path, self.interval)
 
     def start(self):
-        '''
-        if self.before:
-            after = client_tools.get_file_paths(self.path)
-            self.added = [f for f in after.keys() if not f in self.before.keys()]
-            self.removed = [f for f in self.before.keys() if not f in after.keys()]
-            self.modified = []
-            for afile in self.before.keys():
-                if afile in after.keys():
-                    if after[afile] > self.before[afile]:
-                        self.modified.append(afile)
-        '''
-
         self.notifier.start()
 
     def stop(self):
-        # Will never be called! Anything you put in here will be useless! HA!
-        self.before = client_tools.get_file_paths(self.path)
 
         self.notifier.stop()
 
@@ -70,7 +55,7 @@ def main():
 
     fu = FileUpdateChecker(ONEDIR_DIRECTORY)
     fu.start()
-    fu.stop()
+
 
 if __name__ == '__main__':
     main()

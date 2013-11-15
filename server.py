@@ -86,6 +86,7 @@ def listing():
     if not securify(request):
         return FALSE
     username = request.form['username']
+    listingFile = username + '.filelisting'
     listing_path = os.path.join(app.root_path, 'uploads', listingFile)
     return open(listing_path, 'r').read()
 

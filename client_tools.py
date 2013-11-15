@@ -5,8 +5,9 @@ import daemon
 import pynotify_update
 from constants import *
 import shutil
+import sys
 
-DEBUG = True 
+DEBUG = False
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -24,6 +25,13 @@ def register_user(username,password,email=None,_type='user'):
         else:
             pass
             #toss error or re-enter.
+
+def get_file_paths(path):
+    file_paths = []
+    for root, directories, files in os.walk(path):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            file_paths.append(filepath)
             
 def login_user(username, password):
     payload = {'username': username, 'password': password}
@@ -136,6 +144,7 @@ def download_file_updates(url):
         code.write(r.content)
 
 def file_listing():
+    url = SERVER_ADDRESS
     url += 'listing'
     sess = session()
     payload = add_auth({})
@@ -218,9 +227,10 @@ class OneDirDaemon(daemon.Daemon):
 
     def run(self):
     # Run the daemon that checks for file updates and stuff
+        sys.stderr.write("Hi")
         ONEDIR_DIRECTORY = read_config_file(self.username)
-        fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
-        fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+        self.fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+        self.fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
 
 def sync(on):
     # Run the daemon that checks for file updates and stuff
