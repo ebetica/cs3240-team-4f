@@ -165,6 +165,13 @@ def is_admin(username):
 
 def view_user_files(username):
     payload = {'username': username}
+    r = requests.get(SERVER_ADDRESS + 'view_user_files', data=payload)
+    return r.content == TRUE
+
+def view_all_files():
+    payload = {}
+    r = requests.get(SERVER_ADDRESS + 'view_all_files', data = payload)
+    return r.content == TRUE
 
 def add_auth(payload):
     sess = session()

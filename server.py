@@ -230,5 +230,28 @@ def remove_user():
     username = request.form['username']
     query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
 
+@app.route('/view_user_files', methods = ['GET'])
+def view_user_files():
+    username = request.form['username']
+    path = os.path.join(app.root_path,'uploads',username)
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        file_sizes += os.path.getsize(files)
+        file_number += 1
+    files = [file_sizes, file_number]
+    return file_sizes
+
+@app.route('/view_all_files', methods = ['GET'])
+def view_all_files():
+    path = os.path.join(app.root_path,'uploads')
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        file_sizes += os.path.getsize(files)
+        file_number += 1
+    files = [file_sizes, file_number]
+    return file_sizes
+
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
