@@ -19,9 +19,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def process_IN_DELETE(self, event):
         print "DELETE event:", event.pathname
-        #Delete file from server. Probably going to write a new URL for server.
-        # Remove file from server and add .delete to the end of filename in textfile
-        # Current plan: read in entire file as dictionary, change deleted line, write back to text file.
+        client_tools.delete_file(constants.SERVER_ADDRESS, event.pathname)
 
     def process_IN_MODIFY(self, event):
         print "MODIFY event:", event.pathname
@@ -33,20 +31,32 @@ class FileUpdateChecker():
     def __init__(self, directory):
         self.path = directory
         self.watchManager = pyinotify.WatchManager()
-	if not os.path.isdir(self.path):
-		os.mkdir(self.path, 0700)
-        self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True, auto_add=True)
-        self.eventHandler = MyEventHandler()
-        self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
-        self.interval = 1
-        self.serverChecker = ServerChecker(self.path, self.interval)
+        if not os.path.isdir(self.path):
+            os.mkdir(self.path, 0700)
+            self.watchManager.add_watch(self.path, pyinotify.ALL_EVENTS, rec=True, auto_add=True)
+            self.eventHandler = MyEventHandler()
+            self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
+            self.interval = 1
+            self.serverChecker = ServerChecker(self.path, self.interval)
 
     def start(self):
+        if self.before:
+            after = client_tools.get_file_paths(self.path)
+            self.added = [f for f in after.keys() if not f in self.before.keys()]
+            self.removed = [f for f in self.before.keys() if not f in after.keys()]
+            self.modified = []
+            for afile in self.before.keys():
+                if afile in after.keys():
+                    if after[afile] > self.before[afile]:
+                        self.modified.append(afile)
+
         self.notifier.start()
-        self.serverChecker.start()
 
     def stop(self):
+        self.before = client_tools.get_file_paths(self.path)
+
         self.notifier.stop()
+
 
 def main():
     # watch manager

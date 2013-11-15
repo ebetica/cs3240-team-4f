@@ -68,11 +68,24 @@ def change_directory(dirname):
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
 
+def get_file_paths(directory):
+    file_paths = {}
+
+    for root, directories, files in os.walk(directory):
+
+        for filename in files:
+
+            # Join the two strings in order to form the full filepath.
+            filepath = os.path.join(root, filename)
+
+            file_paths[filepath] = os.path.getmtime(filepath)
+
+    return file_paths
+
 def upload_file(url, filename, timestamp):
     sess = session()
-    username = sess['username']
-    ONEDIR_DIRECTORY = read_config_file(username)
-    rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY)
+    ONEDIR_DIRECTORY = read_config_file(sess['username'])
+    rel_path = os.path.split(os.path.relpath(filename, ONEDIR_DIRECTORY ))[0]
     payload = add_auth({'timestamp': timestamp, 'path': rel_path})
     files = {}
     if os.path.isdir(filename):
@@ -86,11 +99,9 @@ def upload_file(url, filename, timestamp):
         quit_session()
     return r.status_code
 
-
 def download_file(url, filename):
     url += 'uploads/'
     url += filename
-    sess = session()
     payload = add_auth({})
     r = requests.get(url, data=payload)
     if r.content == FALSE:
@@ -98,6 +109,18 @@ def download_file(url, filename):
         quit_session()
     with open(filename, 'wb') as code:
         code.write(r.content)
+
+def delete_file(url, filename):
+    url += 'delete'
+    sess = session()
+    onedir_directory = read_config_file(sess['username'])
+    rel_path = os.path.relpath(filename, onedir_directory)
+    payload = add_auth({'rel_path':rel_path})
+    payload = add_auth({})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
 
 def download_file_updates(url):
     url += 'sync'

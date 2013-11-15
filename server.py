@@ -105,6 +105,16 @@ def upload_file():
     return FALSE
 
 
+@app.route('delete')
+def delete_file():
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    rel_path = request.form['rel_path']
+    descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
+    if os.path.isfile(descriptor):
+        os.remove(descriptor)
+
 @app.route('/mkdir', methods=['POST'])
 def mkdir():
     if not securify(request):
