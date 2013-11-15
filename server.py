@@ -105,7 +105,7 @@ def upload_file():
     return FALSE
 
 
-@app.route('delete')
+@app.route('/delete')
 def delete_file():
     if not securify(request):
         return FALSE
