@@ -50,19 +50,28 @@ def r_mkdir(dirname):
         os.makedirs(dirname)
         print(dirname)
 
-def update_listings(listing, path, timestamp, auth):
-    f = open(listing, 'r')
-    l = f.readlines()
-    f.close()
+def update_listings(listing, path, timestamp, auth, delete=False):
+    l = []
+    if os.path.isfile(listing):
+        f = open(listing, 'r')
+        l = f.readlines()
+        f.close()
     found = False
     for k in range(len(l)):
-        l[k].split(' ')
+        l[k] = l[k].strip().split(' ')
         if l[k][0] == path:
-            l[k][1] = str(timestamp)
-            l[k][2] = auth
-            found = True
-    if not found:
+            if delete:
+                found = k
+            else:
+                l[k][1] = str(timestamp)
+                l[k][2] = auth
+                found = True
+    if not found and not delete:
         l.append([path, timestamp, auth])
+    print("Found = %d"%(found))
+    if type(found) == int and delete:
+        del l[found]
+    print l
     f = open(listing, 'w')
     f.write('\n'.join([' '.join(k) for k in l]))
     f.close()

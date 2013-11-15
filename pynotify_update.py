@@ -13,7 +13,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
     def process_IN_CREATE(self, event):
         print "CREATE event:", event.pathname
         self.uploadFiles.append(event.pathname)
-        r = client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
+        if os.path.exists(event.pathname):
+            r = client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
         if r == 200:
             self.uploadFiles.remove(event.pathname)
 
@@ -23,7 +24,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def process_IN_MODIFY(self, event):
         print "MODIFY event:", event.pathname
-        client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
+        if os.path.exists(event.pathname):
+            client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
 
 class FileUpdateChecker():
     #TODO download updated files from server. Older file_updates.py code could be useful here

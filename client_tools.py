@@ -92,6 +92,9 @@ def upload_file(url, filename, timestamp):
         url += 'mkdir'
     else:
         url += 'upload'
+        if not os.path.exists(filename):
+            print("File disappeared before I could upload it!")
+            return
         files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
     if r.content == FALSE:

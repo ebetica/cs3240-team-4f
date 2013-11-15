@@ -121,6 +121,11 @@ def delete_file():
     username = request.form['username']
     rel_path = request.form['rel_path']
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
+
+    listingFile = username + '.filelisting'
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, rel_path, 0, request.form['auth'], True)
+
     if os.path.isfile(descriptor):
         os.remove(descriptor)
     if os.path.isdir(descriptor):
