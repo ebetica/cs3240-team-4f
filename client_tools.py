@@ -85,7 +85,7 @@ def get_file_paths(directory):
 def upload_file(url, filename, timestamp):
     sess = session()
     ONEDIR_DIRECTORY = read_config_file(sess['username'])
-    rel_path = os.path.split(os.path.relpath(filename, ONEDIR_DIRECTORY ))[0]
+    rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY )
     payload = add_auth({'timestamp': timestamp, 'path': rel_path})
     files = {}
     if os.path.isdir(filename):
@@ -116,7 +116,6 @@ def delete_file(url, filename):
     onedir_directory = read_config_file(sess['username'])
     rel_path = os.path.relpath(filename, onedir_directory)
     payload = add_auth({'rel_path':rel_path})
-    payload = add_auth({})
     r = requests.get(url, data=payload)
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
@@ -132,6 +131,16 @@ def download_file_updates(url):
         quit_session()
     with open('.onedirdata', 'wb') as code:
         code.write(r.content)
+
+def file_listing():
+    url += 'listing'
+    sess = session()
+    payload = add_auth({})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    listing = [k.split(' ') for k in r.content.split('\n')]
 
 def reset_password(username):
     payload = {'username': username}

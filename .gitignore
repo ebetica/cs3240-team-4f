@@ -1,13 +1,30 @@
 # Compiled files
 ########################
-*.pyc
+
+# Python compiled files
+#############
+*.py?
+
+# Config files for GUI editors... pshhh
+#############
 *.xml
 *.iml
 .idea/**/*
+.idea
+build/**/*
+build
+
+# Test code coverage
+#############
 .coverage
+
+# Temp files
+#############
 *.swap
 *.swp
-build/**/*
+
+# Test files for the code
+#############
 uploads/**/*
 uploads
 .onedirdata

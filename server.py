@@ -80,6 +80,16 @@ def user_is_admin():
         ret = TRUE
     return ret
 
+
+@app.route('/listing')
+def listing():
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    return open(listing_path, 'r').read()
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if not securify(request):
@@ -94,13 +104,12 @@ def upload_file():
         descriptor = os.path.join(app.root_path, 'uploads', username)
         if not os.path.isdir(descriptor):
             os.mkdir(descriptor, 0700)
-        descriptor1 = os.path.join(app.root_path, 'uploads', listingFile)
-        with open(descriptor1, 'a') as listFile:
-            listFile.write(path + ' ' + timestamp + '\n')
-        descriptor2 = os.path.join(descriptor, path)
-        server_tools.r_mkdir( os.path.dirname(descriptor2) )
-        afile.save(descriptor2)
-        print("Saved file to %s"%descriptor2)
+        listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+        server_tools.update_listings(listing_path, path, timestamp, request.form['auth'])
+        path = os.path.join(descriptor, path)
+        server_tools.r_mkdir( os.path.dirname(path) )
+        afile.save(path)
+        print("Saved file to %s"%path)
         return TRUE
     return FALSE
 
@@ -114,6 +123,9 @@ def delete_file():
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
     if os.path.isfile(descriptor):
         os.remove(descriptor)
+    if os.path.isdir(descriptor):
+        os.rmdir(descriptor)
+    return TRUE
 
 @app.route('/mkdir', methods=['POST'])
 def mkdir():
