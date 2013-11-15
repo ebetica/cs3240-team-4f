@@ -82,6 +82,12 @@ def view_user_files():
         print("File number: " + sizes[1])
         print(sizes[0])
 
+def view_all_files():
+    sess = client_tools.session()
+    if client_tools.is_admin(sess['username']):
+        sizes = client_tools.view_all_files()
+        print("File number: " + sizes[1])
+        print(sizes[0])
 
 
 def remove_user():
