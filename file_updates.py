@@ -45,11 +45,11 @@ class ServerChecker(threading.Thread):
     def get_server_files(self):
         client_tools.download_file_updates(constants.SERVER_ADDRESS)
         fileListing = {}
-        path = os.path.join(self.path, '/.filelisting.onedir')  # Local machine path to dictionary of files from server
+        path = os.path.join(self.path, '.filelisting.onedir')  # Local machine path to dictionary of files from server
 
         if os.path.isfile(path):
-            with open(path, 'a') as readerFile:
-                reader = csv.reader(readerFile, delimerter=' ')
+            with open(path, 'r') as readerFile:
+                reader = csv.reader(readerFile, delimiter=' ')
                 for row in reader:
                     fileListing[row[0]] = row[1]
         return fileListing

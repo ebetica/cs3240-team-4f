@@ -77,8 +77,18 @@ def view_user_files():
     sess = client_tools.session()
     if client_tools.is_admin(sess['username']):
         print("Please enter the user to view the file sizes and counts for.")
-        user = raw_input("Usernmae: ")
-        client_tools.view_user_files(user)
+        user = raw_input("Username: ")
+        sizes = client_tools.view_user_files(user)
+        print("File number: " + sizes[1])
+        print(sizes[0])
+
+def view_all_files():
+    sess = client_tools.session()
+    if client_tools.is_admin(sess['username']):
+        sizes = client_tools.view_all_files()
+        print("File number: " + sizes[1])
+        print(sizes[0])
+
 
 def remove_user():
     sess = client_tools.session()

@@ -86,6 +86,7 @@ def listing():
     if not securify(request):
         return FALSE
     username = request.form['username']
+    listingFile = username + '.filelisting'
     listing_path = os.path.join(app.root_path, 'uploads', listingFile)
     return open(listing_path, 'r').read()
 
@@ -132,6 +133,11 @@ def delete_file():
     username = request.form['username']
     rel_path = request.form['rel_path']
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
+
+    listingFile = username + '.filelisting'
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, rel_path, 0, request.form['auth'], True)
+
     if os.path.isfile(descriptor):
         os.remove(descriptor)
     if os.path.isdir(descriptor):
@@ -240,6 +246,29 @@ def password_change():
 def remove_user():
     username = request.form['username']
     query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
+
+@app.route('/view_user_files', methods = ['GET'])
+def view_user_files():
+    username = request.form['username']
+    path = os.path.join(app.root_path,'uploads',username)
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        file_sizes += os.path.getsize(files)
+        file_number += 1
+    files = [file_sizes, file_number]
+    return file_sizes
+
+@app.route('/view_all_files', methods = ['GET'])
+def view_all_files():
+    path = os.path.join(app.root_path,'uploads')
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        file_sizes += os.path.getsize(files)
+        file_number += 1
+    files = [file_sizes, file_number]
+    return file_sizes
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
