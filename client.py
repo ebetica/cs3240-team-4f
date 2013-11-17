@@ -87,7 +87,10 @@ def remove_user():
         print("Please enter the user to remove.")
         user = raw_input("Username: ")
         client_tools.remove_user(user)
-
+def share_file():
+    user= raw_input("Username of who to share with: ")
+    pathName=raw_input("Enter Full Path to File: ")
+    client_tools.share_file(user,pathName)
 
 def ExistingUsers():
     sess = client_tools.session()

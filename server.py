@@ -113,6 +113,17 @@ def upload_file():
         return TRUE
     return FALSE
 
+@app.route('/share')
+def share_file(filename):
+    username=request.form['username']
+    path=request.form['PathName']
+    userShared=request.form['SharedWith']
+    listingFile=userShared+'.filelisting'
+    sharedPath=os.path.join(app.root_path, 'uploads', 'Share',userShared)
+    server_tools.r_mkdir(os.path.dirname(sharedPath))
+    filePath=os.path.join(app.root_path,'uploads',username,path)
+    os.symlink(filePath,sharedPath)
+    return TRUE
 
 @app.route('/delete')
 def delete_file():

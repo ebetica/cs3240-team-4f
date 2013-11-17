@@ -54,7 +54,6 @@ class ServerChecker(threading.Thread):
                     fileListing[row[0]] = row[1]
         return fileListing
 
-
     #Compares the file listings between server and local machine
     #Returns a list containing two lists
     #The first list is a list of files that need to be updated on the local machine

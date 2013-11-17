@@ -99,6 +99,13 @@ def upload_file(url, filename, timestamp):
         quit_session()
     return r.status_code
 
+def share_file(user,pathName):
+    sess=session()
+    username=sess['username']
+    payload=add_auth({'ShareWith': user, 'PathName':pathName})
+    r=request.post(url,data=payload)
+
+
 def download_file(url, filename):
     url += 'uploads/'
     url += filename
