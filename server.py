@@ -80,6 +80,17 @@ def user_is_admin():
         ret = TRUE
     return ret
 
+
+@app.route('/listing')
+def listing():
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    listingFile = username + '.filelisting'
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    return open(listing_path, 'r').read()
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     if not securify(request):
@@ -94,16 +105,28 @@ def upload_file():
         descriptor = os.path.join(app.root_path, 'uploads', username)
         if not os.path.isdir(descriptor):
             os.mkdir(descriptor, 0700)
-        descriptor1 = os.path.join(app.root_path, 'uploads', listingFile)
-        with open(descriptor1, 'a') as listFile:
-            listFile.write(path + ' ' + timestamp + '\n')
-        descriptor2 = os.path.join(descriptor, path)
-        server_tools.r_mkdir( os.path.dirname(descriptor2) )
-        afile.save(descriptor2)
-        print("Saved file to %s"%descriptor2)
+        listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+        server_tools.update_listings(listing_path, path, timestamp, request.form['auth'])
+        path = os.path.join(descriptor, path)
+        server_tools.r_mkdir( os.path.dirname(path) )
+        afile.save(path)
+        print("Saved file to %s"%path)
         return TRUE
     return FALSE
 
+@app.route('/share')
+def share_file(filename):
+    username = request.form['username']
+    path = request.form['PathName']
+    userShared = request.form['SharedWith']
+    listingFile = userShared + '.filelisting'
+    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
+    server_tools.r_mkdir(os.path.dirname(sharedPath))
+    filePath = os.path.join(app.root_path, 'uploads', username, path)
+    os.symlink(filePath, sharedPath)
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, path, os.path.getmtime(sharedPath), request.form['auth'])
+    return TRUE
 
 @app.route('/delete')
 def delete_file():
@@ -112,8 +135,16 @@ def delete_file():
     username = request.form['username']
     rel_path = request.form['rel_path']
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
+
+    listingFile = username + '.filelisting'
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, rel_path, 0, request.form['auth'], True)
+
     if os.path.isfile(descriptor):
         os.remove(descriptor)
+    if os.path.isdir(descriptor):
+        os.rmdir(descriptor)
+    return TRUE
 
 @app.route('/mkdir', methods=['POST'])
 def mkdir():
@@ -194,9 +225,14 @@ def register():
 
 @app.route('/getVals',methods=['GET'])
 def getVals():
-    item=request.form['item']
-    Vals=query_db("SELECT * FROM ?",[item], one=True)
-    return Vals
+    value = request.form['value']
+    table = request.form['table']
+    query = "SELECT * FROM " + table
+    vals = query_db( query, [], one=False)
+    if value == 'username':
+        return '\n'.join( val[0] for val in vals)
+    else:
+        return '\n'.join( val for val in vals)
 
 @app.route('/password_reset', methods=['POST'])
 def password_reset():
@@ -217,6 +253,34 @@ def password_change():
 def remove_user():
     username = request.form['username']
     query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
+
+@app.route('/view_user_files', methods = ['GET'])
+def view_user_files():
+    username = request.form['username']
+    path = os.path.join(app.root_path,'uploads',username)
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        for f in files:
+            fp = os.path.join(roots, f)
+            file_sizes += os.path.getsize(fp)
+            file_number += 1
+    files = [str(file_sizes), str(file_number)]
+    return ','.join(files)
+
+@app.route('/view_all_files', methods=['GET'])
+def view_all_files():
+    path = os.path.join(app.root_path,'uploads')
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        for f in files:
+            fp = os.path.join(roots, f)
+            file_sizes += os.path.getsize(fp)
+            file_number += 1
+    files = [str(file_sizes), str(file_number)]
+    string = ','.join(files)
+    return string
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
