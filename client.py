@@ -78,7 +78,7 @@ def view_user_files():
     if client_tools.is_admin(sess['username']):
         print("Please enter the user to view the file sizes and counts for.")
         user = raw_input("Username: ")
-        sizes = client_tools.view_user_files(user)
+        sizes = str.split(client_tools.view_user_files(user),',')
         print(sizes[1] + ' files')
         print(sizes[0] + ' bytes used')
 
