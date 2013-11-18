@@ -16,6 +16,8 @@ def safeHashFile( path):
             buf = afile.read(BLOCKSIZE)
     return hasher.hexdigest()
 
+def scrub_sqlite_input(table_name):
+    return ' '.join( chr for chr in table_name if chr.isalnum() )
 #Builds a dictionary of the local files on the machine
 #Uses filename as key, and stores an md5 hash of each file as well as when the file was last modified
 def get_local_files(fileOb):

@@ -15,8 +15,8 @@ class MyEventHandler(pyinotify.ProcessEvent):
         self.uploadFiles.append(event.pathname)
         if os.path.exists(event.pathname):
             r = client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
-        if r == 200:
-            self.uploadFiles.remove(event.pathname)
+            if r == 200:
+                self.uploadFiles.remove(event.pathname)
 
     def process_IN_DELETE(self, event):
         print "DELETE event:", event.pathname

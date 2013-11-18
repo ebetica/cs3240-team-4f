@@ -79,15 +79,18 @@ def view_user_files():
         print("Please enter the user to view the file sizes and counts for.")
         user = raw_input("Username: ")
         sizes = client_tools.view_user_files(user)
-        print("File number: " + sizes[1])
-        print(sizes[0])
+        print(sizes[1] + ' files')
+        print(sizes[0] + ' bytes used')
 
 def view_all_files():
     sess = client_tools.session()
     if client_tools.is_admin(sess['username']):
-        sizes = client_tools.view_all_files()
-        print("File number: " + sizes[1])
-        print(sizes[0])
+        sizes = str.split(client_tools.view_all_files(), ',')
+        print(sizes[1] + ' files')
+        print(sizes[0] + ' bytes used')
+
+def get_user_list():
+    print client_tools.get_user_list()
 
 
 def remove_user():
@@ -97,16 +100,17 @@ def remove_user():
         print("Please enter the user to remove.")
         user = raw_input("Username: ")
         client_tools.remove_user(user)
+
 def share_file():
-    user= raw_input("Username of who to share with: ")
-    pathName=raw_input("Enter Full Path to File: ")
-    client_tools.share_file(user,pathName)
+    user = raw_input("Username of user to share with: ")
+    pathName = raw_input("Enter full path to File: ")
+    client_tools.share_file(user, pathName)
 
 def ExistingUsers():
     sess = client_tools.session()
     print("User list")
     if client_tools.is_admin(sess['username']):
-        print client_tools.get_user_list();
+        print client_tools.get_user_list()
 
 def main():
     parser = argparse.ArgumentParser(description=
@@ -122,6 +126,14 @@ def main():
             help="STOP THE PRESS (client)")
     group.add_argument("-d", "--change-directory", type=str,
             help="Change the default directory of OneDir")
+    group.add_argument("-f", "--share-file", action="store_true",
+            help="Share a file with another OneDir user")
+    group.add_argument("-l", "--list-users", action="store_true",
+            help="List all users (admin only)")
+    group.add_argument("-u", "--view-user-files", action="store_true",
+            help="View information about a user's files (admin only)")
+    group.add_argument("-a", "--view-all-files", action="store_true",
+            help="View information about all files store on the server (admin only)")
     args = parser.parse_args()
     # Throw an error if OneDir is not running!
     if client_tools.session():
@@ -133,6 +145,14 @@ def main():
             client_tools.sync(False)
         elif args.change_directory:
             client_tools.change_directory(args.change_directory)
+        elif args.share_file:
+            share_file()
+        elif args.list_users:
+            get_user_list()
+        elif args.view_user_files:
+            view_user_files()
+        elif args.view_all_files:
+            view_all_files()
         elif args.stop:
             client_tools.stop()
         else:

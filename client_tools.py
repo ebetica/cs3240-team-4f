@@ -1,11 +1,13 @@
 # The non-interactive parts of the client
-import string, os
+import string
+import os
 import requests 
 import daemon
 import pynotify_update
 from constants import *
 import shutil
 import sys
+from threading import Timer
 
 DEBUG = False
 
@@ -25,13 +27,6 @@ def register_user(username,password,email=None,_type='user'):
         else:
             pass
             #toss error or re-enter.
-
-def get_file_paths(path):
-    file_paths = []
-    for root, directories, files in os.walk(path):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            file_paths.append(filepath)
             
 def login_user(username, password):
     payload = {'username': username, 'password': password}
@@ -39,8 +34,9 @@ def login_user(username, password):
     return r.content
 
 def get_user_list():
-    payload={'item': 'username'}
-    r=requests.get(SERVER_ADDRESS+'getVals',data=payload)
+    payload = {'value': 'username', 'table': 'users'}
+    r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
+    return r.content
 
 def sanity_check_username(name):
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
@@ -75,17 +71,15 @@ def change_directory(dirname):
     ONEDIR_DIRECTORY = read_config_file(username)
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
+    sync(False)
+    sync(True)
 
 def get_file_paths(directory):
     file_paths = {}
 
     for root, directories, files in os.walk(directory):
-
         for filename in files:
-
-            # Join the two strings in order to form the full filepath.
             filepath = os.path.join(root, filename)
-
             file_paths[filepath] = os.path.getmtime(filepath)
 
     return file_paths
@@ -111,10 +105,12 @@ def upload_file(url, filename, timestamp):
     return r.status_code
 
 def share_file(user,pathName):
-    sess=session()
-    username=sess['username']
-    payload=add_auth({'ShareWith': user, 'PathName':pathName})
-    r=request.post(url,data=payload)
+    url = SERVER_ADDRESS + 'share'
+    sess = session()
+    username = sess['username']
+    payload = add_auth({'ShareWith': user, 'PathName': pathName})
+    r = requests.post(url, data=payload)
+    return r.status_code
 
 
 def download_file(url, filename):
@@ -160,6 +156,25 @@ def file_listing():
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
     listing = [k.split(' ') for k in r.content.split('\n')]
+    return listing
+
+def check_updates():
+    url = SERVER_ADDRESS
+    ONEDIR_DIRECTORY = read_config_file(session()['username'])
+    server_listing = file_listing()
+    server_files = {}
+    local_listing = get_file_paths(ONEDIR_DIRECTORY)
+    for afile in server_listing:
+        afile = afile.split(' ')
+        filename = afile[0]
+        server_files[filename] = afile[1]
+        if filename not in local_listing:
+            download_file(url, filename)
+    for afile in local_listing:
+        if afile not in server_files.keys():
+            upload_file(url, afile, os.path.getmtime(afile))
+        elif server_files[afile] < os.path.getmtime(afile):
+            upload_file(url, afile, os.path.getmtime(afile))
 
 def reset_password(username):
     payload = {'username': username}
@@ -185,12 +200,12 @@ def is_admin(username):
 def view_user_files(username):
     payload = {'username': username}
     r = requests.get(SERVER_ADDRESS + 'view_user_files', data=payload)
-    return r.content == TRUE
+    return r.content
 
 def view_all_files():
     payload = {}
     r = requests.get(SERVER_ADDRESS + 'view_all_files', data = payload)
-    return r.content == TRUE
+    return r.content
 
 def add_auth(payload):
     sess = session()
@@ -221,8 +236,8 @@ def quit_session():
     sess = session()
     if sess['sync'] == '1':
         sync(False)
-    os.remove("/tmp/onedir.session")
     payload = add_auth({})
+    os.remove("/tmp/onedir.session")
     r = requests.post(SERVER_ADDRESS + 'logout', data=payload)
     if r.content == FALSE:
         print("You are not logged in on the server...")
@@ -255,12 +270,12 @@ def sync(on):
     else:
         sess = session()
         ONEDIR_DIRECTORY = read_config_file(sess['username'])
-        fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
+        t = Timer(1, check_updates()) #This should be accessible from other methods
         if on:
-            fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+            t.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
             sess['sync'] = '1'
         else:
-            fuc.stop()
+            t.stop()
             sess['sync'] = '0'
         update_session(sess)
         return sess['sync']  == '1'

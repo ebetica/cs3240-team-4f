@@ -116,14 +116,16 @@ def upload_file():
 
 @app.route('/share')
 def share_file(filename):
-    username=request.form['username']
-    path=request.form['PathName']
-    userShared=request.form['SharedWith']
-    listingFile=userShared+'.filelisting'
-    sharedPath=os.path.join(app.root_path, 'uploads', 'Share',userShared)
+    username = request.form['username']
+    path = request.form['PathName']
+    userShared = request.form['SharedWith']
+    listingFile = userShared + '.filelisting'
+    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
     server_tools.r_mkdir(os.path.dirname(sharedPath))
-    filePath=os.path.join(app.root_path,'uploads',username,path)
-    os.symlink(filePath,sharedPath)
+    filePath = os.path.join(app.root_path, 'uploads', username, path)
+    os.symlink(filePath, sharedPath)
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, path, os.path.getmtime(sharedPath), request.form['auth'])
     return TRUE
 
 @app.route('/delete')
@@ -223,9 +225,14 @@ def register():
 
 @app.route('/getVals',methods=['GET'])
 def getVals():
-    item=request.form['item']
-    Vals=query_db("SELECT * FROM ?",[item], one=True)
-    return Vals
+    value = request.form['value']
+    table = request.form['table']
+    query = "SELECT * FROM " + table
+    vals = query_db( query, [], one=False)
+    if value == 'username':
+        return '\n'.join( val[0] for val in vals)
+    else:
+        return '\n'.join( val for val in vals)
 
 @app.route('/password_reset', methods=['POST'])
 def password_reset():
@@ -254,21 +261,26 @@ def view_user_files():
     file_sizes = 0
     file_number = 0
     for roots, dirs, files in os.walk(path):
-        file_sizes += os.path.getsize(files)
-        file_number += 1
-    files = [file_sizes, file_number]
-    return file_sizes
+        for f in files:
+            fp = os.path.join(roots, f)
+            file_sizes += os.path.getsize(fp)
+            file_number += 1
+    files = [str(file_sizes), str(file_number)]
+    return ','.join(files)
 
-@app.route('/view_all_files', methods = ['GET'])
+@app.route('/view_all_files', methods=['GET'])
 def view_all_files():
     path = os.path.join(app.root_path,'uploads')
     file_sizes = 0
     file_number = 0
     for roots, dirs, files in os.walk(path):
-        file_sizes += os.path.getsize(files)
-        file_number += 1
-    files = [file_sizes, file_number]
-    return file_sizes
+        for f in files:
+            fp = os.path.join(roots, f)
+            file_sizes += os.path.getsize(fp)
+            file_number += 1
+    files = [str(file_sizes), str(file_number)]
+    string = ','.join(files)
+    return string
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
