@@ -88,7 +88,10 @@ def listing():
     username = request.form['username']
     listingFile = username + '.filelisting'
     listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-    return open(listing_path, 'r').read()
+    if os.path.isfile(listing_path):
+        return open(listing_path, 'r').read()
+    else:
+        return FALSE
 
 
 @app.route('/upload', methods=['POST'])

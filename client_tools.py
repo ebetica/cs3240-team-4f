@@ -9,7 +9,7 @@ import shutil
 import sys
 from threading import Timer
 
-DEBUG = True
+DEBUG = False
 
 def user_in_database(username):
     # Returns True iff username is in the database
@@ -121,8 +121,10 @@ def download_file(url, filename):
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
-    with open(filename, 'wb') as code:
-        code.write(r.content)
+    if filename != "":
+        filename = os.path.join(read_config_file(session()["username"]), filename)
+        with open(filename, 'wb') as code:
+            code.write(r.content)
 
 def delete_file(url, filename):
     url += 'delete'
