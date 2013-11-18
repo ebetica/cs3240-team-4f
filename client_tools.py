@@ -9,7 +9,7 @@ import shutil
 import sys
 from threading import Timer
 
-DEBUG = False
+DEBUG = True
 
 def user_in_database(username):
     # Returns True iff username is in the database

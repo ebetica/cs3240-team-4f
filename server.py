@@ -243,7 +243,7 @@ def password_reset():
 def password_change():
     username = request.form['username']
     user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user[1] == server_tools.password_hash(request.form['oldpass']):
+    if user[1] == server_tools.password_hash(request.form['oldpass']+user[2]):
         password = server_tools.password_hash(request.form['newpass'])
         query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, username], one=True)
         return TRUE
