@@ -260,7 +260,7 @@ def remove_user():
 @app.route('/view_user_files', methods = ['GET'])
 def view_user_files():
     username = request.form['username']
-    path = os.path.join(app.root_path,'uploads',username)
+    path = os.path.join(app.root_path, 'uploads', username)
     file_sizes = 0
     file_number = 0
     for roots, dirs, files in os.walk(path):
