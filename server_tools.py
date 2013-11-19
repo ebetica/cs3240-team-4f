@@ -107,3 +107,15 @@ def update_listings(listing, path, timestamp, auth, delete=False):
     f = open(listing, 'w')
     f.write('\n'.join([' '.join(k) for k in l]))
     f.close()
+
+def view_files(path):
+    file_sizes = 0
+    file_number = 0
+    for roots, dirs, files in os.walk(path):
+        for f in files:
+            fp = os.path.join(roots, f)
+            file_sizes += os.path.getsize(fp)
+            file_number += 1
+    files = [str(file_sizes), str(file_number)]
+    string = ','.join(files)
+    return string

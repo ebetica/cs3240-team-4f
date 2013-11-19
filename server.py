@@ -106,10 +106,10 @@ def user_in_database():
     return ret
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
-def user_is_admin():
+def user_is_admin(
     """Tests if the user is in the database"""
     username = request.form['username']
-    val = user_is_admin(username)
+    val = server_tools.user_is_admin(username)
     if not val:
         ret = FALSE
     else:
@@ -296,29 +296,12 @@ def remove_user():
 def view_user_files():
     username = request.form['username']
     path = os.path.join(app.root_path, 'uploads', username)
-    file_sizes = 0
-    file_number = 0
-    for roots, dirs, files in os.walk(path):
-        for f in files:
-            fp = os.path.join(roots, f)
-            file_sizes += os.path.getsize(fp)
-            file_number += 1
-    files = [str(file_sizes), str(file_number)]
-    return ','.join(files)
+    return server_tools.view_files(path)
 
 @app.route('/view_all_files', methods=['GET'])
 def view_all_files():
     path = os.path.join(app.root_path,'uploads')
-    file_sizes = 0
-    file_number = 0
-    for roots, dirs, files in os.walk(path):
-        for f in files:
-            fp = os.path.join(roots, f)
-            file_sizes += os.path.getsize(fp)
-            file_number += 1
-    files = [str(file_sizes), str(file_number)]
-    string = ','.join(files)
-    return string
+    return server_tools.view_files(path)
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
