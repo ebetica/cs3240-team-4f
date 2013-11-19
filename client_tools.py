@@ -114,7 +114,7 @@ def share_file(user,pathName):
 
 
 def download_file(url, filename):
-    url += 'uploads/'
+    url += 'download/'
     url += filename
     payload = add_auth({})
     r = requests.get(url, data=payload)

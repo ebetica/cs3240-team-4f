@@ -2,10 +2,11 @@ import sqlite3, time, os, string, random, uuid
 import server_tools
 from constants import *
 from flask import Flask, request, g, send_from_directory, redirect, url_for
-from werkzeug import utils
+from flask.ext.autoindex import AutoIndex
 
 # Creats the application
 app = Flask(__name__)
+index = AutoIndex(app, app.root_path)
 
 # The database location is stored here. If you move around files and
 # don't change this, the server will break.
@@ -116,7 +117,11 @@ def upload_file():
         print("Saved file to %s"%path)
         return TRUE
     return FALSE
-
+'''
+@app.route('/uploads')
+def browse_user_uploads():
+    index.render_autoindex()
+'''
 @app.route('/share')
 def share_file(filename):
     username = request.form['username']
@@ -159,8 +164,8 @@ def mkdir():
     return TRUE
 
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
+@app.route('/download/<filename>')
+def download_file(filename):
     if not securify(request):
         return FALSE
     username = request.form['username']
