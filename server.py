@@ -1,12 +1,12 @@
 import sqlite3, time, os, string, random, uuid
 import server_tools
 from constants import *
-from flask import Flask, request, g, send_from_directory, redirect, url_for
+from flask import Flask, request, g, send_from_directory, render_template, redirect, url_for
 from flask.ext.autoindex import AutoIndex
 
 # Creats the application
 app = Flask(__name__)
-index = AutoIndex(app, app.root_path)
+index = AutoIndex(app, add_url_rules=True)
 
 # The database location is stored here. If you move around files and
 # don't change this, the server will break.
@@ -58,13 +58,48 @@ def close_db(error):
     if hasattr(g, 'sqlite_db'):
         g.sqlite_db.close()
 
+@app.route('/index')
+def web_home_page():
+    return render_template('index.html')
+
+@app.route('/web_login', methods=['POST'])
+def web_login_page():
+    hold = server_tools.login(request.form['username'], request.form['password'])
+    if not hold:
+        return FALSE
+    else:
+        user = hold[0]
+        h = hold[1]
+        if user[0] in app.config['USERS']:
+            app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
+        else:
+            app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
+        if app.config["DEBUG"]: print app.config
+        if server_tools.user_is_admin(request.form['username']):
+            return redirect(url_for('browse_all_uploads'), code=307)
+        else:
+            return redirect(url_for('browse_user_uploads', username=request.form['username'], auth=h), code=307)
+
+
+@app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
+def browse_user_uploads(username, auth):
+    if  auth in [i['auth'] for i in app.config['USERS'][username]]:
+        return index.render_autoindex(os.path.join('uploads', username), browse_root=app.config.root_path)
+    else:
+        return FALSE
+
+@app.route('/uploads/', methods=['GET', 'POST'])
+def browse_all_uploads():
+    if server_tools.user_is_admin(request.form['username']):
+
+        return index.render_autoindex('uploads', browse_root=app.config.root_path)
 
 @app.route('/user_in_database', methods=['GET', 'POST'])
 def user_in_database():
     """Tests if the user is in the database"""
     username = request.form['username']
-    user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user is not None:
+    val = server_tools.user_in_database(username)
+    if val:
         ret = TRUE
     else:
         ret = FALSE
@@ -74,8 +109,8 @@ def user_in_database():
 def user_is_admin():
     """Tests if the user is in the database"""
     username = request.form['username']
-    user_type = query_db("SELECT role FROM users WHERE username=?", [username], one=True )
-    if user_type == 'user':
+    val = user_is_admin(username)
+    if not val:
         ret = FALSE
     else:
         ret = TRUE
@@ -117,11 +152,7 @@ def upload_file():
         print("Saved file to %s"%path)
         return TRUE
     return FALSE
-'''
-@app.route('/uploads')
-def browse_user_uploads():
-    index.render_autoindex()
-'''
+
 @app.route('/share')
 def share_file(filename):
     username = request.form['username']
@@ -188,23 +219,22 @@ def securify(request):
     return auth in [i['auth'] for i in app.config['USERS'][username]]
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET','POST'])
 def login():
     username = request.form['username']
-    user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user is None: return FALSE
-    if user[1] == server_tools.password_hash(request.form['password'] + user[2]):
-        letters = string.ascii_letters+string.digits
-        h = "".join([random.choice(letters) for k in range(20)])
+    password = request.form['password']
+    hold = server_tools.login(username, password)
+    if not hold:
+        return FALSE
+    else:
+        user = hold[0]
+        h = hold[1]
         if user[0] in app.config['USERS']:
             app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
         else:
             app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
         if app.config["DEBUG"]: print app.config
         return h
-    else:
-        return FALSE
-
 
 @app.route('/logout', methods=['POST'])
 def logout():
