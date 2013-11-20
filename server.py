@@ -96,6 +96,8 @@ def listing():
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
+    # Uploads the file to the user's upload directory
+    # Updates the listing file with the new upload!
     if not securify(request):
         return FALSE
     username = request.form['username']
@@ -114,6 +116,7 @@ def upload_file():
         server_tools.r_mkdir( os.path.dirname(path) )
         afile.save(path)
         print("Saved file to %s"%path)
+        update_history(username, path, timestamp, "modify")
         return TRUE
     return FALSE
 
@@ -147,6 +150,7 @@ def delete_file():
         os.remove(descriptor)
     if os.path.isdir(descriptor):
         os.rmdir(descriptor)
+    update_history(username, path, timestamp, "delete")
     return TRUE
 
 @app.route('/mkdir', methods=['POST'])
@@ -156,10 +160,18 @@ def mkdir():
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
     server_tools.r_mkdir(descriptor)
+    update_history(username, path, timestamp, "mkdir")
     return TRUE
 
 
-@app.route('/uploads/<filename>')
+def update_history(user, path, timestamp, op):
+    hist_file = username + '.filelisting'
+    with open(hist_file, 'a') as hist:
+        hist_file.write("%s %s %s"%(timestamp, history, op))
+        # Write the timestamp to the last updated field in the sql
+    pass
+
+@app.route('/download/<filename>')
 def uploaded_file(filename):
     if not securify(request):
         return FALSE

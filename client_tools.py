@@ -11,6 +11,9 @@ from threading import Timer
 
 DEBUG = False
 
+# Server request related function
+########
+
 def user_in_database(username):
     # Returns True iff username is in the database
     payload = {'username': username}
@@ -37,52 +40,6 @@ def get_user_list():
     payload = {'value': 'username', 'table': 'users'}
     r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
     return r.content
-
-def sanity_check_username(name):
-    VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
-    rules = [ 
-            len(name) > 3, # User name is longer than 3 characters
-            all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
-            ]
-    return all(rules)
-
-def write_config_file(onedir_path, username):
-    userhome = os.environ['HOME']
-    config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, config_file)
-    with open(config_path, 'w') as afile:
-        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
-    return True
-
-def read_config_file(username):
-    userhome = os.environ['HOME']
-    config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, config_file)
-    try:
-        with open(config_path, 'r') as afile:
-            return afile.readline()
-    except Exception as e:
-        print e.message
-        return False
-
-def change_directory(dirname):
-    sess = session()
-    username = sess['username']
-    ONEDIR_DIRECTORY = read_config_file(username)
-    shutil.move(ONEDIR_DIRECTORY, dirname)
-    write_config_file(dirname, username)
-    sync(False)
-    sync(True)
-
-def get_file_paths(directory):
-    file_paths = {}
-
-    for root, directories, files in os.walk(directory):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            file_paths[filepath] = os.path.getmtime(filepath)
-
-    return file_paths
 
 def upload_file(url, filename, timestamp):
     sess = session()
@@ -114,7 +71,7 @@ def share_file(user,pathName):
 
 
 def download_file(url, filename):
-    url += 'uploads/'
+    url += 'download/'
     url += filename
     payload = add_auth({})
     r = requests.get(url, data=payload)
@@ -209,30 +166,21 @@ def view_all_files():
     r = requests.get(SERVER_ADDRESS + 'view_all_files', data = payload)
     return r.content
 
-def add_auth(payload):
+
+
+
+
+# Client-side state manipulation
+###########
+
+def change_directory(dirname):
     sess = session()
-    payload['username'] = sess['username']
-    payload['auth'] = sess['auth']
-    return payload
-
-def session():
-    order = ['username', 'auth', 'sync']
-    try:
-        session_file = open("/tmp/onedir.session", 'r').read().split("\n")
-        session = {}
-        for i in range(len(order)):
-            session[order[i]] = session_file[i]
-
-        return session
-    except IOError:
-        return False
-    
-def update_session(session):
-    order = ['username', 'auth', 'sync']
-    session_file = open("/tmp/onedir.session", 'w')
-    for i in order:
-        session_file.write(session[i] + '\n')
-    session_file.close()
+    username = sess['username']
+    ONEDIR_DIRECTORY = read_config_file(username)
+    shutil.move(ONEDIR_DIRECTORY, dirname)
+    write_config_file(dirname, username)
+    sync(False)
+    sync(True)
 
 def quit_session():
     sess = session()
@@ -243,18 +191,6 @@ def quit_session():
     r = requests.post(SERVER_ADDRESS + 'logout', data=payload)
     if r.content == FALSE:
         print("You are not logged in on the server...")
-
-class OneDirDaemon(daemon.Daemon):
-    def __init__(self, pidfile, username):
-        daemon.Daemon.__init__(self, pidfile)
-        self.username = username
-
-    def run(self):
-    # Run the daemon that checks for file updates and stuff
-        sys.stderr.write("Hi")
-        ONEDIR_DIRECTORY = read_config_file(self.username)
-        self.fuc = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)  #This should be accessible from other methods
-        self.fuc.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
 
 def sync(on):
     # Run the daemon that checks for file updates and stuff
@@ -287,3 +223,83 @@ def stop():
     quit_session()
 
 
+
+# Configuration related functions
+##########
+
+order = ['username', 'auth', 'sync']
+def session():
+    try:
+        session_file = open("/tmp/onedir.session", 'r').read().split("\n")
+        session = {}
+        for i in range(len(order)):
+            session[order[i]] = session_file[i]
+
+        return session
+    except IOError:
+        return False
+    
+def update_session(session):
+    session_file = open("/tmp/onedir.session", 'w')
+    for i in order:
+        session_file.write(session[i] + '\n')
+    session_file.close()
+
+
+def write_config_file(onedir_path, username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig_' + username
+    config_path = os.path.join(userhome, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
+    return True
+
+def read_config_file(username):
+    userhome = os.environ['HOME']
+    config_file = '.onedirconfig_' + username
+    config_path = os.path.join(userhome, config_file)
+    try:
+        with open(config_path, 'r') as afile:
+            return afile.readline()
+    except Exception as e:
+        print e.message
+        return False
+
+
+
+# Misc Functions
+#########
+
+def get_file_paths(directory):
+    file_paths = {}
+
+    for root, directories, files in os.walk(directory):
+        for filename in files:
+            filepath = os.path.join(root, filename)
+            file_paths[filepath] = os.path.getmtime(filepath)
+
+    return file_paths
+
+def sanity_check_username(name):
+    VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
+    rules = [ 
+            len(name) > 3, # User name is longer than 3 characters
+            all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
+            ]
+    return all(rules)
+
+def add_auth(payload):
+    sess = session()
+    payload['username'] = sess['username']
+    payload['auth'] = sess['auth']
+    return payload
+
+class OneDirDaemon(daemon.Daemon):
+    def __init__(self, pidfile, username):
+        daemon.Daemon.__init__(self, pidfile)
+        self.username = username
+
+    def run(self):
+        sys.stderr.write("Hi")
+        ONEDIR_DIRECTORY = read_config_file(self.username)
+        pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY).start()

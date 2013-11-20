@@ -12,11 +12,7 @@ class MyEventHandler(pyinotify.ProcessEvent):
 
     def process_IN_CREATE(self, event):
         print "CREATE event:", event.pathname
-        self.uploadFiles.append(event.pathname)
-        if os.path.exists(event.pathname):
-            r = client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
-            if r == 200:
-                self.uploadFiles.remove(event.pathname)
+        self.create_file(event.pathname)
 
     def process_IN_DELETE(self, event):
         print "DELETE event:", event.pathname
@@ -26,6 +22,22 @@ class MyEventHandler(pyinotify.ProcessEvent):
         print "MODIFY event:", event.pathname
         if os.path.exists(event.pathname):
             client_tools.upload_file(constants.SERVER_ADDRESS, event.pathname, os.path.getmtime(event.pathname))
+
+    def process_IN_MOVED_FROM(self, event):
+        print "MOVE FROM event:", event.pathname
+        self.process_IN_DELETE(event)
+
+    def process_IN_MOVED_TO(self, event):
+        print "MOVE TO event:", event.pathname
+        self.process_IN_CREATE(event)
+
+    def create_file(self, pathname):
+        self.uploadFiles.append(pathname)
+        if os.path.exists(pathname):
+            r = client_tools.upload_file(constants.SERVER_ADDRESS, pathname, os.path.getmtime(pathname))
+            if r == 200:
+                self.uploadFiles.remove(pathname)
+        
 
 class FileUpdateChecker():
     #TODO download updated files from server. Older file_updates.py code could be useful here
@@ -51,7 +63,7 @@ class FileUpdateChecker():
 
 def main():
     # watch manager
-    ONEDIR_DIRECTORY = os.path.join(os.environ['HOME'] + 'OneDir')
+    ONEDIR_DIRECTORY = os.path.join(os.environ['HOME'], 'OneDir')
 
     fu = FileUpdateChecker(ONEDIR_DIRECTORY)
     fu.start()
