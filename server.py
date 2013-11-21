@@ -106,7 +106,7 @@ def user_in_database():
     return ret
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
-def user_is_admin(
+def user_is_admin():
     """Tests if the user is in the database"""
     username = request.form['username']
     val = server_tools.user_is_admin(username)
@@ -124,9 +124,9 @@ def listing():
     username = request.form['username']
     listingFile = username + '.filelisting'
     listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-    if os.path.isfile(listing_path):
+    try:
         return open(listing_path, 'r').read()
-    else:
+    except:
         return FALSE
 
 
@@ -140,14 +140,12 @@ def upload_file():
     timestamp = request.form['timestamp']
     path = request.form['path']
     afile = request.files['file']
-    listingFile = username + '.filelisting'
 
     if afile:
         descriptor = os.path.join(app.root_path, 'uploads', username)
         if not os.path.isdir(descriptor):
             os.mkdir(descriptor, 0700)
-        listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-        server_tools.update_listings(listing_path, path, timestamp, request.form['auth'])
+        server_tools.update_listings(username, path, timestamp)
         path = os.path.join(descriptor, path)
         server_tools.r_mkdir( os.path.dirname(path) )
         afile.save(path)
@@ -161,13 +159,11 @@ def share_file(filename):
     username = request.form['username']
     path = request.form['PathName']
     userShared = request.form['SharedWith']
-    listingFile = userShared + '.filelisting'
     sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
     server_tools.r_mkdir(os.path.dirname(sharedPath))
     filePath = os.path.join(app.root_path, 'uploads', username, path)
     os.symlink(filePath, sharedPath)
-    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-    server_tools.update_listings(listing_path, path, os.path.getmtime(sharedPath), request.form['auth'])
+    server_tools.update_listings(userShared, path, os.path.getmtime(sharedPath))
     return TRUE
 
 @app.route('/delete')
@@ -178,15 +174,13 @@ def delete_file():
     rel_path = request.form['rel_path']
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
 
-    listingFile = username + '.filelisting'
-    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-    server_tools.update_listings(listing_path, rel_path, 0, request.form['auth'], True)
+    server_tools.update_listings(username, rel_path, 0, True)
 
     if os.path.isfile(descriptor):
         os.remove(descriptor)
     if os.path.isdir(descriptor):
         os.rmdir(descriptor)
-    update_history(username, path, timestamp, "delete")
+    update_history(username, rel_path, timestamp, "delete")
     return TRUE
 
 @app.route('/mkdir', methods=['POST'])
@@ -196,16 +190,15 @@ def mkdir():
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
     server_tools.r_mkdir(descriptor)
-    update_history(username, path, timestamp, "mkdir")
+    update_history(username, descriptor, timestamp, "mkdir")
     return TRUE
 
 
 def update_history(user, path, timestamp, op):
-    hist_file = username + '.filelisting'
+    hist_file = os.path.join("uploads", user + '.history')
     with open(hist_file, 'a') as hist:
-        hist_file.write("%s %s %s"%(timestamp, history, op))
+        hist.write("%s %s %s\n"%(timestamp, path, op))
         # Write the timestamp to the last updated field in the sql
-    pass
 
 @app.route('/download/<filename>')
 def uploaded_file(filename):

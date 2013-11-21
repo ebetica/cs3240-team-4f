@@ -1,6 +1,4 @@
 __author__ = 'robert'
-
-
 import hashlib
 import os
 import pickle
@@ -82,7 +80,9 @@ def r_mkdir(dirname):
         os.makedirs(dirname)
         print(dirname)
 
-def update_listings(listing, path, timestamp, auth, delete=False):
+def update_listings(username, path, timestamp, delete=False):
+    listingFile = username + '.filelisting'
+    listing = os.path.join(server.app.root_path, 'uploads', listingFile)
     l = []
     if os.path.isfile(listing):
         f = open(listing, 'r')
@@ -96,10 +96,9 @@ def update_listings(listing, path, timestamp, auth, delete=False):
                 found = k
             else:
                 l[k][1] = str(timestamp)
-                l[k][2] = auth
                 found = True
     if not found and not delete:
-        l.append([path, timestamp, auth])
+        l.append([path, timestamp])
     print("Found = %d"%(found))
     if type(found) == int and delete:
         del l[found]

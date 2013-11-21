@@ -1,7 +1,7 @@
 __author__ = 'robert'
 
 import pyinotify
-import os
+import os, time
 import client_tools
 import constants
 from file_updates import ServerChecker
@@ -57,8 +57,25 @@ class FileUpdateChecker():
         self.notifier.start()
 
     def stop(self):
-
         self.notifier.stop()
+
+    def sync_with_server(self):
+        while True:
+            sleep(self.interval)
+            username = client_tools.session()["username"]
+            server_files = dict(client_tools.parse_listing(client_tools.file_listing()))
+            client_files = dict(client_tools.parse_listing(username))
+
+            # builds a listing of files on the local path
+            local_files = {}
+            for roots, dirs, files in os.walk(path):
+                for f in files:
+                    fp = os.path.join(roots, f)
+                    mod_time = os.path.getmtime(fp)
+                    local_files[fp] = mod_time
+
+
+
 
 
 def main():

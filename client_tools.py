@@ -59,6 +59,7 @@ def upload_file(url, filename, timestamp):
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
+    update_listings(sess['username'], rel_path, timestamp)
     return r.status_code
 
 def share_file(user,pathName):
@@ -93,6 +94,7 @@ def delete_file(url, filename):
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
+    update_listings(sess['username'], rel_path, 0, delete=True)
 
 def download_file_updates(url):
     url += 'sync'
@@ -248,23 +250,63 @@ def update_session(session):
 
 def write_config_file(onedir_path, username):
     userhome = os.environ['HOME']
-    config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, config_file)
+    folder = os.path.join(userhome, username+".onedir")
+    if not os.isdir(folder):
+        os.makedirs(folder)
+    config_file = username + ".config"
+    config_path = os.path.join(folder, config_file)
     with open(config_path, 'w') as afile:
         afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
     return True
 
 def read_config_file(username):
     userhome = os.environ['HOME']
-    config_file = '.onedirconfig_' + username
-    config_path = os.path.join(userhome, config_file)
+    config_path = os.path.join(userhome, username+".onedir")
     try:
         with open(config_path, 'r') as afile:
             return afile.readline()
     except Exception as e:
-        print e.message
+        print "Configuration file does not exist!"
         return False
 
+def update_listings(user, path, timestamp, delete=False):
+    userhome = os.environ['HOME']
+    listing_file = username+".listing"
+    listing = os.path.join(userhome, ".onedir", listing_file)
+    l = []
+    if os.path.isfile(listing):
+        f = open(listing, 'r')
+        l = f.readlines()
+        f.close()
+    found = False
+    for k in range(len(l)):
+        l[k] = l[k].strip().split(' ')
+        if l[k][0] == path:
+            if delete:
+                found = k
+            else:
+                l[k][1] = str(timestamp)
+                found = True
+    if not found and not delete:
+        l.append([path, timestamp])
+    print("Found = %d"%(found))
+    if type(found) == int and delete:
+        del l[found]
+    print l
+    f = open(listing, 'w')
+    f.write('\n'.join([' '.join(k) for k in l]))
+    f.close()
+
+def parse_listing(listing):
+    # takes either a username or the contents of a /listing request
+    #  from the server.
+    userhome = os.environ['HOME']
+    listing_file = listing+".listing"
+    listing_file = os.path.join(userhome, ".onedir", listing_file)
+    if os.exists(listing_file):
+        listing = open(listing_file).read()
+
+    return [k.strip().split(' ') for k in listing.strip().split('\n')]
 
 
 # Misc Functions
