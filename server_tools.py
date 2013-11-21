@@ -11,6 +11,8 @@ def login(username, password):
     user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True)
     if user is None:
         return False
+    userval = user[1]
+    progval = password_hash(password + user[2])
     if user[1] == password_hash(password + user[2]):
         letters = string.ascii_letters+string.digits
         h = ''.join([random.choice(letters) for k in range(20)])
@@ -93,7 +95,8 @@ def user_in_database(username):
 def user_is_admin(username):
     """Returns if a user is an admin user or just a normal user"""
     user_type = server.query_db("SELECT role FROM users WHERE username=?", [username], one=True)
-    if user_type == 'user':
+    user_string = user_type[0]
+    if str(user_string).lower() == 'user':
         ret = False
     else:
         ret = True

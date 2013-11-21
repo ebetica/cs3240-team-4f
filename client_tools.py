@@ -15,14 +15,6 @@ DEBUG = False
 ########
 
 
-def change_password(oldpass, newpass):
-    """Change password from oldpass to newpass for input user"""
-    payload = {'oldpass': oldpass, 'newpass': newpass}
-    payload = add_auth(payload)
-    r = requests.post(SERVER_ADDRESS + 'password_change', data=payload)
-    return r.content == TRUE
-
-
 def check_updates():
     """"Checks the server for any updates to the user's files, and uploads or downloads changed files"""
     url = SERVER_ADDRESS
@@ -94,8 +86,7 @@ def get_user_list():
 
 def is_admin(username):
     """Returns if a user is an admin or not"""
-    payload = {'username': username}
-    payload = add_auth(payload)
+    payload = add_auth({})
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
     return r.content == TRUE
 
@@ -105,6 +96,22 @@ def login_user(username, password):
     payload = {'username': username, 'password': password}
     r = requests.post(SERVER_ADDRESS + 'login', data=payload)
     return r.content
+
+
+def password_change(oldpass, newpass):
+    """Change password from oldpass to newpass for input user"""
+    payload = {'oldpass': oldpass, 'newpass': newpass}
+    payload = add_auth(payload)
+    r = requests.post(SERVER_ADDRESS + 'password_change', data=payload)
+    return r.content == TRUE
+
+
+def password_reset(resetMe):
+    """Reset password for input user"""
+    payload = {'resetMe': resetMe}
+    payload = add_auth(payload)
+    r = requests.post(SERVER_ADDRESS + 'password_reset', data=payload)
+    return r.content == TRUE
 
 
 def register_user(username, password, email=None, _type='user'):
@@ -126,14 +133,6 @@ def remove_user(deleteMe):
     payload = {'deleteMe': deleteMe}
     payload = add_auth(payload)
     r = requests.post(SERVER_ADDRESS + 'remove_user', data=payload)
-    return r.content == TRUE
-
-
-def reset_password(resetMe):
-    """Reset password for input user"""
-    payload = {'resetMe': resetMe}
-    payload = add_auth(payload)
-    r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
     return r.content == TRUE
 
 

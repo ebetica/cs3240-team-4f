@@ -157,6 +157,8 @@ def getVals():
             return '\n'.join(val[0] for val in vals)
         else:
             return '\n'.join(val for val in vals)
+    else:
+        return "You need to be an admin for this feature"
 
 
 @app.route('/listing')
@@ -217,29 +219,32 @@ def mkdir():
     return TRUE
 
 
-@app.route('/password_reset', methods=['POST'])
-def password_reset():
-    """Resets the user's password for the OneDir service"""
-    if securify(request) and server_tools.user_is_admin(request.form['username']):
-        resetMe = request.form['resetMe']
-        query_db("UPDATE users SET password = 'password' WHERE username = (?)", [resetMe], one=True)
-        return TRUE
-    else:
-        return FALSE
-
-
 @app.route('/password_change', methods=['POST'])
 def password_change():
     """Allows a user to change their own password"""
     if securify(request):
         username = request.form['username']
         user = query_db("SELECT * FROM users WHERE username=?", [username], one=True)
-        if user[1] == server_tools.password_hash(request.form['oldpass']+user[2]):
-            password = server_tools.password_hash(request.form['newpass'])
+        if user[1] == server_tools.password_hash(request.form['oldpass'] + user[2]):
+            password = server_tools.password_hash(request.form['newpass'] + user[2])
             query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, username], one=True)
             return TRUE
         else:
             return FALSE
+
+
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    """Resets the user's password for the OneDir service"""
+    username = request.form['username']
+    if securify(request) and server_tools.user_is_admin(username):
+        resetMe = request.form['resetMe']
+        user = query_db("SELECT * FROM users WHERE username=?", [resetMe], one=True)
+        password = server_tools.password_hash('password' + user[2])
+        query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, resetMe], one=True)
+        return TRUE
+    else:
+        return FALSE
 
 
 @app.route('/register', methods=['POST'])
@@ -362,6 +367,8 @@ def view_user_files():
         viewUser = request.form['viewUser']
         path = os.path.join(app.root_path, 'uploads', viewUser)
         return server_tools.view_files(path)
+    else:
+        return "You need to be an admin for this feature"
 
 
 @app.route('/view_all_files', methods=['GET'])
@@ -370,6 +377,8 @@ def view_all_files():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         path = os.path.join(app.root_path, 'uploads')
         return server_tools.view_files(path)
+    else:
+        return "You need to be an admin for this feature"
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
