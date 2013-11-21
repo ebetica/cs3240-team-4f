@@ -1,10 +1,9 @@
-__author__ = 'robert'
-
-import pyinotify
-import os
 import client_tools
 import constants
 from file_updates import ServerChecker
+
+import os
+import pyinotify
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
@@ -57,7 +56,6 @@ class FileUpdateChecker():
         self.notifier.start()
 
     def stop(self):
-
         self.notifier.stop()
 
 
