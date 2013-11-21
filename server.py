@@ -106,7 +106,7 @@ def user_in_database():
     return ret
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
-def user_is_admin(
+def user_is_admin():
     """Tests if the user is in the database"""
     username = request.form['username']
     val = server_tools.user_is_admin(username)
