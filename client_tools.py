@@ -1,12 +1,11 @@
 # The non-interactive parts of the client
-import string
-import os
-import requests 
+from constants import *
 import daemon
 import pynotify_update
-from constants import *
+import os
+import requests
 import shutil
-import sys
+import string
 from threading import Timer
 
 DEBUG = False
@@ -14,112 +13,9 @@ DEBUG = False
 # Server request related function
 ########
 
-def user_in_database(username):
-    # Returns True iff username is in the database
-    payload = {'username': username}
-    r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
-    return r.content == TRUE
-
-def register_user(username,password,email=None,_type='user'):
-    if not user_in_database(username):
-        if email is None:
-            email=''
-        if sanity_check_username(username):
-            payload={'username':username, 'password': password, 'email': email, 'user_type':_type}
-            r=requests.post(SERVER_ADDRESS + 'register', data=payload)
-        else:
-            pass
-            #toss error or re-enter.
-            
-def login_user(username, password):
-    payload = {'username': username, 'password': password}
-    r = requests.post(SERVER_ADDRESS + 'login', data=payload)
-    return r.content
-
-def get_user_list():
-    payload = {'value': 'username', 'table': 'users'}
-    r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
-    return r.content
-
-def upload_file(url, filename, timestamp):
-    sess = session()
-    ONEDIR_DIRECTORY = read_config_file(sess['username'])
-    rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY )
-    payload = add_auth({'timestamp': timestamp, 'path': rel_path})
-    files = {}
-    if os.path.isdir(filename):
-        url += 'mkdir'
-    else:
-        url += 'upload'
-        if not os.path.exists(filename):
-            print("File disappeared before I could upload it!")
-            return
-        files = {'file': open(filename, 'rb')}
-    r = requests.post(url, files=files, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    update_listings(sess['username'], rel_path, timestamp)
-    return r.status_code
-
-def share_file(user,pathName):
-    url = SERVER_ADDRESS + 'share'
-    sess = session()
-    username = sess['username']
-    payload = add_auth({'ShareWith': user, 'PathName': pathName})
-    r = requests.post(url, data=payload)
-    return r.status_code
-
-
-def download_file(url, filename):
-    url += 'download/'
-    url += filename
-    payload = add_auth({})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    if filename != "":
-        filename = os.path.join(read_config_file(session()["username"]), filename)
-        with open(filename, 'wb') as code:
-            code.write(r.content)
-
-def delete_file(url, filename):
-    url += 'delete'
-    sess = session()
-    onedir_directory = read_config_file(sess['username'])
-    rel_path = os.path.relpath(filename, onedir_directory)
-    payload = add_auth({'rel_path':rel_path})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    update_listings(sess['username'], rel_path, 0, delete=True)
-
-def download_file_updates(url):
-    url += 'sync'
-    sess = session()
-    payload = add_auth({})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    with open('.onedirdata', 'wb') as code:
-        code.write(r.content)
-
-def file_listing():
-    url = SERVER_ADDRESS
-    url += 'listing'
-    sess = session()
-    payload = add_auth({})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    listing = [k.split(' ') for k in r.content.split('\n')]
-    return listing
 
 def check_updates():
+    """"Checks the server for any updates to the user's files, and uploads or downloads changed files"""
     url = SERVER_ADDRESS
     ONEDIR_DIRECTORY = read_config_file(session()['username'])
     server_listing = file_listing()
@@ -137,43 +33,163 @@ def check_updates():
         elif server_files[afile] < os.path.getmtime(afile):
             upload_file(url, afile, os.path.getmtime(afile))
 
-def reset_password(username):
-    payload = {'username': username}
-    r = requests.post(SERVER_ADDRESS + 'reset_password', data=payload)
-    return r.content == TRUE
 
-def change_password(oldpass, newpass):
+def delete_file(url, filename):
+    """Deletes specified file from the server, if this file has been deleted from the user's OneDir directory"""
+    url += 'delete'
     sess = session()
-    payload = {'username': sess['username'], 'oldpass': oldpass, 'newpass': newpass}
-    r = requests.post(SERVER_ADDRESS + 'password_change', data=payload)
-    return r.content == TRUE
+    onedir_directory = read_config_file(sess['username'])
+    rel_path = os.path.relpath(filename, onedir_directory)
+    payload = add_auth({'rel_path': rel_path})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    update_listings(sess['username'], rel_path, timestamp)
+    return r.status_code
 
-def remove_user(username):
-    payload = {'username': username}
-    r = requests.post(SERVER_ADDRESS + 'remove_user', data = payload)
-    return r.content == TRUE
+def download_file(url, filename):
+    """Downloads file specified by filename from the OneDir server"""
+    url += 'download/'
+    url += filename
+    payload = add_auth({})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    if filename != "":
+        filename = os.path.join(read_config_file(session()["username"]), filename)
+        with open(filename, 'wb') as code:
+            code.write(r.content)
+
+def file_listing():
+    """Returns a listing of the files stored on the server in the user's directory"""
+    url = SERVER_ADDRESS
+    url += 'listing'
+    payload = add_auth({})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    listing = [k.split(' ') for k in r.content.split('\n')]
+    return listing
+
+
+def get_user_list():
+    """Returns the list of users registered on the OneDir server"""
+    payload = {'value': 'username', 'table': 'users'}
+    payload = add_auth(payload)
+    r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
+    return r.content
+
 
 def is_admin(username):
-    payload = {'username': username}
+    """Returns if a user is an admin or not"""
+    payload = add_auth({})
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
     return r.content == TRUE
 
-def view_user_files(username):
+
+def login_user(username, password):
+    """Logs a user in to the OneDir server"""
+    payload = {'username': username, 'password': password}
+    r = requests.post(SERVER_ADDRESS + 'login', data=payload)
+    return r.content
+
+
+def password_change(oldpass, newpass):
+    """Change password from oldpass to newpass for input user"""
+    payload = {'oldpass': oldpass, 'newpass': newpass}
+    payload = add_auth(payload)
+    r = requests.post(SERVER_ADDRESS + 'password_change', data=payload)
+    return r.content == TRUE
+
+
+def password_reset(resetMe):
+    """Reset password for input user"""
+    payload = {'resetMe': resetMe}
+    payload = add_auth(payload)
+    r = requests.post(SERVER_ADDRESS + 'password_reset', data=payload)
+    return r.content == TRUE
+
+
+def register_user(username, password, email=None, _type='user'):
+    """Registers the user specified by username in the database"""
+    if not user_in_database(username):
+        if email is None:
+            email = ''
+        if sanity_check_username(username):
+            payload = {'username': username, 'password': password, 'email': email, 'user_type': _type}
+            r = requests.post(SERVER_ADDRESS + 'register', data=payload)
+            return r.status_code
+        else:
+            pass
+            #toss error or re-enter.
+
+
+def remove_user(deleteMe):
+    """Remove users from the OneDir service"""
+    payload = {'deleteMe': deleteMe}
+    payload = add_auth(payload)
+    r = requests.post(SERVER_ADDRESS + 'remove_user', data=payload)
+    return r.content == TRUE
+
+
+def share_file(user, pathName):
+    """Shares the file located at pathname from the current user to the input user"""
+    url = SERVER_ADDRESS + 'share'
+    payload = add_auth({'ShareWith': user, 'PathName': pathName})
+    r = requests.post(url, data=payload)
+    return r.status_code
+
+
+def upload_file(url, filename, timestamp):
+    """Uploads the file specified by filename and its timestamp to the server"""
+    sess = session()
+    ONEDIR_DIRECTORY = read_config_file(sess['username'])
+    rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY)
+    payload = add_auth({'timestamp': timestamp, 'path': rel_path})
+    files = {}
+    if os.path.isdir(filename):
+        url += 'mkdir'
+    else:
+        url += 'upload'
+        if not os.path.exists(filename):
+            print("File disappeared before I could upload it!")
+            return
+        files = {'file': open(filename, 'rb')}
+    r = requests.post(url, files=files, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    update_listings(sess['username'], rel_path, timestamp)
+    return r.status_code
+
+
+def user_in_database(username):
+    # Returns True iff username is in the database
     payload = {'username': username}
+    r = requests.get(SERVER_ADDRESS + 'user_in_database', data=payload)
+    return r.content == TRUE
+
+
+def view_all_files():
+    """Returns information about files uploaded to the server"""
+    payload = add_auth({})
+    r = requests.get(SERVER_ADDRESS + 'view_all_files', data=payload)
+    return r.content
+
+
+def view_user_files(viewUser):
+    """Returns information about files uploaded to the server by a specific user"""
+    payload = {'viewUser': viewUser}
+    payload = add_auth(payload)
     r = requests.get(SERVER_ADDRESS + 'view_user_files', data=payload)
     return r.content
 
-def view_all_files():
-    payload = {}
-    r = requests.get(SERVER_ADDRESS + 'view_all_files', data = payload)
-    return r.content
-
-
-
-
-
 # Client-side state manipulation
 ###########
+
 
 def change_directory(dirname):
     sess = session()
@@ -184,6 +200,7 @@ def change_directory(dirname):
     sync(False)
     sync(True)
 
+
 def quit_session():
     sess = session()
     if sess['sync'] == '1':
@@ -193,6 +210,12 @@ def quit_session():
     r = requests.post(SERVER_ADDRESS + 'logout', data=payload)
     if r.content == FALSE:
         print("You are not logged in on the server...")
+
+
+def stop():
+    sync(False)
+    quit_session()
+
 
 def sync(on):
     # Run the daemon that checks for file updates and stuff
@@ -206,31 +229,26 @@ def sync(on):
             onedir_daemon.stop()
             sess['sync'] = '0'
         update_session(sess)
-        return sess['sync']  == '1'
+        return sess['sync'] == '1'
     else:
         sess = session()
-        ONEDIR_DIRECTORY = read_config_file(sess['username'])
-        t = Timer(1, check_updates()) #This should be accessible from other methods
+        t = Timer(1, check_updates())
         if on:
-            t.start() #If it's accessible from other methods, it's easy to stop fuc.stop() BOOM!
+            t.start()
             sess['sync'] = '1'
         else:
             t.stop()
             sess['sync'] = '0'
         update_session(sess)
-        return sess['sync']  == '1'
-
-def stop():
-    sync(False)
-    quit_session()
-
-
+        return sess['sync'] == '1'
 
 # Configuration related functions
 ##########
-
 order = ['username', 'auth', 'sync']
+
+
 def session():
+    """Returns a list containing information about the current session (username, auth)"""
     try:
         session_file = open("/tmp/onedir.session", 'r').read().split("\n")
         session = {}
@@ -240,26 +258,18 @@ def session():
         return session
     except IOError:
         return False
-    
+
+
 def update_session(session):
+    """Updates the user's session file"""
     session_file = open("/tmp/onedir.session", 'w')
     for i in order:
         session_file.write(session[i] + '\n')
     session_file.close()
 
 
-def write_config_file(onedir_path, username):
-    userhome = os.environ['HOME']
-    folder = os.path.join(userhome, username+".onedir")
-    if not os.isdir(folder):
-        os.makedirs(folder)
-    config_file = username + ".config"
-    config_path = os.path.join(folder, config_file)
-    with open(config_path, 'w') as afile:
-        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
-    return True
-
 def read_config_file(username):
+    """Reads the config file to determine the user's preferences when the application is opened"""
     userhome = os.environ['HOME']
     config_path = os.path.join(userhome, username+".onedir")
     try:
@@ -308,11 +318,31 @@ def parse_listing(listing):
 
     return [k.strip().split(' ') for k in listing.strip().split('\n')]
 
+def write_config_file(onedir_path, username):
+    """Writes a config file stored in the user's Home folder. This file allows user preferences to persist"""
+    userhome = os.environ['HOME']
+    folder = os.path.join(userhome, username+".onedir")
+    if not os.isdir(folder):
+        os.makedirs(folder)
+    config_file = username + ".config"
+    config_path = os.path.join(folder, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
 
 # Misc Functions
 #########
 
+
+def add_auth(payload):
+    """"Adds the auth value from session to a request before it is sent to the server"""
+    sess = session()
+    payload['username'] = sess['username']
+    payload['auth'] = sess['auth']
+    return payload
+
+
 def get_file_paths(directory):
+    """Recursively returns all the files stored in a directory"""
     file_paths = {}
 
     for root, directories, files in os.walk(directory):
@@ -322,26 +352,26 @@ def get_file_paths(directory):
 
     return file_paths
 
+
 def sanity_check_username(name):
+    """"Makes sure the user's input username is acceptable"""
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
     rules = [ 
-            len(name) > 3, # User name is longer than 3 characters
-            all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
-            ]
+        len(name) > 3, # User name is longer than 3 characters
+        all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
+    ]
     return all(rules)
 
-def add_auth(payload):
-    sess = session()
-    payload['username'] = sess['username']
-    payload['auth'] = sess['auth']
-    return payload
 
 class OneDirDaemon(daemon.Daemon):
+    """"Daemonizes the OneDir client so it can run in the background"""
+
     def __init__(self, pidfile, username):
+        """Init function for daemon"""
         daemon.Daemon.__init__(self, pidfile)
         self.username = username
 
     def run(self):
-        sys.stderr.write("Hi")
+        """Starts the daemon!"""
         ONEDIR_DIRECTORY = read_config_file(self.username)
         pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY).start()

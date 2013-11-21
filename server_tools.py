@@ -1,14 +1,44 @@
 __author__ = 'robert'
+import server
 import hashlib
 import os
-import pickle
 import random
-import server
 import string
 
-#Safe way to hash large files (reads and hashes in chunks)
-#From www.pythoncentral.io/hashing-files-with-python/
-def safeHashFile( path):
+
+def login(username, password):
+    """Logs a user in to the OneDir server. Helper method for several methods in server.py"""
+    user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True)
+    if user is None:
+        return False
+    userval = user[1]
+    progval = password_hash(password + user[2])
+    if user[1] == password_hash(password + user[2]):
+        letters = string.ascii_letters+string.digits
+        h = ''.join([random.choice(letters) for k in range(20)])
+        return (user, h)
+    else:
+        return False
+
+
+def password_hash(password):
+    """Returns a hex format hash of the input password. Input password should contain salt already."""
+    return hashlib.sha1(password).hexdigest()
+
+
+def r_mkdir(dirname):
+    """Recursively makes directories so they always exist before we try to save a file"""
+    if os.path.exists(dirname):
+        return
+    else:
+        r_mkdir(os.path.dirname(dirname))
+        os.makedirs(dirname)
+        print(dirname)
+
+
+def safeHashFile(path):
+    """Safe way to hash large files (reads and hashes in chunks)"""
+    #From www.pythoncentral.io/hashing-files-with-python/
     BLOCKSIZE = 65536
     hasher = hashlib.md5()
     with open(path, 'rb') as afile:
@@ -18,69 +48,14 @@ def safeHashFile( path):
             buf = afile.read(BLOCKSIZE)
     return hasher.hexdigest()
 
+
 def scrub_sqlite_input(table_name):
-    return ' '.join( chr for chr in table_name if chr.isalnum() )
-#Builds a dictionary of the local files on the machine
-#Uses filename as key, and stores an md5 hash of each file as well as when the file was last modified
-def get_local_files(fileOb):
-    fileDict = {}
-    for root, dirs, files in os.walk(fileOb, topdown=False):
-        for name in files:
-            if not name == '.onedirdata':
-                path = os.path.join(root, name)
-                fileDict[name] = [safeHashFile(path), os.path.getmtime(path)]
-        for name in dirs:
-            fileDict.update(get_local_files(name))
-    return fileDict
+    """Sanitizes input to SQL queries to prevent SQL injection attacks"""
+    return ' '.join(char for char in table_name if char.isalnum())
 
-def build_file_listing( path):
-    pick = get_local_files(path)
-    print pick
-    pickle_path = os.path.join(path ,'.onedirdata.p')
-    with open(pickle_path, 'wb') as pickle_file:
-        pickle.dump(pick, pickle_file)
-
-
-def password_hash(password):
-    # Make this return the proper hashed version later
-    # Probably use SHA1 with salt
-    return hashlib.sha1(password).hexdigest()
-
-def user_in_database(username):
-    user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user is not None:
-        ret = True
-    else:
-        ret = False
-    return ret
-
-def user_is_admin(username):
-    user_type = server.query_db("SELECT role FROM users WHERE username=?", [username], one=True )
-    if user_type == 'user':
-        ret = False
-    else:
-        ret = True
-    return ret
-
-def login(username, password):
-    user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user is None: return False
-    if user[1] == password_hash(password + user[2]):
-        letters = string.ascii_letters+string.digits
-        h = ''.join([random.choice( letters ) for k in range(20)])
-        return (user,h)
-    else:
-        return False
-
-def r_mkdir(dirname): 
-    if os.path.exists(dirname):
-        return
-    else:
-        r_mkdir(os.path.dirname(dirname))
-        os.makedirs(dirname)
-        print(dirname)
 
 def update_listings(username, path, timestamp, delete=False):
+    """Updates the specified listing file with a new line containing the filename and timestamp"""
     listingFile = username + '.filelisting'
     listing = os.path.join(server.app.root_path, 'uploads', listingFile)
     l = []
@@ -107,7 +82,30 @@ def update_listings(username, path, timestamp, delete=False):
     f.write('\n'.join([' '.join(k) for k in l]))
     f.close()
 
+
+def user_in_database(username):
+    """Checks if a user is in the OneDir database"""
+    user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True)
+    if user is not None:
+        ret = True
+    else:
+        ret = False
+    return ret
+
+
+def user_is_admin(username):
+    """Returns if a user is an admin user or just a normal user"""
+    user_type = server.query_db("SELECT role FROM users WHERE username=?", [username], one=True)
+    user_string = user_type[0]
+    if str(user_string).lower() == 'user':
+        ret = False
+    else:
+        ret = True
+    return ret
+
+
 def view_files(path):
+    """Returns the size and number of files stored in a directory on the server"""
     file_sizes = 0
     file_number = 0
     for roots, dirs, files in os.walk(path):

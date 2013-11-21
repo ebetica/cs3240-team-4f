@@ -1,8 +1,12 @@
-import sqlite3, time, os, string, random, uuid
 import server_tools
 from constants import *
+
 from flask import Flask, request, g, send_from_directory, render_template, redirect, url_for
 from flask.ext.autoindex import AutoIndex
+import os
+import sqlite3
+import time
+import uuid
 
 # Creats the application
 app = Flask(__name__)
@@ -13,11 +17,24 @@ index = AutoIndex(app, add_url_rules=True)
 app.config.update(dict(
     DATABASE='database.db',
     DATABASE_SCHEMA='schema.sql',
-    TESTING = False,
-    DEBUG = True,
-    USERS = {} # Stores list of logged in users and their timestamps
-               # not sure if I'm putting this in the right place.
+    TESTING=False,
+    DEBUG=True,
+    USERS={}  # Stores list of logged in users and their timestamps
+              # not sure if I'm putting this in the right place.
 ))
+
+# Server-side database methods
+##########
+
+
+@app.teardown_appcontext
+def close_db(error):
+    """Closes the database again at the end of the request."""
+    if hasattr(g, 'sqlite_db'):
+        g.sqlite_db.close()
+        if error:
+            print("There was an error closing the database")
+
 
 def connect_db():
     """Connects to the specific database."""
@@ -52,18 +69,37 @@ def query_db(query, args=(), one=False):
     get_db().commit()
     return (rv[0] if rv else None) if one else rv
 
-@app.teardown_appcontext
-def close_db(error):
-    """Closes the database again at the end of the request."""
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
+# Web interface methods
+##########
+
+
+@app.route('/uploads/', methods=['GET', 'POST'])
+def browse_all_uploads():
+    """Allows admin users to browse the directory with all stored files through a web-browser"""
+    if server_tools.user_is_admin(request.form['username']):
+        return index.render_autoindex('uploads', browse_root=app.config.root_path)
+    else:
+        return "Perhaps you don't have privileges for that"
+
+
+@app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
+def browse_user_uploads(username, auth):
+    """Allows the user to browse the directory with their stored files through a web-browser"""
+    if auth in [i['auth'] for i in app.config['USERS'][username]]:
+        return index.render_autoindex(os.path.join('uploads', username), browse_root=app.config.root_path)
+    else:
+        return "Perhaps you skipped logging in"
+
 
 @app.route('/index')
 def web_home_page():
-    return render_template('index.html')
+    """Returns page where users can log into the application"""
+    return render_template('index.html')  # index.html exists in the templates directory. Flask knows this.
+
 
 @app.route('/web_login', methods=['POST'])
 def web_login_page():
+    """Parses form input to log the user in from the homepage and redirects to proper directory display"""
     hold = server_tools.login(request.form['username'], request.form['password'])
     if not hold:
         return FALSE
@@ -74,12 +110,12 @@ def web_login_page():
             app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
         else:
             app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
-        if app.config["DEBUG"]: print app.config
+        if app.config["DEBUG"]:
+            print app.config
         if server_tools.user_is_admin(request.form['username']):
             return redirect(url_for('browse_all_uploads'), code=307)
         else:
             return redirect(url_for('browse_user_uploads', username=request.form['username'], auth=h), code=307)
-
 
 @app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
 def browse_user_uploads(username, auth):
@@ -168,6 +204,7 @@ def share_file(filename):
 
 @app.route('/delete')
 def delete_file():
+    """Deletes the file specified in the request from the server"""
     if not securify(request):
         return FALSE
     username = request.form['username']
@@ -183,49 +220,40 @@ def delete_file():
     update_history(username, rel_path, timestamp, "delete")
     return TRUE
 
-@app.route('/mkdir', methods=['POST'])
-def mkdir():
+
+@app.route('/getVals', methods=['GET'])
+def getVals():
+    """Used to return attributes specified in request from the table"""
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        value = request.form['value']
+        table = request.form['table']
+        query = "SELECT * FROM " + table
+        vals = query_db(query, [], one=False)
+        if value == 'username':
+            return '\n'.join(val[0] for val in vals)
+        else:
+            return '\n'.join(val for val in vals)
+    else:
+        return "You need to be an admin for this feature"
+
+
+@app.route('/listing')
+def listing():
+    """Returns a listing of the user's files that are saved to the OneDir server"""
     if not securify(request):
         return FALSE
     username = request.form['username']
-    descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
-    server_tools.r_mkdir(descriptor)
-    update_history(username, descriptor, timestamp, "mkdir")
-    return TRUE
-
-
-def update_history(user, path, timestamp, op):
-    hist_file = os.path.join("uploads", user + '.history')
-    with open(hist_file, 'a') as hist:
-        hist.write("%s %s %s\n"%(timestamp, path, op))
-        # Write the timestamp to the last updated field in the sql
-
-@app.route('/download/<filename>')
-def uploaded_file(filename):
-    if not securify(request):
+    listingFile = username + '.filelisting'
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    if os.path.isfile(listing_path):
+        return open(listing_path, 'r').read()
+    else:
         return FALSE
-    username = request.form['username']
-    descriptor = os.path.join(app.root_path, 'uploads', username)
-    return send_from_directory(descriptor, filename)
-
-@app.route('/sync')
-def client_sync():
-    if not securify(request):
-        return FALSE
-    username = request.form['username']
-    listingFile = '.filelisting.onedir'
-    descriptor = os.path.join(app.root_path, 'uploads', username)
-    return send_from_directory(descriptor, listingFile)
 
 
-def securify(request):
-    username = request.form['username']
-    auth = request.form['auth']
-    return auth in [i['auth'] for i in app.config['USERS'][username]]
-
-
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    """Logs a user in to the OneDir service running on the server"""
     username = request.form['username']
     password = request.form['password']
     hold = server_tools.login(username, password)
@@ -238,14 +266,16 @@ def login():
             app.config['USERS'][user[0]].append({'time': time.time(), 'auth': h})
         else:
             app.config['USERS'][user[0]] = [{'time': time.time(), 'auth': h}]
-        if app.config["DEBUG"]: print app.config
         return h
+
 
 @app.route('/logout', methods=['POST'])
 def logout():
+    """Logs a user out from the OneDir service running on the server"""
     user = request.form['username']
     auth = request.form['auth']
-    if user not in app.config['USERS']: return FALSE
+    if user not in app.config['USERS']:
+        return FALSE
     for i in app.config['USERS'][user]:
         if i['auth'] == auth:
             app.config['USERS'][user].remove(i)
@@ -253,60 +283,178 @@ def logout():
     return TRUE
 
 
-@app.route('/register', methods=['POST'])
-def register():
-    username= request.form['username']
-    salt = uuid.uuid1().hex
-    password= server_tools.password_hash(request.form['password']+salt)
-    email = request.form['email']
-    user = request.form['user_type']
-    query_db("INSERT INTO users VALUES (?,?,?,?,?)",[username,password,salt,email,user],one=True)
-    # Code for registering a user.
-    # Read from form sent in via post, hash the password
-    # and make entry to database.
+@app.route('/mkdir', methods=['POST'])
+def mkdir():
+    """Creates a sub-directory in the user's server-side OneDir directory"""
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
+    server_tools.r_mkdir(descriptor)
+    update_history(username, descriptor, request.form['timestamp'], "mkdir")
     return TRUE
 
-@app.route('/getVals',methods=['GET'])
-def getVals():
-    value = request.form['value']
-    table = request.form['table']
-    query = "SELECT * FROM " + table
-    vals = query_db( query, [], one=False)
-    if value == 'username':
-        return '\n'.join( val[0] for val in vals)
-    else:
-        return '\n'.join( val for val in vals)
-
-@app.route('/password_reset', methods=['POST'])
-def password_reset():
-    username = request.form['username']
-    query_db("UPDATE users SET password = 'password' WHERE username = (?)",[username],one=True)
 
 @app.route('/password_change', methods=['POST'])
 def password_change():
+    """Allows a user to change their own password"""
+    if securify(request):
+        username = request.form['username']
+        user = query_db("SELECT * FROM users WHERE username=?", [username], one=True)
+        if user[1] == server_tools.password_hash(request.form['oldpass'] + user[2]):
+            password = server_tools.password_hash(request.form['newpass'] + user[2])
+            query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, username], one=True)
+            return TRUE
+        else:
+            return FALSE
+
+
+@app.route('/password_reset', methods=['POST'])
+def password_reset():
+    """Resets the user's password for the OneDir service"""
     username = request.form['username']
-    user = query_db("SELECT * FROM users WHERE username=?", [username], one=True )
-    if user[1] == server_tools.password_hash(request.form['oldpass']+user[2]):
-        password = server_tools.password_hash(request.form['newpass'])
-        query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, username], one=True)
+    if securify(request) and server_tools.user_is_admin(username):
+        resetMe = request.form['resetMe']
+        user = query_db("SELECT * FROM users WHERE username=?", [resetMe], one=True)
+        password = server_tools.password_hash('password' + user[2])
+        query_db("UPDATE users SET password = (?) WHERE username = (?)", [password, resetMe], one=True)
         return TRUE
-    else: return FALSE
+    else:
+        return FALSE
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    username = request.form['username']
+    salt = uuid.uuid1().hex
+    password = server_tools.password_hash(request.form['password']+salt)
+    email = request.form['email']
+    user = request.form['user_type']
+    query_db("INSERT INTO users VALUES (?,?,?,?,?)", [username, password, salt, email, user], one=True)
+    return TRUE
+
 
 @app.route('/remove_user', methods=['POST'])
 def remove_user():
-    username = request.form['username']
-    query_db("DELETE FROM users WHERE username = (?)", [username],one=True)
+    """Removes a user from the OneDir service. Does not delete their files"""
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        deleteMe = request.form['deleteMe']
+        query_db("DELETE FROM users WHERE username = (?)", [deleteMe], one=True)
 
-@app.route('/view_user_files', methods = ['GET'])
-def view_user_files():
+
+def securify(request):
     username = request.form['username']
-    path = os.path.join(app.root_path, 'uploads', username)
-    return server_tools.view_files(path)
+    auth = request.form['auth']
+    return auth in [i['auth'] for i in app.config['USERS'][username]]
+
+
+@app.route('/share')
+def share_file():
+    """Shares the file from one user (username) with another (sharedUser)"""
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    path = request.form['PathName']
+    userShared = request.form['SharedWith']
+    listingFile = userShared + '.filelisting'
+    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
+    server_tools.r_mkdir(os.path.dirname(sharedPath))
+    filePath = os.path.join(app.root_path, 'uploads', username, path)
+    os.symlink(filePath, sharedPath)  # os.symlink doesn't exist on Windows, but it does on *nix
+    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+    server_tools.update_listings(listing_path, path, os.path.getmtime(sharedPath), request.form['auth'])
+    return TRUE
+
+
+def update_history(username, path, timestamp, op):
+    """Updates the history file for the user specified by username"""
+    hist_file = username + '.filelisting'
+    with open(hist_file, 'a') as hist:
+        hist.write("%s %s %s" % (timestamp, path, op))
+        # Write the timestamp to the last updated field in the sql
+    pass
+
+
+@app.route('/upload', methods=['POST'])
+def upload_file():
+    # Uploads the file to the user's upload directory
+    # Updates the listing file with the new upload!
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    timestamp = request.form['timestamp']
+    path = request.form['path']
+    afile = request.files['file']
+    listingFile = username + '.filelisting'
+
+    if afile:
+        descriptor = os.path.join(app.root_path, 'uploads', username)
+        if not os.path.isdir(descriptor):
+            os.mkdir(descriptor, 0700)
+        listing_path = os.path.join(app.root_path, 'uploads', listingFile)
+        server_tools.update_listings(listing_path, path, timestamp, request.form['auth'])
+        path = os.path.join(descriptor, path)
+        server_tools.r_mkdir(os.path.dirname(path))
+        afile.save(path)
+        print("Saved file to %s" % path)
+        update_history(username, path, timestamp, "modify")
+        return TRUE
+    return FALSE
+
+
+@app.route('/download/<filename>')
+def uploaded_file(filename):
+    """Returns the requested file from the user's server-side OneDir directory"""
+    if not securify(request):
+        return FALSE
+    username = request.form['username']
+    descriptor = os.path.join(app.root_path, 'uploads', username)
+    return send_from_directory(descriptor, filename)
+
+
+@app.route('/user_is_admin', methods=['GET', 'POST'])
+def user_is_admin():
+    """Tests if the user is in the database"""
+    username = request.form['username']
+    val = server_tools.user_is_admin(username)
+    if not val:
+        ret = FALSE
+    else:
+        ret = TRUE
+    return ret
+
+
+@app.route('/user_in_database', methods=['GET', 'POST'])
+def user_in_database():
+    """Tests if the user is in the database"""
+    username = request.form['username']
+    val = server_tools.user_in_database(username)
+    if val:
+        ret = TRUE
+    else:
+        ret = FALSE
+    return ret
+
+
+@app.route('/view_user_files', methods=['GET'])
+def view_user_files():
+    """Returns a listing that contains the number and size of all files stored by a user"""
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        viewUser = request.form['viewUser']
+        path = os.path.join(app.root_path, 'uploads', viewUser)
+        return server_tools.view_files(path)
+    else:
+        return "You need to be an admin for this feature"
+
 
 @app.route('/view_all_files', methods=['GET'])
 def view_all_files():
-    path = os.path.join(app.root_path,'uploads')
-    return server_tools.view_files(path)
+    """Returns a listing that contains the number and size of all files stored by the service"""
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        path = os.path.join(app.root_path, 'uploads')
+        return server_tools.view_files(path)
+    else:
+        return "You need to be an admin for this feature"
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])

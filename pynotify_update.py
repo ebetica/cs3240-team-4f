@@ -6,6 +6,9 @@ import client_tools
 import constants
 from file_updates import ServerChecker
 
+import os
+import pyinotify
+
 
 class MyEventHandler(pyinotify.ProcessEvent):
     uploadFiles = []

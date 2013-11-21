@@ -1,23 +1,14 @@
-__author__ = 'robert'
-__author__ = 'robert'
-
-import hashlib
-import os
-import pickle
-import sys
-import threading
-import time
 import client_tools
 import constants
-import server_tools
-import csv
+
+import os
+import threading
 
 
 #Prototype to compare files on disk to those stored on a server
 #Download listing of files on server -> create listing of files on local machine -> compare listings -> update necessary files
 class ServerChecker(threading.Thread):
     interval = 5  # minutes between checking for updates
-
 
     def __init__(self, pathname, intervalIn):
         super(ServerChecker, self).__init__()
@@ -33,7 +24,7 @@ class ServerChecker(threading.Thread):
         url = constants.SERVER_ADDRESS
         server_listing = client_tools.file_listing()
         server_files = {}
-        local_listing = client_tools.get_file_paths()
+        local_listing = client_tools.get_file_paths(self.path)
         for afile in server_listing:
             afile = afile.split(' ')
             filename = afile[0]
@@ -45,6 +36,7 @@ class ServerChecker(threading.Thread):
                 client_tools.upload_file(url, afile, os.path.getmtime(afile))
             elif server_files[afile] < os.path.getmtime(afile):
                 client_tools.upload_file(url, afile, os.path.getmtime(afile))
+
 
 #Set your user path here (Could come from config file later)
 #Creates a process to run in background and polls for file updates
