@@ -202,6 +202,7 @@ def share_file(filename):
     server_tools.update_listings(userShared, path, os.path.getmtime(sharedPath))
     return TRUE
 
+
 @app.route('/delete')
 def delete_file():
     """Deletes the file specified in the request from the server"""
@@ -217,6 +218,7 @@ def delete_file():
         os.remove(descriptor)
     if os.path.isdir(descriptor):
         os.rmdir(descriptor)
+    timestamp = request.form['timestamp']
     update_history(username, rel_path, timestamp, "delete")
     return TRUE
 
