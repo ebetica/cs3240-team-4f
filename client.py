@@ -151,9 +151,9 @@ def main():
     parser = argparse.ArgumentParser(description=
                                      '''OneDir is a wonderful program. Run without any arguments to start the client''')
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-p", "--change-password", action="store_true",
+    group.add_argument("-c", "--change-password", action="store_true",
                        help="Open a prompt to change your password")
-    group.add_argument("-r", "--reset-password", action="store_true",
+    group.add_argument("-p", "--reset-password", action="store_true",
                        help="Open a prompt to reset a user's password (admin only)")
     group.add_argument("-s", "--sync", action="store_true",
                        help="Set sync on")
@@ -171,6 +171,8 @@ def main():
                        help="View information about a user's files (admin only)")
     group.add_argument("-a", "--view-all-files", action="store_true",
                        help="View information about all files store on the server (admin only)")
+    group.add_argument("-r", "--remove-user", action="store_true",
+                       help="remove a user from Onedir (admin only)")
     args = parser.parse_args()
     # Throw an error if OneDir is not running!
     if client_tools.session():
@@ -192,6 +194,8 @@ def main():
             view_user_files()
         elif args.view_all_files:
             view_all_files()
+        elif args.remove_user:
+            remove_user()
         elif args.stop:
             client_tools.stop()
         else:

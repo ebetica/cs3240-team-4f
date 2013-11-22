@@ -119,9 +119,10 @@ def view_files(path):
     string = ','.join(files)
     return string
 
+
 def delete_user_files(path, filename):
     for roots, dirs, files in os.walk(path):
         for f in files:
             if f == filename:
                 os.remove(os.path.join(path, filename))
-                return 'success'
+                return constants.TRUE

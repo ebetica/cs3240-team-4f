@@ -8,7 +8,7 @@ import sqlite3
 import time
 import uuid
 
-# Creats the application
+# Creates the application
 app = Flask(__name__)
 index = AutoIndex(app, add_url_rules=True)
 
@@ -82,11 +82,11 @@ def browse_all_uploads():
         return "Perhaps you don't have privileges for that"
 
 
-@app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
-def browse_user_uploads(username, auth):
+@app.route('/uploads/<username>_<path>_<auth>', methods=['GET', 'POST'])
+def browse_user_uploads(username, path, auth):
     """Allows the user to browse the directory with their stored files through a web-browser"""
     if auth in [i['auth'] for i in app.config['USERS'][username]]:
-        return index.render_autoindex(os.path.join('uploads', username), browse_root=app.config.root_path)
+        return index.render_autoindex(os.path.join('uploads', username, path), browse_root=app.config.root_path)
     else:
         return "Perhaps you skipped logging in"
 
@@ -251,8 +251,15 @@ def register():
     password = server_tools.password_hash(request.form['password']+salt)
     email = request.form['email']
     user = request.form['user_type']
-    query_db("INSERT INTO users VALUES (?,?,?,?,?)", [username, password, salt, email, user], one=True)
-    return TRUE
+    if not server_tools.user_in_database(username):
+        query_db("INSERT INTO users VALUES (?,?,?,?,?)", [username, password, salt, email, user], one=True)
+        try:
+            os.mkdir(os.path.join(app.config, 'uploads', username))
+            listingfile = username + '.filelisting'
+            open(os.path.join(app.config, 'uploads', listingfile), 'w').close()
+            return TRUE
+        except IOError:
+            return FALSE
 
 
 @app.route('/remove_user', methods=['POST'])
@@ -261,6 +268,8 @@ def remove_user():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         deleteMe = request.form['deleteMe']
         query_db("DELETE FROM users WHERE username = (?)", [deleteMe], one=True)
+        return TRUE
+    return "You need to be an admin user to use this feature"
 
 
 def securify(request):
@@ -368,6 +377,6 @@ if __name__ == '__main__':
 def delete_user_files():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         path = os.path.join(app.root_path, 'uploads', request.form['username'])
-        server_tools.view_files(path, request.form['filename'])
+        server_tools.delete_user_files(path, request.form['filename'])
     else:
         return "You need to be an admin for this feature"
