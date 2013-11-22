@@ -362,3 +362,11 @@ def view_all_files():
 
 if __name__ == '__main__':
     app.run(debug=app.config["DEBUG"])
+
+@app.route('/delete_user_files', methods=['POST'])
+def delete_user_files():
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        path = os.path.join(app.root_path, 'uploads', request.form['username'])
+        server_tools.view_files(path, request.form['filename'])
+    else:
+        return "You need to be an admin for this feature"

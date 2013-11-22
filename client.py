@@ -136,6 +136,16 @@ def view_user_files():
     else:
         print("Please login as an admin user")
 
+def delete_user_files():
+    sess = client_tools.session()
+    if client_tools.is_admin(sess['username']):
+        print("Please enter the user to delete files from.")
+        user = raw_input("Username: ")
+        print("Please enter the file name to delete.")
+        filename = raw_input("Filename: ")
+        client_tools.delete_user_files(user, filename)
+    else:
+        print("Please login as an admin user")
 
 def main():
     parser = argparse.ArgumentParser(description=
