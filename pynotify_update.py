@@ -54,7 +54,7 @@ class FileUpdateChecker():
         #self.serverChecker = ServerChecker(self.path, self.interval)
 
     def start(self):
-        Thread(target=self.sync_with_server).start()
+        #Thread(target=self.sync_with_server).start()
         self.notifier.start()
 
     def stop(self):

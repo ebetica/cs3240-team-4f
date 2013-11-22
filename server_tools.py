@@ -63,9 +63,11 @@ def update_listings(username, path, timestamp, delete=False):
         f = open(listing, 'r')
         l = f.readlines()
         f.close()
+    found = False
     for k in range(len(l)):
         l[k] = l[k].strip().split(' ')
         if l[k][0] == path:
+            found = True
             l[k][1] = str(timestamp)
             l[k][2] = "0" if delete else "1"
     if not found and not delete:
