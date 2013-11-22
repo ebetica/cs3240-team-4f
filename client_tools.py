@@ -75,8 +75,7 @@ def file_listing():
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
-    listing = [k.split(' ') for k in r.content.split('\n')]
-    return listing
+    return r.content
 
 
 def get_user_list():
@@ -331,10 +330,15 @@ def parse_listing(listing):
     userhome = os.environ['HOME']
     listing_file = listing+".listing"
     listing_file = os.path.join(userhome, ".onedir", listing_file)
-    if os.path.exists(listing_file):
+    try:
         listing = open(listing_file).read()
+    except:
+        # There is no listing file.
+        pass
 
-    return [k.strip().split(' ') for k in listing.strip().split('\n')]
+    # Split it down to the right format
+    return [k.strip().split(' ') for k in listing.strip().split('\n') if k.strip() != ""]
+
 
 
 # Misc Functions

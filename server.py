@@ -165,7 +165,9 @@ def listing():
     if os.path.isfile(listing_path):
         return open(listing_path, 'r').read()
     else:
-        return FALSE
+        f = open(listing_path, 'w')
+        f.close()
+        return ""
 
 
 @app.route('/login', methods=['GET', 'POST'])
