@@ -83,6 +83,14 @@ def update_listings(username, path, timestamp, delete=False):
     f.close()
 
 
+def update_history(username, path, timestamp, op):
+    """Updates the history file for the user specified by username"""
+    hist_file = os.path.join(server.app.root_path, "uploads", username + '.history')
+    with open(hist_file, 'a') as hist:
+        hist.write("%s %s %s\n" % (timestamp, path, op))
+        # Write the timestamp to the last updated field in the sql
+
+
 def user_in_database(username):
     """Checks if a user is in the OneDir database"""
     user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True)

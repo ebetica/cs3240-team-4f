@@ -7,13 +7,14 @@ import requests
 import shutil
 import string
 from threading import Timer
+import time
 
-DEBUG = False
+DEBUG = True
 
 # Server request related function
 ########
 
-
+#TODO Candidate for deletion
 def check_updates():
     """"Checks the server for any updates to the user's files, and uploads or downloads changed files"""
     url = SERVER_ADDRESS
@@ -45,8 +46,10 @@ def delete_file(url, filename):
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
+    timestamp = time.time()
     update_listings(sess['username'], rel_path, timestamp)
     return r.status_code
+
 
 def download_file(url, filename):
     """Downloads file specified by filename from the OneDir server"""
@@ -61,6 +64,7 @@ def download_file(url, filename):
         filename = os.path.join(read_config_file(session()["username"]), filename)
         with open(filename, 'wb') as code:
             code.write(r.content)
+
 
 def file_listing():
     """Returns a listing of the files stored on the server in the user's directory"""
@@ -126,7 +130,7 @@ def register_user(username, password, email=None, _type='user'):
             pass
             #toss error or re-enter.
 
-
+#TODO add to command line client
 def remove_user(deleteMe):
     """Remove users from the OneDir service"""
     payload = {'deleteMe': deleteMe}
@@ -192,12 +196,12 @@ def view_user_files(viewUser):
 
 
 def change_directory(dirname):
+    sync(False)
     sess = session()
     username = sess['username']
     ONEDIR_DIRECTORY = read_config_file(username)
     shutil.move(ONEDIR_DIRECTORY, dirname)
     write_config_file(dirname, username)
-    sync(False)
     sync(True)
 
 
@@ -232,7 +236,9 @@ def sync(on):
         return sess['sync'] == '1'
     else:
         sess = session()
-        t = Timer(1, check_updates())
+        ONEDIR_DIRECTORY = read_config_file(sess['username'])
+        t = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)
+        #t = Timer(1, check_updates())
         if on:
             t.start()
             sess['sync'] = '1'
@@ -271,15 +277,28 @@ def update_session(session):
 def read_config_file(username):
     """Reads the config file to determine the user's preferences when the application is opened"""
     userhome = os.environ['HOME']
-    config_path = os.path.join(userhome, username+".onedir")
+    config_path = os.path.join(userhome, ".onedir", username+".config")
     try:
         with open(config_path, 'r') as afile:
             return afile.readline()
     except Exception as e:
         print "Configuration file does not exist!"
+        print e.message
         return False
 
-def update_listings(user, path, timestamp, delete=False):
+def write_config_file(onedir_path, username):
+    """Writes a config file stored in the user's Home folder. This file allows user preferences to persist"""
+    userhome = os.environ['HOME']
+    folder = os.path.join(userhome, ".onedir")
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
+    config_file = username + ".config"
+    config_path = os.path.join(folder, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
+
+
+def update_listings(username, path, timestamp, delete=False):
     userhome = os.environ['HOME']
     listing_file = username+".listing"
     listing = os.path.join(userhome, ".onedir", listing_file)
@@ -298,14 +317,13 @@ def update_listings(user, path, timestamp, delete=False):
                 l[k][1] = str(timestamp)
                 found = True
     if not found and not delete:
-        l.append([path, timestamp])
-    print("Found = %d"%(found))
+        l.append([path, str(timestamp)])
     if type(found) == int and delete:
         del l[found]
-    print l
     f = open(listing, 'w')
     f.write('\n'.join([' '.join(k) for k in l]))
     f.close()
+
 
 def parse_listing(listing):
     # takes either a username or the contents of a /listing request
@@ -313,21 +331,11 @@ def parse_listing(listing):
     userhome = os.environ['HOME']
     listing_file = listing+".listing"
     listing_file = os.path.join(userhome, ".onedir", listing_file)
-    if os.exists(listing_file):
+    if os.path.exists(listing_file):
         listing = open(listing_file).read()
 
     return [k.strip().split(' ') for k in listing.strip().split('\n')]
 
-def write_config_file(onedir_path, username):
-    """Writes a config file stored in the user's Home folder. This file allows user preferences to persist"""
-    userhome = os.environ['HOME']
-    folder = os.path.join(userhome, username+".onedir")
-    if not os.isdir(folder):
-        os.makedirs(folder)
-    config_file = username + ".config"
-    config_path = os.path.join(folder, config_file)
-    with open(config_path, 'w') as afile:
-        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
 
 # Misc Functions
 #########
@@ -358,7 +366,7 @@ def sanity_check_username(name):
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
     rules = [ 
         len(name) > 3, # User name is longer than 3 characters
-        all([k in VALID_CHARACTERS for k in list(name)]) # Username is made of valid characters
+        all([k in VALID_CHARACTERS for k in list(name)])  # Username is made of valid characters
     ]
     return all(rules)
 
