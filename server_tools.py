@@ -67,20 +67,22 @@ def update_listings(username, path, timestamp, delete=False):
     for k in range(len(l)):
         l[k] = l[k].strip().split(' ')
         if l[k][0] == path:
-            if delete:
-                found = k
-            else:
-                l[k][1] = str(timestamp)
-                found = True
+            found = True
+            l[k][1] = str(timestamp)
+            l[k][2] = "0" if delete else "1"
     if not found and not delete:
-        l.append([path, timestamp])
-    print("Found = %d"%(found))
-    if type(found) == int and delete:
-        del l[found]
-    print l
+        l.append([path, timestamp, "1"])
     f = open(listing, 'w')
     f.write('\n'.join([' '.join(k) for k in l]))
     f.close()
+
+
+def update_history(username, path, timestamp, op):
+    """Updates the history file for the user specified by username"""
+    hist_file = os.path.join(server.app.root_path, "uploads", username + '.history')
+    with open(hist_file, 'a') as hist:
+        hist.write("%s %s %s\n" % (timestamp, path, op))
+        # Write the timestamp to the last updated field in the sql
 
 
 def user_in_database(username):
@@ -116,3 +118,10 @@ def view_files(path):
     files = [str(file_sizes), str(file_number)]
     string = ','.join(files)
     return string
+
+def delete_user_files(path, filename):
+    for roots, dirs, files in os.walk(path):
+        for f in files:
+            if f == filename:
+                os.remove(os.path.join(path, filename))
+                return 'success'

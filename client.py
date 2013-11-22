@@ -46,11 +46,8 @@ def make_new_user(username):
     print('A blank directory will default to ~/OneDir/')
     directory = raw_input("Directory: ")
     if directory == "":
-        ONEDIR_DIRECTORY = os.path.join(os.environ['HOME'], 'OneDir')
-        client_tools.write_config_file(ONEDIR_DIRECTORY, username)
-    else:
-        client_tools.write_config_file(directory, username)
-    client_tools.register_user(username, password, email, user_type)
+        directory = os.path.join(os.environ['HOME'], 'OneDir')
+    client_tools.write_config_file(directory, username)
     h = client_tools.login_user(username, password)
     return h
 
@@ -72,11 +69,13 @@ def parse_user():
             # Password is wrong!
             password = raw_input("Wrong password, try again: ")
             h = client_tools.login_user(username, password)
-        if not read_config_file(username):
+        if not client_tools.read_config_file(username):
             # No config file currently exists for the given user :(
             print('Please enter the directory you would like to keep synced with the OneDir service.')
             print('A blank directory will default to ~/OneDir/')
             directory = raw_input("Directory: ")
+            if directory == "":
+                directory = os.path.join(os.environ['HOME'], 'OneDir')
             client_tools.write_config_file(directory, username)
     else:
         h = make_new_user(username)
@@ -137,6 +136,16 @@ def view_user_files():
     else:
         print("Please login as an admin user")
 
+def delete_user_files():
+    sess = client_tools.session()
+    if client_tools.is_admin(sess['username']):
+        print("Please enter the user to delete files from.")
+        user = raw_input("Username: ")
+        print("Please enter the file name to delete.")
+        filename = raw_input("Filename: ")
+        client_tools.delete_user_files(user, filename)
+    else:
+        print("Please login as an admin user")
 
 def main():
     parser = argparse.ArgumentParser(description=
