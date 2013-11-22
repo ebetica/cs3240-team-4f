@@ -117,90 +117,6 @@ def web_login_page():
         else:
             return redirect(url_for('browse_user_uploads', username=request.form['username'], auth=h), code=307)
 
-@app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
-def browse_user_uploads(username, auth):
-    if  auth in [i['auth'] for i in app.config['USERS'][username]]:
-        return index.render_autoindex(os.path.join('uploads', username), browse_root=app.config.root_path)
-    else:
-        return FALSE
-
-@app.route('/uploads/', methods=['GET', 'POST'])
-def browse_all_uploads():
-    if server_tools.user_is_admin(request.form['username']):
-
-        return index.render_autoindex('uploads', browse_root=app.config.root_path)
-
-@app.route('/user_in_database', methods=['GET', 'POST'])
-def user_in_database():
-    """Tests if the user is in the database"""
-    username = request.form['username']
-    val = server_tools.user_in_database(username)
-    if val:
-        ret = TRUE
-    else:
-        ret = FALSE
-    return ret
-
-@app.route('/user_is_admin', methods=['GET', 'POST'])
-def user_is_admin():
-    """Tests if the user is in the database"""
-    username = request.form['username']
-    val = server_tools.user_is_admin(username)
-    if not val:
-        ret = FALSE
-    else:
-        ret = TRUE
-    return ret
-
-
-@app.route('/listing')
-def listing():
-    if not securify(request):
-        return FALSE
-    username = request.form['username']
-    listingFile = username + '.filelisting'
-    listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-    try:
-        return open(listing_path, 'r').read()
-    except:
-        return FALSE
-
-
-@app.route('/upload', methods=['POST'])
-def upload_file():
-    # Uploads the file to the user's upload directory
-    # Updates the listing file with the new upload!
-    if not securify(request):
-        return FALSE
-    username = request.form['username']
-    timestamp = request.form['timestamp']
-    path = request.form['path']
-    afile = request.files['file']
-
-    if afile:
-        descriptor = os.path.join(app.root_path, 'uploads', username)
-        if not os.path.isdir(descriptor):
-            os.mkdir(descriptor, 0700)
-        server_tools.update_listings(username, path, timestamp)
-        path = os.path.join(descriptor, path)
-        server_tools.r_mkdir( os.path.dirname(path) )
-        afile.save(path)
-        print("Saved file to %s"%path)
-        update_history(username, path, timestamp, "modify")
-        return TRUE
-    return FALSE
-
-@app.route('/share')
-def share_file(filename):
-    username = request.form['username']
-    path = request.form['PathName']
-    userShared = request.form['SharedWith']
-    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
-    server_tools.r_mkdir(os.path.dirname(sharedPath))
-    filePath = os.path.join(app.root_path, 'uploads', username, path)
-    os.symlink(filePath, sharedPath)
-    server_tools.update_listings(userShared, path, os.path.getmtime(sharedPath))
-    return TRUE
 
 @app.route('/delete')
 def delete_file():
@@ -217,6 +133,7 @@ def delete_file():
         os.remove(descriptor)
     if os.path.isdir(descriptor):
         os.rmdir(descriptor)
+    timestamp = request.form['timestamp']
     update_history(username, rel_path, timestamp, "delete")
     return TRUE
 
@@ -226,7 +143,7 @@ def getVals():
     """Used to return attributes specified in request from the table"""
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         value = request.form['value']
-        table = request.form['table']
+        table = server_tools.scrub_sqlite_input(request.form['table'])
         query = "SELECT * FROM " + table
         vals = query_db(query, [], one=False)
         if value == 'username':
@@ -385,14 +302,12 @@ def upload_file():
     timestamp = request.form['timestamp']
     path = request.form['path']
     afile = request.files['file']
-    listingFile = username + '.filelisting'
 
     if afile:
         descriptor = os.path.join(app.root_path, 'uploads', username)
         if not os.path.isdir(descriptor):
             os.mkdir(descriptor, 0700)
-        listing_path = os.path.join(app.root_path, 'uploads', listingFile)
-        server_tools.update_listings(listing_path, path, timestamp, request.form['auth'])
+        server_tools.update_listings(username, path, timestamp)
         path = os.path.join(descriptor, path)
         server_tools.r_mkdir(os.path.dirname(path))
         afile.save(path)
@@ -414,14 +329,13 @@ def uploaded_file(filename):
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
 def user_is_admin():
-    """Tests if the user is in the database"""
+    """Tests if the user is an admin user"""
     username = request.form['username']
     val = server_tools.user_is_admin(username)
     if not val:
-        ret = FALSE
+        return FALSE
     else:
-        ret = TRUE
-    return ret
+        return TRUE
 
 
 @app.route('/user_in_database', methods=['GET', 'POST'])
@@ -429,11 +343,10 @@ def user_in_database():
     """Tests if the user is in the database"""
     username = request.form['username']
     val = server_tools.user_in_database(username)
-    if val:
-        ret = TRUE
+    if not val:
+        return FALSE
     else:
-        ret = FALSE
-    return ret
+        return TRUE
 
 
 @app.route('/view_user_files', methods=['GET'])

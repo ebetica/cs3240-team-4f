@@ -1,13 +1,10 @@
-__author__ = 'robert'
-
-import pyinotify
-import os, time
 import client_tools
 import constants
 from file_updates import ServerChecker
 
-import os
 import pyinotify
+import os
+import time
 
 
 class MyEventHandler(pyinotify.ProcessEvent):
@@ -43,7 +40,6 @@ class MyEventHandler(pyinotify.ProcessEvent):
         
 
 class FileUpdateChecker():
-    #TODO download updated files from server. Older file_updates.py code could be useful here
 
     def __init__(self, directory):
         self.path = directory
@@ -64,21 +60,18 @@ class FileUpdateChecker():
 
     def sync_with_server(self):
         while True:
-            sleep(self.interval)
+            time.sleep(self.interval)
             username = client_tools.session()["username"]
             server_files = dict(client_tools.parse_listing(client_tools.file_listing()))
             client_files = dict(client_tools.parse_listing(username))
 
             # builds a listing of files on the local path
             local_files = {}
-            for roots, dirs, files in os.walk(path):
+            for roots, dirs, files in os.walk(self.path):
                 for f in files:
                     fp = os.path.join(roots, f)
                     mod_time = os.path.getmtime(fp)
                     local_files[fp] = mod_time
-
-
-
 
 
 def main():
