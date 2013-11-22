@@ -209,6 +209,10 @@ def change_directory(dirname):
     write_config_file(dirname, username)
     sync(True)
 
+def delete_user_files(user, filename):
+    sess = session()
+    payload = add_auth({'username': user, 'filename': filename})
+
 
 def quit_session():
     sess = session()
