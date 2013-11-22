@@ -210,7 +210,7 @@ def mkdir():
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
     server_tools.r_mkdir(descriptor)
-    server_tools.update_listings(username, rel_path, request.form['timestamp'], True)
+    server_tools.update_listings(username, request.form['path'], request.form['timestamp'], True)
     server_tools.update_history(username, descriptor, request.form['timestamp'], "mkdir")
     return TRUE
 
