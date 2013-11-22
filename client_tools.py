@@ -17,7 +17,6 @@ DEBUG = True
 #TODO Candidate for deletion
 def check_updates():
     """"Checks the server for any updates to the user's files, and uploads or downloads changed files"""
-    url = SERVER_ADDRESS
     ONEDIR_DIRECTORY = read_config_file(session()['username'])
     server_listing = file_listing()
     server_files = {}
@@ -27,43 +26,12 @@ def check_updates():
         filename = afile[0]
         server_files[filename] = afile[1]
         if filename not in local_listing:
-            download_file(url, filename)
+            download_file(filename)
     for afile in local_listing:
         if afile not in server_files.keys():
-            upload_file(url, afile, os.path.getmtime(afile))
+            upload_file(afile, os.path.getmtime(afile))
         elif server_files[afile] < os.path.getmtime(afile):
-            upload_file(url, afile, os.path.getmtime(afile))
-
-
-def delete_file(url, filename):
-    """Deletes specified file from the server, if this file has been deleted from the user's OneDir directory"""
-    url += 'delete'
-    sess = session()
-    onedir_directory = read_config_file(sess['username'])
-    rel_path = os.path.relpath(filename, onedir_directory)
-    payload = add_auth({'rel_path': rel_path})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    timestamp = time.time()
-    update_listings(sess['username'], rel_path, timestamp)
-    return r.status_code
-
-
-def download_file(url, filename):
-    """Downloads file specified by filename from the OneDir server"""
-    url += 'download/'
-    url += filename
-    payload = add_auth({})
-    r = requests.get(url, data=payload)
-    if r.content == FALSE:
-        print("You are not logged in! Shutting down OneDir...")
-        quit_session()
-    if filename != "":
-        filename = os.path.join(read_config_file(session()["username"]), filename)
-        with open(filename, 'wb') as code:
-            code.write(r.content)
+            upload_file(afile, os.path.getmtime(afile))
 
 
 def file_listing():
@@ -146,8 +114,9 @@ def share_file(user, pathName):
     return r.status_code
 
 
-def upload_file(url, filename, timestamp):
+def upload_file(filename, timestamp):
     """Uploads the file specified by filename and its timestamp to the server"""
+    url = SERVER_ADDRESS
     sess = session()
     ONEDIR_DIRECTORY = read_config_file(sess['username'])
     rel_path = os.path.relpath(filename, ONEDIR_DIRECTORY)
@@ -162,11 +131,48 @@ def upload_file(url, filename, timestamp):
             return
         files = {'file': open(filename, 'rb')}
     r = requests.post(url, files=files, data=payload)
+    update_listings(sess['username'], rel_path, timestamp)
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
-    update_listings(sess['username'], rel_path, timestamp)
     return r.status_code
+
+
+def delete_file(filename):
+    """Deletes specified file from the server, if this file has been deleted from the user's OneDir directory"""
+    url = SERVER_ADDRESS
+    url += 'delete'
+    sess = session()
+    onedir_directory = read_config_file(sess['username'])
+    rel_path = os.path.relpath(filename, onedir_directory)
+    timestamp = time.time()
+    payload = add_auth({'timestamp': timestamp, 'rel_path': rel_path})
+
+    r = requests.get(url, data=payload)
+    update_listings(sess['username'], rel_path, timestamp)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+    return r.status_code
+
+
+def download_file(filename):
+    """ Downloads file specified by filename from the OneDir server
+        The argument is a relative path to the filename"""
+    url = SERVER_ADDRESS
+    url += 'download/'
+    url += filename
+    payload = add_auth({})
+    r = requests.get(url, data=payload)
+    if r.content == FALSE:
+        print("You are not logged in! Shutting down OneDir...")
+        quit_session()
+        return
+    update_listings(session()['username'], filename, time.time())
+    if filename != "":
+        filename = os.path.join(read_config_file(session()["username"]), filename)
+        with open(filename, 'wb') as code:
+            code.write(r.content)
 
 
 def user_in_database(username):
@@ -324,17 +330,18 @@ def update_listings(username, path, timestamp, delete=False):
     f.close()
 
 
-def parse_listing(listing):
+def parse_listing(listing, user = False):
     # takes either a username or the contents of a /listing request
     #  from the server.
     userhome = os.environ['HOME']
     listing_file = listing+".listing"
     listing_file = os.path.join(userhome, ".onedir", listing_file)
-    try:
-        listing = open(listing_file).read()
-    except:
-        # There is no listing file.
-        pass
+    if user:
+        try:
+            listing = open(listing_file, 'r').read()
+        except:
+            listing = ""
+            open(listing_file, 'w').write("")
 
     # Split it down to the right format
     return [k.strip().split(' ') for k in listing.strip().split('\n') if k.strip() != ""]

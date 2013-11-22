@@ -125,16 +125,17 @@ def delete_file():
         return FALSE
     username = request.form['username']
     rel_path = request.form['rel_path']
+    timestamp = request.form['timestamp']
     descriptor = os.path.join(app.root_path, 'uploads', username, rel_path)
 
-    server_tools.update_listings(username, rel_path, 0, True)
+    server_tools.update_listings(username, rel_path, timestamp, True)
 
     if os.path.isfile(descriptor):
         os.remove(descriptor)
     if os.path.isdir(descriptor):
         os.rmdir(descriptor)
     timestamp = request.form['timestamp']
-    server_tools.update_history(username, rel_path, timestamp, "delete")
+    server_tools.update_history(username, descriptor, timestamp, "delete")
     return TRUE
 
 
@@ -210,7 +211,7 @@ def mkdir():
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username, request.form['path'])
     server_tools.r_mkdir(descriptor)
-    server_tools.update_listings(username, request.form['path'], request.form['timestamp'], True)
+    server_tools.update_listings(username, request.form['path'], request.form['timestamp'])
     server_tools.update_history(username, descriptor, request.form['timestamp'], "mkdir")
     return TRUE
 
