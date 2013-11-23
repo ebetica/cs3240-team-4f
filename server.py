@@ -82,7 +82,7 @@ def browse_all_uploads():
         return "Perhaps you don't have privileges for that"
 
 
-@app.route('/uploads/<username>_<path>_<auth>', methods=['GET', 'POST'])
+@app.route('/browse/<username>_<path>_<auth>', methods=['GET', 'POST'])
 def browse_user_uploads(username, path, auth):
     """Allows the user to browse the directory with their stored files through a web-browser"""
     if auth in [i['auth'] for i in app.config['USERS'][username]]:
@@ -115,7 +115,7 @@ def web_login_page():
         if server_tools.user_is_admin(request.form['username']):
             return redirect(url_for('browse_all_uploads'), code=307)
         else:
-            return redirect(url_for('browse_user_uploads', username=request.form['username'], auth=h), code=307)
+            return redirect(url_for('browse_user_uploads', username=request.form['username'], path='.', auth=h), code=307)
 
 
 @app.route('/delete')
@@ -293,6 +293,7 @@ def share_file():
     server_tools.update_listings(userShared, path, os.path.getmtime(sharedPath))
     return TRUE
 
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     # Uploads the file to the user's upload directory
@@ -370,8 +371,6 @@ def view_all_files():
     else:
         return "You need to be an admin for this feature"
 
-if __name__ == '__main__':
-    app.run(debug=app.config["DEBUG"])
 
 @app.route('/delete_user_files', methods=['POST'])
 def delete_user_files():
@@ -380,3 +379,6 @@ def delete_user_files():
         server_tools.delete_user_files(path, request.form['filename'])
     else:
         return "You need to be an admin for this feature"
+
+if __name__ == '__main__':
+    app.run(debug=app.config["DEBUG"])

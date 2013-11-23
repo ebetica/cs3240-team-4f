@@ -47,6 +47,7 @@ def make_new_user(username):
     directory = raw_input("Directory: ")
     if directory == "":
         directory = os.path.join(os.environ['HOME'], 'OneDir')
+    client_tools.register_user(username, password, email, user_type)
     client_tools.write_config_file(directory, username)
     h = client_tools.login_user(username, password)
     return h
