@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script>
+            function formSubmit(path)
+            {
+                document.form1.action = path ;
+                document.form1.submit() ;
+            }
+        </script>
+        <link href="../static/main.css" rel="stylesheet">
+        <link href="../static/bootstrap.min.css" rel="stylesheet">
+        <link href="../static/bootstrap-theme.css" rel="stylesheet">
+        <title>OneDir Directory</title>
+    </head>
+
+    <body>
+    <form name="form1" method="post" enctype="multipart/form-data">
+        <div>
+            <input name='username' type="hidden" value="{{ user }}">
+            <input name='auth' type="hidden" value="{{ auth }}">
+        </div>
+    </form>
+        <h2><u>Index of {{path}}</u></h2>
+        {% for directory in directories.keys() %}
+            <li><a href="#" onclick="formSubmit('{{ directories[directory] }}')">{{directory}}</a></li>
+        {% endfor %}
+        {% for file in files %}
+            <li>{{file}}</li>
+        {% endfor %}
+    </body>
+</html>

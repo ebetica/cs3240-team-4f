@@ -10,7 +10,6 @@ import uuid
 
 # Creates the application
 app = Flask(__name__)
-index = AutoIndex(app, add_url_rules=True)
 
 # The database location is stored here. If you move around files and
 # don't change this, the server will break.
@@ -71,26 +70,71 @@ def query_db(query, args=(), one=False):
 
 # Web interface methods
 ##########
+@app.errorhandler(400)
+def bad_request(error):
+    return '''<html lang="en"> <a href="/"> You are not logged in </a> </html>'''
 
+@app.route('/browse/', methods=['GET', 'POST'])
+def uploads(path=None):
+    hold = server_tools.login(request.form['username'], request.form['password'])
+    if not hold:
+        return FALSE
+    else:
+        user = hold[0][0]
+        h = hold[1]
+        if user[0] in app.config['USERS']:
+            app.config['USERS'][user].append({'time': time.time(), 'auth': h})
+        else:
+            app.config['USERS'][user] = [{'time': time.time(), 'auth': h}]
+        directories = {}
+        files = []
+        if server_tools.user_is_admin(request.form['username']):
+            descriptor = os.path.join(app.root_path, 'uploads')
+            for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = stuff
+                else:
+                    files.append(stuff)
+        else:
+            descriptor = os.path.join(app.root_path, 'uploads', user)
+            for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = user + '_' + stuff
+                else:
+                    if not stuff.startswith('.'): files.append(stuff)
+        path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
+        return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=h)
+
+@app.route('/browse/<path>', methods=['GET', 'POST'])
+def browse_directories(path=None):
+    auth = request.form['auth']
+    user = request.form['username']
+    authorized = str(path).split('_')[0] == user
+    admin = server_tools.user_is_admin(user)
+    if securify(request) and (authorized or admin):
+        path = str(path).replace('_', '/')
+        descriptor = os.path.join(app.root_path, 'uploads', path)
+        directories = {}
+        files = []
+        path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
+        for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = path + '_' + stuff
+                else:
+                    if not stuff.startswith('.'): files.append(stuff)
+        return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
+    else:
+        return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
 
 @app.route('/uploads/', methods=['GET', 'POST'])
 def browse_all_uploads():
     """Allows admin users to browse the directory with all stored files through a web-browser"""
     if server_tools.user_is_admin(request.form['username']):
-        return index.render_autoindex('uploads', browse_root=app.config.root_path)
+        return TRUE  # index.render_autoindex('uploads', browse_root=app.config.root_path)
     else:
         return "Perhaps you don't have privileges for that"
 
-
-@app.route('/browse/<username>_<path>_<auth>', methods=['GET', 'POST'])
-def browse_user_uploads(username, path, auth):
-    """Allows the user to browse the directory with their stored files through a web-browser"""
-    if auth in [i['auth'] for i in app.config['USERS'][username]]:
-        return index.render_autoindex(os.path.join('uploads', username, path), browse_root=app.config.root_path)
-    else:
-        return "Perhaps you skipped logging in"
-
-
+@app.route('/')
 @app.route('/index')
 def web_home_page():
     """Returns page where users can log into the application"""
