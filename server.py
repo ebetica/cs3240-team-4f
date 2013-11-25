@@ -74,6 +74,7 @@ def query_db(query, args=(), one=False):
 def bad_request(error):
     return '''<html lang="en"> <a href="/"> You are not logged in </a> </html>'''
 
+
 @app.route('/browse/', methods=['GET', 'POST'])
 def uploads(path=None):
     hold = server_tools.login(request.form['username'], request.form['password'])
@@ -106,7 +107,7 @@ def uploads(path=None):
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=h)
 
 @app.route('/browse/<path>', methods=['GET', 'POST'])
-def browse_directories(path=None):
+def browse_directories(path, aFile=None):
     auth = request.form['auth']
     user = request.form['username']
     authorized = str(path).split('_')[0] == user
@@ -243,6 +244,7 @@ def logout():
     for i in app.config['USERS'][user]:
         if i['auth'] == auth:
             app.config['USERS'][user].remove(i)
+            server_tools.update_log(user, 'Logout')
             break
     return TRUE
 
