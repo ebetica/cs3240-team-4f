@@ -4,7 +4,7 @@ REQUIREMENTS
 Database is saved in sqlite3. Python has a builtin module to access it.
     The command line utility of sqlite3 can also be used to acess it more easily.
 
-Currently requires python packages flask, requests, pyinotify, ...
+Currently requires python packages flask, requests, pyinotify, Flask-AutoIndex...
     One method of installation is using pip.
 
 DOCUMENTATION
