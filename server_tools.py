@@ -99,10 +99,10 @@ def user_is_admin(username):
     """Returns if a user is an admin user or just a normal user"""
     user_type = server.query_db("SELECT role FROM users WHERE username=?", [username], one=True)
     user_string = user_type[0]
-    if str(user_string).lower() == 'user':
-        ret = False
-    else:
+    if str(user_string).lower() == 'admin':
         ret = True
+    else:
+        ret = False
     return ret
 
 
