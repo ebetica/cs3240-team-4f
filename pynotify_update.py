@@ -68,7 +68,6 @@ class FileUpdateChecker():
             # Dictionary of file: (timestamp, deleted) for each file on the server.
             server_files = {k[0]:(k[1], k[2]) for k in 
                     client_tools.parse_listing(client_tools.file_listing())}
-            print(client_tools.parse_listing(username))
             prev_files = dict(client_tools.parse_listing(username, user = True))
 
             # builds a listing of files on the local path
@@ -79,7 +78,7 @@ class FileUpdateChecker():
                     mod_time = os.path.getmtime(fp)
                     local_files[os.path.relpath(fp, OD)] = mod_time
 
-            all_files = set(prev_files.keys()+local_files.keys())
+            all_files = set(server_files.keys()+prev_files.keys()+local_files.keys())
             for f in all_files:
                 # f is the relative file name, absf is the absolute filename
                 absf = os.path.join(OD, f)
