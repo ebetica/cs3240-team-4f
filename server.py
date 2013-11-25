@@ -370,6 +370,7 @@ def uploaded_file(filename):
         return FALSE
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username)
+    if os.path.isdir(descriptor): return TRUE 
     return send_from_directory(descriptor, filename)
 
 
@@ -425,4 +426,4 @@ def delete_user_files():
         return "You need to be an admin for this feature"
 
 if __name__ == '__main__':
-    app.run(debug=app.config["DEBUG"])
+    app.run(host='0.0.0.0', port=4414, debug=app.config["DEBUG"])
