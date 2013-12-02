@@ -71,7 +71,7 @@ class FileUpdateChecker():
             # builds a listing of files on the local path
             local_files = {}
             for roots, dirs, files in os.walk(self.path):
-                for f in files:
+                for f in dirs+files:
                     fp = os.path.join(roots, f)
                     mod_time = os.path.getmtime(fp)
                     local_files[os.path.relpath(fp, OD)] = mod_time
@@ -82,15 +82,19 @@ class FileUpdateChecker():
                 absf = os.path.join(OD, f)
                 state = (f in server_files, f in local_files)
                 if state == (True, True):
+		    if os.path.isdir(absf):
+			continue
                     if server_files[f][1] == "1":
                         server_time = math.trunc(float(server_files[f][0])*100) / 100.0
                         local_time  = math.trunc(local_files[f]*100) / 100.0
                         # It's on both systems! Match timestamps and take the newest one :)
-                        print("It's on both systems! Match timestamps and take the newest one!")
-                        print("File %s has timestamp %f on the server and %f timestamp on the client."%(f, server_time, local_time))
                         if server_time > local_time:
+			    print("It's on both systems! Match timestamps and take the newest one!")
+			    print("File %s has timestamp %f on the server and %f timestamp on the client."%(f, server_time, local_time))
                             client_tools.download_file(f)
                         elif local_time > server_time:
+			    print("It's on both systems! Match timestamps and take the newest one!")
+			    print("File %s has timestamp %f on the server and %f timestamp on the client."%(f, server_time, local_time))
                             client_tools.upload_file(absf, local_time)
                     elif server_files[f][1] == "0":
                         # It was once on the server but it has been deleted :(
@@ -98,12 +102,16 @@ class FileUpdateChecker():
                         print("File %s was once on the server but it has been deleted :("%f)
                         client_tools.delete_file(absf)
                 if state == (True, False):
+                    if server_files[f][1] == "0":
+			# It's not actually on the server... server deleted it
+			continue
                     # It's in the server but not in the client!
                     print("File %s was in the server but not in the client!"%f)
                     if f in prev_files:
                         # It was in the client! The client must have deleted it :(
-                        #  Delete it from the client listings.
+                        #  Delete it from the client listings and the server
                         client_tools.update_listings(username, f, 0, True)
+			client_tools.delete_file(absf)
                     else:
                         # It wasn't in the client, so download it from the server.  
                         client_tools.download_file(f)

@@ -14,26 +14,6 @@ DEBUG = True
 # Server request related function
 ########
 
-#TODO Candidate for deletion
-def check_updates():
-    """"Checks the server for any updates to the user's files, and uploads or downloads changed files"""
-    ONEDIR_DIRECTORY = read_config_file(session()['username'])
-    server_listing = file_listing()
-    server_files = {}
-    local_listing = get_file_paths(ONEDIR_DIRECTORY)
-    for afile in server_listing:
-        afile = afile.split(' ')
-        filename = afile[0]
-        server_files[filename] = afile[1]
-        if filename not in local_listing:
-            download_file(filename)
-    for afile in local_listing:
-        if afile not in server_files.keys():
-            upload_file(afile, os.path.getmtime(afile))
-        elif server_files[afile] < os.path.getmtime(afile):
-            upload_file(afile, os.path.getmtime(afile))
-
-
 def file_listing():
     """Returns a listing of the files stored on the server in the user's directory"""
     url = SERVER_ADDRESS
@@ -175,6 +155,9 @@ def download_file(filename):
             r_mkdir(filename)
         else:
             r_mkdir(os.path.dirname(filename))
+	    if os.path.isdir(filename):
+		# BUG... I don't know why this happens
+		return
             with open(filename, 'wb') as code:
                 code.write(r.content)
 
