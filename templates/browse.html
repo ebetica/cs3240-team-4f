@@ -14,7 +14,7 @@
         <title>OneDir Directory</title>
     </head>
 
-    <body>
+    <div id="wrap">
     <form name="form1" method="post" enctype="multipart/form-data">
         <div>
             <input name='username' type="hidden" value="{{ user }}">
@@ -28,5 +28,5 @@
         {% for file in files %}
            <li>{{file}}</li>
         {% endfor %}
-    </body>
+    </div>
 </html>
