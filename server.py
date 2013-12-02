@@ -372,7 +372,7 @@ def uploaded_file(filename):
         return FALSE
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username)
-    if os.path.isdir(descriptor): return TRUE 
+    if os.path.isdir(os.path.join(descriptor,filename)): return TRUE 
     return send_from_directory(descriptor, filename)
 
 

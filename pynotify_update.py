@@ -97,11 +97,11 @@ class FileUpdateChecker():
                     elif server_files[f][1] == "0":
                         # It was once on the server but it has been deleted :(
                         #  Delete it from the client!
-                        print("It was once on the server but it has been deleted :(")
+                        print("File %s was once on the server but it has been deleted :("%f)
                         client_tools.delete_file(absf)
                 if state == (True, False):
                     # It's in the server but not in the client!
-                    print("It's in the server but not in the client!")
+                    print("File %s was in the server but not in the client!"%f)
                     if f in prev_files:
                         # It was in the client! The client must have deleted it :(
                         #  Delete it from the client listings.
@@ -112,7 +112,7 @@ class FileUpdateChecker():
                 if state == (False, True):
                     # It's on the client but has never been on the server!
                     #  Upload it to the server!
-                    print("It's on the client but has never been on the server!")
+                    print("File %s on the client but has never been on the server!"%f)
                     client_tools.upload_file(absf, os.path.getmtime(absf))
                 if state == (False, False):
                     # It's not in either! hmm...

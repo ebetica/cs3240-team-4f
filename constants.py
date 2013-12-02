@@ -1,4 +1,4 @@
 TRUE = "true"
 FALSE = "false"
-SERVER_ADDRESS = 'http://127.0.0.1:5000/'
+SERVER_ADDRESS = 'http://zlin.cloudapp.net/'
 PID_FILE = "/tmp/onedir-session.pid"

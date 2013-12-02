@@ -9,7 +9,7 @@ import string
 from threading import Timer
 import time
 
-DEBUG = False
+DEBUG = True
 
 # Server request related function
 ########
