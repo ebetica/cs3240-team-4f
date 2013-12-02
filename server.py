@@ -2,7 +2,6 @@ import server_tools
 from constants import *
 
 from flask import Flask, request, g, send_from_directory, render_template, redirect, url_for
-from flask.ext.autoindex import AutoIndex
 import os
 import sqlite3
 import time

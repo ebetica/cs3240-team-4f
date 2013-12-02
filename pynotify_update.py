@@ -1,6 +1,5 @@
 import client_tools
 import constants
-from file_updates import ServerChecker
 
 import pyinotify
 import os, time, math
@@ -50,7 +49,6 @@ class FileUpdateChecker():
         self.eventHandler = MyEventHandler()
         self.notifier = pyinotify.ThreadedNotifier(self.watchManager, self.eventHandler)
         self.interval = 1
-        #self.serverChecker = ServerChecker(self.path, self.interval)
 
     def start(self):
         Thread(target=self.sync_with_server).start()
