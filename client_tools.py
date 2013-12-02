@@ -9,7 +9,7 @@ import string
 from threading import Timer
 import time
 
-DEBUG = True
+DEBUG = False
 
 # Server request related function
 ########
@@ -171,8 +171,12 @@ def download_file(filename):
     update_listings(session()['username'], filename, time.time())
     if filename != "":
         filename = os.path.join(read_config_file(session()["username"]), filename)
-        with open(filename, 'wb') as code:
-            code.write(r.content)
+        if r.content == TRUE:
+            r_mkdir(filename)
+        else:
+            r_mkdir(os.path.dirname(filename))
+            with open(filename, 'wb') as code:
+                code.write(r.content)
 
 
 def user_in_database(username):
@@ -354,6 +358,16 @@ def parse_listing(listing, user = False):
 
 # Misc Functions
 #########
+
+
+def r_mkdir(dirname):
+    """Recursively makes directories so they always exist before we try to save a file"""
+    if os.path.exists(dirname):
+        return
+    else:
+        r_mkdir(os.path.dirname(dirname))
+        os.makedirs(dirname)
+        print(dirname)
 
 
 def add_auth(payload):

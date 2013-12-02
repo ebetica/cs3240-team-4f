@@ -16,6 +16,7 @@ def login(username, password):
     if user[1] == password_hash(password + user[2]):
         letters = string.ascii_letters+string.digits
         h = ''.join([random.choice(letters) for k in range(20)])
+        update_log(user[0], 'Login')
         return (user, h)
     else:
         return False
@@ -79,9 +80,19 @@ def update_listings(username, path, timestamp, delete=False):
 
 def update_history(username, path, timestamp, op):
     """Updates the history file for the user specified by username"""
+    log_file = os.path.join(server.app.root_path, 'uploads', '.admin.log')
     hist_file = os.path.join(server.app.root_path, "uploads", username + '.history')
     with open(hist_file, 'a') as hist:
         hist.write("%s %s %s\n" % (timestamp, path, op))
+    with open(log_file, 'a') as log:
+        log.write('%s\t%s\t%s\n' % (username, path, op))
+        # Write the timestamp to the last updated field in the sql
+
+def update_log(username, op):
+    """Updates the history file for the user specified by username"""
+    log_file = os.path.join(server.app.root_path, 'uploads', '.admin.log')
+    with open(log_file, 'a') as log:
+        log.write('%s\t%s\t%s\n' % (username, ' ', op))
         # Write the timestamp to the last updated field in the sql
 
 
@@ -99,10 +110,10 @@ def user_is_admin(username):
     """Returns if a user is an admin user or just a normal user"""
     user_type = server.query_db("SELECT role FROM users WHERE username=?", [username], one=True)
     user_string = user_type[0]
-    if str(user_string).lower() == 'user':
-        ret = False
-    else:
+    if str(user_string).lower() == 'admin':
         ret = True
+    else:
+        ret = False
     return ret
 
 
@@ -119,9 +130,10 @@ def view_files(path):
     string = ','.join(files)
     return string
 
+
 def delete_user_files(path, filename):
     for roots, dirs, files in os.walk(path):
         for f in files:
             if f == filename:
                 os.remove(os.path.join(path, filename))
-                return 'success'
+                return constants.TRUE

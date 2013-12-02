@@ -8,9 +8,8 @@ import sqlite3
 import time
 import uuid
 
-# Creats the application
+# Creates the application
 app = Flask(__name__)
-index = AutoIndex(app, add_url_rules=True)
 
 # The database location is stored here. If you move around files and
 # don't change this, the server will break.
@@ -71,26 +70,72 @@ def query_db(query, args=(), one=False):
 
 # Web interface methods
 ##########
+@app.errorhandler(400)
+def bad_request(error):
+    return '''<html lang="en"> <a href="/"> You are not logged in </a> </html>'''
 
+
+@app.route('/browse/', methods=['GET', 'POST'])
+def uploads(path=None):
+    hold = server_tools.login(request.form['username'], request.form['password'])
+    if not hold:
+        return FALSE
+    else:
+        user = hold[0][0]
+        h = hold[1]
+        if user[0] in app.config['USERS']:
+            app.config['USERS'][user].append({'time': time.time(), 'auth': h})
+        else:
+            app.config['USERS'][user] = [{'time': time.time(), 'auth': h}]
+        directories = {}
+        files = []
+        if server_tools.user_is_admin(request.form['username']):
+            descriptor = os.path.join(app.root_path, 'uploads')
+            for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = stuff
+                else:
+                    files.append(stuff)
+        else:
+            descriptor = os.path.join(app.root_path, 'uploads', user)
+            for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = user + '_' + stuff
+                else:
+                    if not stuff.startswith('.'): files.append(stuff)
+        path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
+        return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=h)
+
+@app.route('/browse/<path>', methods=['GET', 'POST'])
+def browse_directories(path, aFile=None):
+    auth = request.form['auth']
+    user = request.form['username']
+    authorized = str(path).split('_')[0] == user
+    admin = server_tools.user_is_admin(user)
+    if securify(request) and (authorized or admin):
+        path = str(path).replace('_', '/')
+        descriptor = os.path.join(app.root_path, 'uploads', path)
+        directories = {}
+        files = []
+        path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
+        for stuff in os.listdir(descriptor):
+                if os.path.isdir(os.path.join(descriptor, stuff)):
+                    directories[stuff] = path + '_' + stuff
+                else:
+                    if not stuff.startswith('.'): files.append(stuff)
+        return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
+    else:
+        return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
 
 @app.route('/uploads/', methods=['GET', 'POST'])
 def browse_all_uploads():
     """Allows admin users to browse the directory with all stored files through a web-browser"""
     if server_tools.user_is_admin(request.form['username']):
-        return index.render_autoindex('uploads', browse_root=app.config.root_path)
+        return TRUE  # index.render_autoindex('uploads', browse_root=app.config.root_path)
     else:
         return "Perhaps you don't have privileges for that"
 
-
-@app.route('/uploads/<username>_<auth>', methods=['GET', 'POST'])
-def browse_user_uploads(username, auth):
-    """Allows the user to browse the directory with their stored files through a web-browser"""
-    if auth in [i['auth'] for i in app.config['USERS'][username]]:
-        return index.render_autoindex(os.path.join('uploads', username), browse_root=app.config.root_path)
-    else:
-        return "Perhaps you skipped logging in"
-
-
+@app.route('/')
 @app.route('/index')
 def web_home_page():
     """Returns page where users can log into the application"""
@@ -115,7 +160,7 @@ def web_login_page():
         if server_tools.user_is_admin(request.form['username']):
             return redirect(url_for('browse_all_uploads'), code=307)
         else:
-            return redirect(url_for('browse_user_uploads', username=request.form['username'], auth=h), code=307)
+            return redirect(url_for('browse_user_uploads', username=request.form['username'], path='.', auth=h), code=307)
 
 
 @app.route('/delete')
@@ -199,6 +244,7 @@ def logout():
     for i in app.config['USERS'][user]:
         if i['auth'] == auth:
             app.config['USERS'][user].remove(i)
+            server_tools.update_log(user, 'Logout')
             break
     return TRUE
 
@@ -251,8 +297,15 @@ def register():
     password = server_tools.password_hash(request.form['password']+salt)
     email = request.form['email']
     user = request.form['user_type']
-    query_db("INSERT INTO users VALUES (?,?,?,?,?)", [username, password, salt, email, user], one=True)
-    return TRUE
+    if not server_tools.user_in_database(username):
+        query_db("INSERT INTO users VALUES (?,?,?,?,?)", [username, password, salt, email, user], one=True)
+        try:
+            os.mkdir(os.path.join(app.config, 'uploads', username))
+            listingfile = username + '.filelisting'
+            open(os.path.join(app.config, 'uploads', listingfile), 'w').close()
+            return TRUE
+        except IOError:
+            return FALSE
 
 
 @app.route('/remove_user', methods=['POST'])
@@ -261,6 +314,8 @@ def remove_user():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         deleteMe = request.form['deleteMe']
         query_db("DELETE FROM users WHERE username = (?)", [deleteMe], one=True)
+        return TRUE
+    return "You need to be an admin user to use this feature"
 
 
 def securify(request):
@@ -283,6 +338,7 @@ def share_file():
     os.symlink(filePath, sharedPath)
     server_tools.update_listings(userShared, path, os.path.getmtime(sharedPath))
     return TRUE
+
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -316,6 +372,7 @@ def uploaded_file(filename):
         return FALSE
     username = request.form['username']
     descriptor = os.path.join(app.root_path, 'uploads', username)
+    if os.path.isdir(descriptor): return TRUE 
     return send_from_directory(descriptor, filename)
 
 
@@ -361,13 +418,14 @@ def view_all_files():
     else:
         return "You need to be an admin for this feature"
 
-if __name__ == '__main__':
-    app.run(debug=app.config["DEBUG"])
 
 @app.route('/delete_user_files', methods=['POST'])
 def delete_user_files():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
         path = os.path.join(app.root_path, 'uploads', request.form['username'])
-        server_tools.view_files(path, request.form['filename'])
+        server_tools.delete_user_files(path, request.form['filename'])
     else:
         return "You need to be an admin for this feature"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=4414, debug=app.config["DEBUG"])
