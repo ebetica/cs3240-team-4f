@@ -33,6 +33,7 @@ def get_user_list():
     r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
     return r.content
 
+
 def get_admin_log():
     """Returns the log of user activity on the OneDir server"""
     payload = add_auth({})
@@ -49,7 +50,8 @@ def get_admin_log():
         with open(filename, 'wb') as code:
             code.write(r.content)
 
-def is_admin(username):
+
+def is_admin():
     """Returns if a user is an admin or not"""
     payload = add_auth({})
     r = requests.get(SERVER_ADDRESS + 'user_is_admin', data=payload)
@@ -92,7 +94,7 @@ def register_user(username, password, email=None, _type='user'):
             pass
             #toss error or re-enter.
 
-#TODO add to command line client
+
 def remove_user(deleteMe):
     """Remove users from the OneDir service"""
     payload = {'deleteMe': deleteMe}
@@ -163,7 +165,7 @@ def download_file(filename):
     """ Downloads file specified by filename from the OneDir server
         The argument is a relative path to the filename"""
     if filename == "":
-	return
+        return
     url = SERVER_ADDRESS
     url += 'download'
     payload = add_auth({'filename': filename})
@@ -175,17 +177,17 @@ def download_file(filename):
     update_listings(session()['username'], filename, time.time())
     filename = os.path.join(read_config_file(session()["username"]), filename)
     if r.content == TRUE:
-	r_mkdir(filename)
+        r_mkdir(filename)
     elif r.content == FALSE:
-	# Something went wrong with sending the file, mostly likely improper file path.
-	return
+    # Something went wrong with sending the file, mostly likely improper file path.
+        return
     else:
-	r_mkdir(os.path.dirname(filename))
-	if os.path.isdir(filename):
-	    # BUG... I don't know why this happens
-	    return
-	with open(filename, 'wb') as code:
-	    code.write(r.content)
+        r_mkdir(os.path.dirname(filename))
+    if os.path.isdir(filename):
+        # BUG... I don't know why this happens
+        return
+    with open(filename, 'wb') as code:
+        code.write(r.content)
 
 
 def user_in_database(username):
@@ -214,6 +216,7 @@ def view_user_files(viewUser):
 
 
 def change_directory(dirname):
+    """Changes the user's OneDir directory to directory specified by dirname"""
     sync(False)
     sess = session()
     username = sess['username']
@@ -223,8 +226,8 @@ def change_directory(dirname):
     sync(True)
 
 
-
 def quit_session():
+    """Logs the user out"""
     sess = session()
     if sess['sync'] == '1':
         sync(False)
@@ -236,6 +239,7 @@ def quit_session():
 
 
 def stop():
+    """Stops the daemon that checks for file updates, and then logs the user out"""
     sync(False)
     quit_session()
 
@@ -257,7 +261,6 @@ def sync(on):
         sess = session()
         ONEDIR_DIRECTORY = read_config_file(sess['username'])
         t = pynotify_update.FileUpdateChecker(ONEDIR_DIRECTORY)
-        #t = Timer(1, check_updates())
         if on:
             t.start()
             sess['sync'] = '1'
@@ -272,25 +275,21 @@ def sync(on):
 order = ['username', 'auth', 'sync']
 
 
-def session():
-    """Returns a list containing information about the current session (username, auth)"""
-    try:
-        session_file = open("/tmp/onedir.session", 'r').read().split("\n")
-        session = {}
-        for i in range(len(order)):
-            session[order[i]] = session_file[i]
+def parse_listing(listing, user=False):
+    # takes either a username or the contents of a /listing request
+    #  from the server.
+    userhome = os.environ['HOME']
+    listing_file = listing+".listing"
+    listing_file = os.path.join(userhome, ".onedir", listing_file)
+    if user:
+        try:
+            listing = open(listing_file, 'r').read()
+        except:
+            listing = ""
+            open(listing_file, 'w').write("")
 
-        return session
-    except IOError:
-        return False
-
-
-def update_session(session):
-    """Updates the user's session file"""
-    session_file = open("/tmp/onedir.session", 'w')
-    for i in order:
-        session_file.write(session[i] + '\n')
-    session_file.close()
+    # Split it down to the right format
+    return [k.strip().split(' ') for k in listing.strip().split('\n') if k.strip() != ""]
 
 
 def read_config_file(username):
@@ -305,16 +304,18 @@ def read_config_file(username):
         print e.message
         return False
 
-def write_config_file(onedir_path, username):
-    """Writes a config file stored in the user's Home folder. This file allows user preferences to persist"""
-    userhome = os.environ['HOME']
-    folder = os.path.join(userhome, ".onedir")
-    if not os.path.isdir(folder):
-        os.makedirs(folder)
-    config_file = username + ".config"
-    config_path = os.path.join(folder, config_file)
-    with open(config_path, 'w') as afile:
-        afile.write(onedir_path) #If we update the amount written, we need to update the amount read in read_config_file
+
+def session():
+    """Returns a list containing information about the current session (username, auth)"""
+    try:
+        session_file = open("/tmp/onedir.session", 'r').read().split("\n")
+        session = {}
+        for i in range(len(order)):
+            session[order[i]] = session_file[i]
+
+        return session
+    except IOError:
+        return False
 
 
 def update_listings(username, path, timestamp, delete=False):
@@ -344,36 +345,28 @@ def update_listings(username, path, timestamp, delete=False):
     f.close()
 
 
-def parse_listing(listing, user = False):
-    # takes either a username or the contents of a /listing request
-    #  from the server.
+def update_session(session):
+    """Updates the user's session file"""
+    session_file = open("/tmp/onedir.session", 'w')
+    for i in order:
+        session_file.write(session[i] + '\n')
+    session_file.close()
+
+
+def write_config_file(onedir_path, username):
+    """Writes a config file stored in the user's Home folder. This file allows user preferences to persist"""
     userhome = os.environ['HOME']
-    listing_file = listing+".listing"
-    listing_file = os.path.join(userhome, ".onedir", listing_file)
-    if user:
-        try:
-            listing = open(listing_file, 'r').read()
-        except:
-            listing = ""
-            open(listing_file, 'w').write("")
-
-    # Split it down to the right format
-    return [k.strip().split(' ') for k in listing.strip().split('\n') if k.strip() != ""]
-
+    folder = os.path.join(userhome, ".onedir")
+    if not os.path.isdir(folder):
+        os.makedirs(folder)
+    config_file = username + ".config"
+    config_path = os.path.join(folder, config_file)
+    with open(config_path, 'w') as afile:
+        afile.write(onedir_path)  # If we update the amount written, we need to update the amount read in read_config_file
 
 
 # Misc Functions
 #########
-
-
-def r_mkdir(dirname):
-    """Recursively makes directories so they always exist before we try to save a file"""
-    if os.path.exists(dirname):
-        return
-    else:
-        r_mkdir(os.path.dirname(dirname))
-        os.makedirs(dirname)
-        print(dirname)
 
 
 def add_auth(payload):
@@ -396,11 +389,21 @@ def get_file_paths(directory):
     return file_paths
 
 
+def r_mkdir(dirname):
+    """Recursively makes directories so they always exist before we try to save a file"""
+    if os.path.exists(dirname):
+        return
+    else:
+        r_mkdir(os.path.dirname(dirname))
+        os.makedirs(dirname)
+        print(dirname)
+
+
 def sanity_check_username(name):
     """"Makes sure the user's input username is acceptable"""
     VALID_CHARACTERS = string.ascii_letters+string.digits+"_-."
     rules = [ 
-        len(name) > 3, # User name is longer than 3 characters
+        len(name) > 3,  # User name is longer than 3 characters
         all([k in VALID_CHARACTERS for k in list(name)])  # Username is made of valid characters
     ]
     return all(rules)

@@ -26,6 +26,18 @@ def change_password():
             change_password()
 
 
+def delete_user_files():
+    sess = client_tools.session()
+    if client_tools.is_admin():
+        print("Please enter the user to delete files from.")
+        user = raw_input("Username: ")
+        print("Please enter the file name to delete.")
+        filename = raw_input("Filename: ")
+        client_tools.delete_user_files(user, filename)
+    else:
+        print("Please login as an admin user")
+
+
 def get_user_list():
     """Returns a list of all users registered for the OneDir service"""
     sess = client_tools.session()
@@ -138,44 +150,32 @@ def view_user_files():
         print("Please login as an admin user")
 
 
-def delete_user_files():
-    sess = client_tools.session()
-    if client_tools.is_admin(sess['username']):
-        print("Please enter the user to delete files from.")
-        user = raw_input("Username: ")
-        print("Please enter the file name to delete.")
-        filename = raw_input("Filename: ")
-        client_tools.delete_user_files(user, filename)
-    else:
-        print("Please login as an admin user")
-
-
 def main():
     parser = argparse.ArgumentParser(description=
                                      '''OneDir is a wonderful program. Run without any arguments to start the client''')
     group = parser.add_mutually_exclusive_group()
+    group.add_argument("-a", "--view-all-files", action="store_true",
+                       help="View information about all files store on the server (admin only)")
     group.add_argument("-c", "--change-password", action="store_true",
                        help="Open a prompt to change your password")
-    group.add_argument("-p", "--reset-password", action="store_true",
-                       help="Open a prompt to reset a user's password (admin only)")
-    group.add_argument("-s", "--sync", action="store_true",
-                       help="Set sync on")
-    group.add_argument("-n", "--no-sync", action="store_true",
-                       help="Set sync off")
-    group.add_argument("-q", "--stop", "--quit", action="store_true",
-                       help="STOP THE PRESS (client)")
     group.add_argument("-d", "--change-directory", type=str,
                        help="Change the default directory of OneDir")
     group.add_argument("-f", "--share-file", action="store_true",
                        help="Share a file with another OneDir user")
     group.add_argument("-l", "--list-users", action="store_true",
                        help="List all users (admin only)")
-    group.add_argument("-u", "--view-user-files", action="store_true",
-                       help="View information about a user's files (admin only)")
-    group.add_argument("-a", "--view-all-files", action="store_true",
-                       help="View information about all files store on the server (admin only)")
+    group.add_argument("-n", "--no-sync", action="store_true",
+                       help="Set sync off")
+    group.add_argument("-p", "--reset-password", action="store_true",
+                       help="Open a prompt to reset a user's password (admin only)")
+    group.add_argument("-q", "--stop", "--quit", action="store_true",
+                       help="STOP THE PRESS (client)")
     group.add_argument("-r", "--remove-user", action="store_true",
                        help="remove a user from OneDir (admin only)")
+    group.add_argument("-s", "--sync", action="store_true",
+                       help="Set sync on")
+    group.add_argument("-u", "--view-user-files", action="store_true",
+                       help="View information about a user's files (admin only)")
     group.add_argument("-v", "--view-log", action="store_true",
                        help="View OneDir log (admin only)")
     args = parser.parse_args()
@@ -203,7 +203,7 @@ def main():
             remove_user()
         elif args.view_log:
             client_tools.get_admin_log()
-	elif args.stop:
+        elif args.stop:
             client_tools.stop()
         else:
             print("OneDir is already running!")

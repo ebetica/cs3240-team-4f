@@ -7,6 +7,15 @@ import string
 import constants
 
 
+def delete_user_files(path, filename):
+    """Deletes the file under path specified by filename"""
+    for roots, dirs, files in os.walk(path):
+        for f in files:
+            if f == filename:
+                os.remove(os.path.join(path, filename))
+                return constants.TRUE
+
+
 def login(username, password):
     """Logs a user in to the OneDir server. Helper method for several methods in server.py"""
     user = server.query_db("SELECT * FROM users WHERE username=?", [username], one=True)
@@ -131,11 +140,3 @@ def view_files(path):
     files = [str(file_sizes), str(file_number)]
     string = ','.join(files)
     return string
-
-
-def delete_user_files(path, filename):
-    for roots, dirs, files in os.walk(path):
-        for f in files:
-            if f == filename:
-                os.remove(os.path.join(path, filename))
-                return constants.TRUE

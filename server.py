@@ -1,5 +1,5 @@
-import server_tools
 from constants import *
+import server_tools
 
 from flask import Flask, request, g, send_file, render_template, redirect, url_for
 import os
@@ -430,6 +430,7 @@ def delete_user_files():
         server_tools.delete_user_files(path, request.form['filename'])
     else:
         return "You need to be an admin for this feature"
+
 
 @app.route('/get_admin_log', methods=['POST'])
 def get_admin_log():
