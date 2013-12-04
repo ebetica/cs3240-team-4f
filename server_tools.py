@@ -4,6 +4,7 @@ import hashlib
 import os
 import random
 import string
+import constants
 
 
 def login(username, password):
@@ -13,7 +14,7 @@ def login(username, password):
         return False
     userval = user[1]
     progval = password_hash(password + user[2])
-    if user[1] == password_hash(password + user[2]):
+    if userval == progval:
         letters = string.ascii_letters+string.digits
         h = ''.join([random.choice(letters) for k in range(20)])
         update_log(user[0], 'Login')
@@ -52,7 +53,7 @@ def safeHashFile(path):
 
 def scrub_sqlite_input(table_name):
     """Sanitizes input to SQL queries to prevent SQL injection attacks"""
-    return ' '.join(char for char in table_name if char.isalnum())
+    return ''.join(char for char in table_name if char.isalnum())
 
 
 def update_listings(username, path, timestamp, delete=False):
@@ -88,8 +89,9 @@ def update_history(username, path, timestamp, op):
         log.write('%s\t%s\t%s\n' % (username, path, op))
         # Write the timestamp to the last updated field in the sql
 
+
 def update_log(username, op):
-    """Updates the history file for the user specified by username"""
+    """Updates the admin log"""
     log_file = os.path.join(server.app.root_path, 'uploads', '.admin.log')
     with open(log_file, 'a') as log:
         log.write('%s\t%s\t%s\n' % (username, ' ', op))

@@ -137,6 +137,7 @@ def view_user_files():
     else:
         print("Please login as an admin user")
 
+
 def delete_user_files():
     sess = client_tools.session()
     if client_tools.is_admin(sess['username']):
@@ -147,6 +148,7 @@ def delete_user_files():
         client_tools.delete_user_files(user, filename)
     else:
         print("Please login as an admin user")
+
 
 def main():
     parser = argparse.ArgumentParser(description=
@@ -173,7 +175,9 @@ def main():
     group.add_argument("-a", "--view-all-files", action="store_true",
                        help="View information about all files store on the server (admin only)")
     group.add_argument("-r", "--remove-user", action="store_true",
-                       help="remove a user from Onedir (admin only)")
+                       help="remove a user from OneDir (admin only)")
+    group.add_argument("-v", "--view-log", action="store_true",
+                       help="View OneDir log (admin only)")
     args = parser.parse_args()
     # Throw an error if OneDir is not running!
     if client_tools.session():

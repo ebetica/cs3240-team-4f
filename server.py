@@ -375,7 +375,7 @@ def download_file():
     if '..' in filename or filename.startswith('/'):
         return FALSE
     descriptor = os.path.join(app.root_path, 'uploads', username, filename)
-    print("Sending %s..."%descriptor)
+    print("Sending %s..." % descriptor)
     if os.path.isdir(descriptor): return TRUE 
     else: return send_file(descriptor)
 
@@ -426,8 +426,16 @@ def view_all_files():
 @app.route('/delete_user_files', methods=['POST'])
 def delete_user_files():
     if securify(request) and server_tools.user_is_admin(request.form['username']):
-        path = os.path.join(app.root_path, 'uploads', request.form['username'])
+        path = os.path.join(app.root_path, 'uploads', request.form['deleteMyFiles'])
         server_tools.delete_user_files(path, request.form['filename'])
+    else:
+        return "You need to be an admin for this feature"
+
+@app.route('/get_admin_log', methods=['POST'])
+def get_admin_log():
+    if securify(request) and server_tools.user_is_admin(request.form['username']):
+        path = os.path.join(app.root_path, 'uploads', '.admin.log')
+        return send_file(path)
     else:
         return "You need to be an admin for this feature"
 

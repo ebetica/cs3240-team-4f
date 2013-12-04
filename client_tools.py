@@ -33,6 +33,21 @@ def get_user_list():
     r = requests.get(SERVER_ADDRESS+'getVals', data=payload)
     return r.content
 
+def get_admin_log():
+    """Returns the log of user activity on the OneDir server"""
+    payload = add_auth({})
+    r = requests.post(SERVER_ADDRESS+'get_admin_log', data=payload)
+    filename = os.path.join(read_config_file(session()["username"]), 'OneDir.log')
+    if r.content == FALSE:
+    # Something went wrong with sending the file, mostly likely improper file path.
+        return
+    else:
+        r_mkdir(os.path.dirname(filename))
+        if os.path.isdir(filename):
+            # BUG... I don't know why this happens
+            return
+        with open(filename, 'wb') as code:
+            code.write(r.content)
 
 def is_admin(username):
     """Returns if a user is an admin or not"""
@@ -136,6 +151,14 @@ def delete_file(filename):
     return r.status_code
 
 
+def delete_user_files(user, filename):
+    url = SERVER_ADDRESS
+    url += 'delete_user_files'
+    payload = add_auth({'deleteMyFiles': user, 'filename': filename})
+    r = requests.post(url, data=payload)
+    return r.status_code
+
+
 def download_file(filename):
     """ Downloads file specified by filename from the OneDir server
         The argument is a relative path to the filename"""
@@ -199,9 +222,6 @@ def change_directory(dirname):
     write_config_file(dirname, username)
     sync(True)
 
-def delete_user_files(user, filename):
-    sess = session()
-    payload = add_auth({'username': user, 'filename': filename})
 
 
 def quit_session():
