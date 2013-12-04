@@ -89,7 +89,7 @@ def remove_user(deleteMe):
 def share_file(user, pathName):
     """Shares the file located at pathname from the current user to the input user"""
     url = SERVER_ADDRESS + 'share'
-    payload = add_auth({'ShareWith': user, 'PathName': pathName})
+    payload = add_auth({'SharedWith': user, 'PathName': pathName})
     r = requests.post(url, data=payload)
     return r.status_code
 
