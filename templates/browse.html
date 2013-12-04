@@ -22,11 +22,14 @@
         </div>
     </form>
         <h2><u>Index of {{path}}</u></h2>
+	<h3><u>Directories</u></h3>
         {% for directory in directories.keys() %}
             <li><a href="#" onclick="formSubmit('{{ directories[directory] }}')">{{directory}}</a></li>
         {% endfor %}
+	<br />
+	<h3><u>Files</u></h3>
         {% for file in files.keys() %}
-           <li><a onclick="formSubmit('{{ files[file] }}')">{{file}}</a></li>
+           <li><font color='black'><a onclick="formSubmit('{{ files[file] }}')">{{file}}</a></font></li>
         {% endfor %}
     </div>
 </html>

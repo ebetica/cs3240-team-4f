@@ -87,21 +87,21 @@ def uploads(path=None):
         else:
             app.config['USERS'][user] = [{'time': time.time(), 'auth': h}]
         directories = {}
-        files = []
+        files = {}
         if server_tools.user_is_admin(request.form['username']):
             descriptor = os.path.join(app.root_path, 'uploads')
             for stuff in os.listdir(descriptor):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
                     directories[stuff] = stuff
                 else:
-                    files.append(stuff)
+                    files[stuff] = '/webdownload/' + stuff
         else:
             descriptor = os.path.join(app.root_path, 'uploads', user)
             for stuff in os.listdir(descriptor):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
                     directories[stuff] = user + '_' + stuff
                 else:
-                    if not stuff.startswith('.'): files.append(stuff)
+                    if not stuff.startswith('.'): files[stuff] = '/webdownload/' + user + '_' + '_' + stuff
         path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=h)
 
@@ -122,7 +122,7 @@ def browse_directories(path, aFile=None):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
                     directories[stuff] = str(path).replace('/', '_') + '_' + stuff
                 else:
-                    if not stuff.startswith('.'): files[stuff] = '/webdownload/' + str(path).replace('/', '_') + stuff
+                    if not stuff.startswith('.'): files[stuff] = '/webdownload/' + str(path).replace('/', '_') + '_' + stuff
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
     else:
         return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
@@ -134,6 +134,7 @@ def web_downloads(path, aFile=None):
     authorized = str(path).split('_')[0] == user
     admin = server_tools.user_is_admin(user)
     if securify(request) and (authorized or admin):
+        path = str(path).replace('_', '/')
         descriptor = os.path.join(app.root_path, 'uploads', path)
         return send_file(descriptor)
     else:
