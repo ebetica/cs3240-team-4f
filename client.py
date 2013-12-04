@@ -42,7 +42,9 @@ def get_user_list():
     """Returns a list of all users registered for the OneDir service"""
     sess = client_tools.session()
     print("User list")
-    if client_tools.is_admin(sess['username']):
+    if client_tools.is_admin(
+
+    ):
         print client_tools.get_user_list()
     else:
         print("Please login as an admin user")
@@ -98,7 +100,7 @@ def parse_user():
 def remove_user():
     sess = client_tools.session()
     print("Removing user")
-    if client_tools.is_admin(sess['username']):
+    if client_tools.is_admin():
         print("Please enter the user to remove.")
         user = raw_input("Username: ")
         client_tools.remove_user(user)
@@ -110,7 +112,7 @@ def reset_password():
     """Resets the password for entered user"""
     sess = client_tools.session()
     print("Reset password.")
-    if client_tools.is_admin(sess['username']):
+    if client_tools.is_admin():
         print("Please enter the user to reset the password for.")
         user = raw_input("Username: ")
         client_tools.password_reset(user)
@@ -129,7 +131,7 @@ def share_file():
 def view_all_files():
     """Allows user to view information about all files stored on the OneDir server"""
     sess = client_tools.session()
-    if client_tools.is_admin(sess['username']):
+    if client_tools.is_admin():
         sizes = str.split(client_tools.view_all_files(), ',')
         print(sizes[1] + ' files')
         print(sizes[0] + ' bytes used')
@@ -140,7 +142,7 @@ def view_all_files():
 def view_user_files():
     """Allows user to view information about all files stored by one user on the OneDir server"""
     sess = client_tools.session()
-    if client_tools.is_admin(sess['username']):
+    if client_tools.is_admin():
         print("Please enter the user to view the file sizes and counts for.")
         user = raw_input("Username: ")
         sizes = str.split(client_tools.view_user_files(user), ',')
@@ -174,6 +176,8 @@ def main():
                        help="remove a user from OneDir (admin only)")
     group.add_argument("-s", "--sync", action="store_true",
                        help="Set sync on")
+    group.add_argument("-t", "--delete-user-file", action="store_true",
+                       help="Delete a file in the specified user's directory (admin only)")
     group.add_argument("-u", "--view-user-files", action="store_true",
                        help="View information about a user's files (admin only)")
     group.add_argument("-v", "--view-log", action="store_true",
@@ -203,6 +207,8 @@ def main():
             remove_user()
         elif args.view_log:
             client_tools.get_admin_log()
+        elif args.delete_user_file():
+            delete_user_files()
         elif args.stop:
             client_tools.stop()
         else:
