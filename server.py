@@ -1,7 +1,7 @@
 import server_tools
 from constants import *
 
-from flask import Flask, request, g, send_from_directory, render_template, redirect, url_for
+from flask import Flask, request, g, send_file, render_template, redirect, url_for
 import os
 import sqlite3
 import time
@@ -365,16 +365,19 @@ def upload_file():
     return FALSE
 
 
-@app.route('/download/<filename>')
-def uploaded_file(filename):
+@app.route('/download', methods=['GET', 'POST'])
+def download_file():
     """Returns the requested file from the user's server-side OneDir directory"""
     if not securify(request):
         return FALSE
     username = request.form['username']
-    descriptor = os.path.join(app.root_path, 'uploads', username)
-    if os.path.isdir(os.path.join(descriptor,filename)): return TRUE 
-    else: return send_from_directory(descriptor, filename)
-
+    filename = request.form['filename']
+    if '..' in filename or filename.startswith('/'):
+        return FALSE
+    descriptor = os.path.join(app.root_path, 'uploads', username, filename)
+    print("Sending %s..."%descriptor)
+    if os.path.isdir(descriptor): return TRUE 
+    else: return send_file(descriptor)
 
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
