@@ -201,7 +201,9 @@ def main():
             view_all_files()
         elif args.remove_user:
             remove_user()
-        elif args.stop:
+        elif args.view_log:
+            client_tools.get_admin_log()
+	elif args.stop:
             client_tools.stop()
         else:
             print("OneDir is already running!")
