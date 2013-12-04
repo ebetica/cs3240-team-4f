@@ -25,8 +25,8 @@
         {% for directory in directories.keys() %}
             <li><a href="#" onclick="formSubmit('{{ directories[directory] }}')">{{directory}}</a></li>
         {% endfor %}
-        {% for file in files %}
-           <li>{{file}}</li>
+        {% for file in files.keys() %}
+           <li><a onclick="formSubmit('{{ files[file] }}')">{{file}}</a></li>
         {% endfor %}
     </div>
 </html>

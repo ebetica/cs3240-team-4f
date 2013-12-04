@@ -105,6 +105,7 @@ def uploads(path=None):
         path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=h)
 
+
 @app.route('/browse/<path>', methods=['GET', 'POST'])
 def browse_directories(path, aFile=None):
     auth = request.form['auth']
@@ -115,14 +116,26 @@ def browse_directories(path, aFile=None):
         path = str(path).replace('_', '/')
         descriptor = os.path.join(app.root_path, 'uploads', path)
         directories = {}
-        files = []
+        files = {}
         path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
         for stuff in os.listdir(descriptor):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
                     directories[stuff] = str(path).replace('/', '_') + '_' + stuff
                 else:
-                    if not stuff.startswith('.'): files.append(stuff)
+                    if not stuff.startswith('.'): files[stuff] = '/webdownload/' + str(path).replace('/', '_') + stuff
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
+    else:
+        return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
+
+@app.route('/webdownload/<path>', methods=['GET', 'POST'])
+def browse_directories(path, aFile=None):
+    auth = request.form['auth']
+    user = request.form['username']
+    authorized = str(path).split('_')[0] == user
+    admin = server_tools.user_is_admin(user)
+    if securify(request) and (authorized or admin):
+        descriptor = os.path.join(app.root_path, 'uploads', path)
+        return send_file(descriptor)
     else:
         return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
 
