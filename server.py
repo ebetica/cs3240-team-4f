@@ -128,7 +128,7 @@ def browse_directories(path, aFile=None):
         return '''<html lang="en"> <a href="/index"> You are not logged in </a> </html>'''
 
 @app.route('/webdownload/<path>', methods=['GET', 'POST'])
-def browse_directories(path, aFile=None):
+def web_downloads(path, aFile=None):
     auth = request.form['auth']
     user = request.form['username']
     authorized = str(path).split('_')[0] == user
