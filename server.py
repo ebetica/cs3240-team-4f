@@ -1,7 +1,7 @@
 import server_tools
 from constants import *
 
-from flask import Flask, request, g, send_from_directory, render_template, redirect, url_for
+from flask import Flask, request, g, send_file, render_template, redirect, url_for
 import os
 import sqlite3
 import time
@@ -119,7 +119,7 @@ def browse_directories(path, aFile=None):
         path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
         for stuff in os.listdir(descriptor):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
-                    directories[stuff] = path + '_' + stuff
+                    directories[stuff] = str(path).replace('/', '_') + '_' + stuff
                 else:
                     if not stuff.startswith('.'): files.append(stuff)
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
@@ -332,7 +332,7 @@ def share_file():
     username = request.form['username']
     path = request.form['PathName']
     userShared = request.form['SharedWith']
-    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
+    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username, path)
     server_tools.r_mkdir(os.path.dirname(sharedPath))
     filePath = os.path.join(app.root_path, 'uploads', username, path)
     os.symlink(filePath, sharedPath)
@@ -365,16 +365,19 @@ def upload_file():
     return FALSE
 
 
-@app.route('/download/<filename>')
-def uploaded_file(filename):
+@app.route('/download', methods=['GET', 'POST'])
+def download_file():
     """Returns the requested file from the user's server-side OneDir directory"""
     if not securify(request):
         return FALSE
     username = request.form['username']
-    descriptor = os.path.join(app.root_path, 'uploads', username)
-    if os.path.isdir(os.path.join(descriptor,filename)): return TRUE 
-    else: return send_from_directory(descriptor, filename)
-
+    filename = request.form['filename']
+    if '..' in filename or filename.startswith('/'):
+        return FALSE
+    descriptor = os.path.join(app.root_path, 'uploads', username, filename)
+    print("Sending %s..."%descriptor)
+    if os.path.isdir(descriptor): return TRUE 
+    else: return send_file(descriptor)
 
 
 @app.route('/user_is_admin', methods=['GET', 'POST'])
