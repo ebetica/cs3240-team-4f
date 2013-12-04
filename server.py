@@ -320,6 +320,7 @@ def remove_user():
 def securify(request):
     username = request.form['username']
     auth = request.form['auth']
+    if username not in app.config['USERS']: return False
     return auth in [i['auth'] for i in app.config['USERS'][username]]
 
 
