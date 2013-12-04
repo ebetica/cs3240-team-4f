@@ -100,7 +100,13 @@ class FileUpdateChecker():
                         # It was once on the server but it has been deleted :(
                         #  Delete it from the client!
                         print("File %s was once on the server but it has been deleted :("%f)
-                        client_tools.delete_file(absf)
+			try:
+			    os.remove(absf)
+			except OSError:
+			    try:
+				os.rmdir(absf)
+			    except:
+				pass
                 if state == (True, False):
                     if server_files[f][1] == "0":
 			# It's not actually on the server... server deleted it

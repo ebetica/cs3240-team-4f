@@ -139,27 +139,30 @@ def delete_file(filename):
 def download_file(filename):
     """ Downloads file specified by filename from the OneDir server
         The argument is a relative path to the filename"""
+    if filename == "":
+	return
     url = SERVER_ADDRESS
-    url += 'download/'
-    url += filename
-    payload = add_auth({})
+    url += 'download'
+    payload = add_auth({'filename': filename})
     r = requests.get(url, data=payload)
     if r.content == FALSE:
         print("You are not logged in! Shutting down OneDir...")
         quit_session()
         return
     update_listings(session()['username'], filename, time.time())
-    if filename != "":
-        filename = os.path.join(read_config_file(session()["username"]), filename)
-        if r.content == TRUE:
-            r_mkdir(filename)
-        else:
-            r_mkdir(os.path.dirname(filename))
-	    if os.path.isdir(filename):
-		# BUG... I don't know why this happens
-		return
-            with open(filename, 'wb') as code:
-                code.write(r.content)
+    filename = os.path.join(read_config_file(session()["username"]), filename)
+    if r.content == TRUE:
+	r_mkdir(filename)
+    elif r.content == FALSE:
+	# Something went wrong with sending the file, mostly likely improper file path.
+	return
+    else:
+	r_mkdir(os.path.dirname(filename))
+	if os.path.isdir(filename):
+	    # BUG... I don't know why this happens
+	    return
+	with open(filename, 'wb') as code:
+	    code.write(r.content)
 
 
 def user_in_database(username):
