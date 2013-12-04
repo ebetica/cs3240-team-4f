@@ -119,7 +119,7 @@ def browse_directories(path, aFile=None):
         path = os.path.relpath(descriptor, os.path.join(app.root_path, 'uploads'))
         for stuff in os.listdir(descriptor):
                 if os.path.isdir(os.path.join(descriptor, stuff)):
-                    directories[stuff] = path + '_' + stuff
+                    directories[stuff] = str(path).replace('/', '_') + '_' + stuff
                 else:
                     if not stuff.startswith('.'): files.append(stuff)
         return render_template('browse.html', directories=directories, files=files, path=path, user=user, auth=auth)
@@ -332,7 +332,7 @@ def share_file():
     username = request.form['username']
     path = request.form['PathName']
     userShared = request.form['SharedWith']
-    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username)
+    sharedPath = os.path.join(app.root_path, 'uploads', userShared, 'Share', username, path)
     server_tools.r_mkdir(os.path.dirname(sharedPath))
     filePath = os.path.join(app.root_path, 'uploads', username, path)
     os.symlink(filePath, sharedPath)
