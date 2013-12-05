@@ -1,4 +1,0 @@
-server.py
-    update_history
-        make sure variable names are correct
-        in code nested under with statement, changed hist_file to just hist and changed some timestamp stuff
