@@ -9,7 +9,7 @@ import string
 from threading import Timer
 import time
 
-DEBUG = False
+DEBUG = True
 
 # Server request related function
 ########
@@ -38,7 +38,13 @@ def get_admin_log():
     """Returns the log of user activity on the OneDir server"""
     payload = add_auth({})
     r = requests.post(SERVER_ADDRESS+'get_admin_log', data=payload)
-    filename = os.path.join(read_config_file(session()["username"]), 'OneDir.log')
+    userhome = os.environ['HOME']
+    onedir = os.path.join(userhome, '.onedir')
+    try:
+        os.mkdir(onedir)
+    except OSError:
+        pass  # Directory already exists or we don't have permission, so it doesn't matter
+    filename = os.path.join(onedir,'OneDir.log')
     if r.content == FALSE:
     # Something went wrong with sending the file, mostly likely improper file path.
         return
@@ -49,6 +55,7 @@ def get_admin_log():
             return
         with open(filename, 'wb') as code:
             code.write(r.content)
+        print "Wrote OneDir.log to " + onedir
 
 
 def is_admin():

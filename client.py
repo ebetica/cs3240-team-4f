@@ -207,7 +207,7 @@ def main():
             remove_user()
         elif args.view_log:
             client_tools.get_admin_log()
-        elif args.delete_user_file():
+        elif args.delete_user_file:
             delete_user_files()
         elif args.stop:
             client_tools.stop()
